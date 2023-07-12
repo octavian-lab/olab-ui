@@ -2,6 +2,18 @@
   "name": "olab-ui",
   "version": "1.0.0",
   "private": true,
+  "main": "./dist/olab-ui.umd.js",
+  "module": "./dist/olab-ui.es.js",
+  "exports": {
+    ".": {
+      "import": "./dist/olab-ui.es.js",
+      "require": "./dist/olab-ui.umd.js"
+    },
+    "./dist/style.css": "./dist/style.css"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -24,7 +36,6 @@
     "vite": "^4.3.9"
   },
   "description": "This template should help get you started developing with Vue 3 in Vite.",
-  "main": "vite.config.js",
   "repository": {
     "type": "git",
     "url": "https://my.octavianlab.com/bitbucket/scm/web/olab-ui.git"

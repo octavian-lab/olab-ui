@@ -1,3 +1,0 @@
-<template>
- <OLottie />
-</template>
