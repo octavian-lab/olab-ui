@@ -1,12 +1,12 @@
 {
   "name": "olab-ui",
-  "version": "1.0.0",
-  "private": true,
+  "version": "1.0.6",
+  "private": false,
   "main": "./dist/olab-ui.umd.js",
-  "module": "./dist/olab-ui.es.js",
+  "module": "./dist/olab-ui.mjs",
   "exports": {
     ".": {
-      "import": "./dist/olab-ui.es.js",
+      "import": "./dist/olab-ui.mjs",
       "require": "./dist/olab-ui.umd.js"
     },
     "./dist/style.css": "./dist/style.css"
@@ -23,7 +23,8 @@
   },
   "dependencies": {
     "pinia": "^2.1.3",
-    "vue": "^3.3.4",
+    "primevue": "^3.30.1",
+    "vue": "^3.0.0",
     "vue3-lottie": "^3.0.0"
   },
   "devDependencies": {
@@ -34,6 +35,11 @@
     "eslint-plugin-vue": "^9.11.0",
     "prettier": "^2.8.8",
     "vite": "^4.3.9"
+  },
+  "peerDependencies": {
+    "vue": "^3.0.0",
+    "vue3-lottie": "^3.0.0",
+    "primevue": "^3.0.0"
   },
   "description": "This template should help get you started developing with Vue 3 in Vite.",
   "repository": {
