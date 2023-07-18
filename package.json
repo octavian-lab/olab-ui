@@ -1,19 +1,22 @@
 {
-  "name": "olab-ui",
-  "version": "1.0.6",
+  "name": "@octavianlab/olab-ui",
+  "author": "octavianlab",
+  "license": "MIT",
+  "version": "1.0.7",
   "private": false,
-  "main": "./dist/olab-ui.umd.js",
-  "module": "./dist/olab-ui.mjs",
+  "type": "module",
+  "files": [
+    "dist",
+    "src"
+  ],
+  "main": "./dist/olab-ui.umd.cjs",
+  "module": "./dist/olab-ui.js",
   "exports": {
     ".": {
-      "import": "./dist/olab-ui.mjs",
-      "require": "./dist/olab-ui.umd.js"
-    },
-    "./dist/style.css": "./dist/style.css"
+      "import": "./dist/olab-ui.js",
+      "require": "./dist/olab-ui.umd.cjs"
+    }
   },
-  "files": [
-    "dist"
-  ],
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -23,29 +26,28 @@
   },
   "dependencies": {
     "pinia": "^2.1.3",
-    "primevue": "^3.30.1",
+    "primevue": "^3.30.1"
+  },
+  "peerDependencies": {
     "vue": "^3.0.0",
     "vue3-lottie": "^3.0.0"
   },
   "devDependencies": {
+    "@rollup/plugin-node-resolve": "^15.1.0",
     "@rushstack/eslint-patch": "^1.2.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
+    "pathe": "^1.1.1",
     "prettier": "^2.8.8",
-    "vite": "^4.3.9"
-  },
-  "peerDependencies": {
+    "vite": "^4.3.9",
     "vue": "^3.0.0",
-    "vue3-lottie": "^3.0.0",
-    "primevue": "^3.0.0"
+    "vue3-lottie": "^3.0.0"
   },
   "description": "This template should help get you started developing with Vue 3 in Vite.",
   "repository": {
     "type": "git",
     "url": "https://my.octavianlab.com/bitbucket/scm/web/olab-ui.git"
-  },
-  "author": "octavianlab",
-  "license": "MIT"
+  }
 }
