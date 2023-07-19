@@ -1,4 +1,3 @@
-// import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import { resolve } from 'pathe'
 import vue from '@vitejs/plugin-vue'
@@ -10,16 +9,17 @@ export default defineConfig({
   build: {
     lib: {
       entry: resolve(__dirname, 'src/index.js'),
-      name: 'OlabUi',
+      name: 'OlabUI',
       fileName: 'olab-ui',
       formats: ['es', 'cjs', 'umd', 'iife']
     },
     rollupOptions: {
-      external: ['vue', 'primevue'],
+      external: ['vue', 'primevue', 'moment'],
       output: {
         exports: 'named',
         globals: {
           vue: 'Vue',
+          moment: 'moment',
           primevue: '$primevue'
         }
       },
@@ -29,7 +29,7 @@ export default defineConfig({
   resolve: {
     symlinks: false,
     alias: {
-      '/@': resolve(__dirname, './src')
+      '@': resolve(__dirname, './src')
     }
   }
 })

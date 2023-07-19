@@ -2,7 +2,7 @@
   "name": "@octavianlab/olab-ui",
   "author": "octavianlab",
   "license": "MIT",
-  "version": "1.0.7",
+  "version": "0.0.1",
   "private": false,
   "type": "module",
   "files": [
@@ -15,7 +15,8 @@
     ".": {
       "import": "./dist/olab-ui.js",
       "require": "./dist/olab-ui.umd.cjs"
-    }
+    },
+    "./style.css": "./dist/style.css"
   },
   "scripts": {
     "dev": "vite",
@@ -30,7 +31,8 @@
   },
   "peerDependencies": {
     "vue": "^3.0.0",
-    "vue3-lottie": "^3.0.0"
+    "vue3-lottie": "^3.0.0",
+    "moment": "^2.29.4"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",
@@ -43,7 +45,8 @@
     "prettier": "^2.8.8",
     "vite": "^4.3.9",
     "vue": "^3.0.0",
-    "vue3-lottie": "^3.0.0"
+    "vue3-lottie": "^3.0.0",
+    "moment": "^2.29.4"
   },
   "description": "This template should help get you started developing with Vue 3 in Vite.",
   "repository": {
