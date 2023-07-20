@@ -48,7 +48,7 @@
       <Calendar
         v-if="mode === 'range'"
         v-model="modelValue.date.from"
-        class="animate__animated animate__fadeIn p-mr-2"
+        class="animate__animated animate__fadeIn mr-2"
         showTime
         :placeholder="$translate('admin.generic.from')"
         dateFormat="dd/mm/yy"
