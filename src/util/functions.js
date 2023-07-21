@@ -1,6 +1,10 @@
 import { useMediaQuery } from '@vueuse/core'
 import { computed } from 'vue'
 
+export const useImage = (url) => {
+  return new URL(`../${url}`, import.meta.url).href
+}
+
 export function isMobile(dim = '(max-width: 640px)') {
   return useMediaQuery(dim)
 }
@@ -38,7 +42,6 @@ export function generateSelects(data, optionValue, optionLabel) {
 
   return ret
 }
-
 
 // todo export function setTranslateKeyAttribute(prefix, name) {
 //   return this.$translate(prefix + name, '', true)

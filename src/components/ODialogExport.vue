@@ -11,22 +11,22 @@
   >
     <template #header>
       <div class="dialog-title">
-        <i class="fad fa-arrow-down-to-line p-mr-3"></i>
+        <i class="fad fa-arrow-down-to-line mr-3"></i>
         <span>{{ $translate('admin.generic.export') }}</span>
       </div>
     </template>
-    <div class="p-grid p-formgrid p-fluid">
-      <div class="p-field p-col-12">
+    <div class="grid formgrid fluid">
+      <div class="field col-12">
         <Panel :toggleable="true" :collapsed="true">
           <template #header>
-            <div class="p-text-bold">
-              <i class="fad fa-floppy-disk-circle-arrow-right p-mr-2"></i>
+            <div class="font-bold">
+              <i class="fad fa-floppy-disk-circle-arrow-right mr-2"></i>
               <span>{{ $translate('admin.title.stored.export') }}</span>
             </div>
           </template>
 
-          <div class="p-my-3">
-            <i class="fad fa-circle-info fa-xl p-mr-2" />
+          <div class="my-3">
+            <i class="fad fa-circle-info fa-xl mr-2" />
             <span>
               {{ $translate('admin.title.stored.export.info.text') }}
             </span>
@@ -34,14 +34,14 @@
 
           <DataTable :value="globalExportTemplates">
             <template #empty>
-              <div class="p-col-12 cx p-text-bold">
+              <div class="col-12 cx font-bold">
                 {{ $translate('admin.generic.empty.results') }}
               </div>
             </template>
 
             <Column :header="$translate('admin.generic.label')" headerClass="w-15" bodyClass="w-15">
               <template #body="{ index, data }">
-                <div v-if="templateEditCheck !== index" class="p-text-bold">
+                <div v-if="templateEditCheck !== index" class="font-bold">
                   {{ data.label }}
                 </div>
                 <InputText
@@ -66,16 +66,16 @@
               bodyClass="w-10"
             >
               <template #body="{ index, data }">
-                <div v-if="templateEditCheck !== index" class="p-d-flex p-jc-center">
+                <div v-if="templateEditCheck !== index" class="flex justify-content-center">
                   <Button
                     icon="fas fa-arrow-down"
-                    class="p-button-outlined p-button-sm p-mr-3"
+                    class="p-button-outlined p-button-sm mr-3"
                     :label="$translate('admin.generic.action.use')"
                     @click="doUseTemplate(data.value)"
                   />
                   <Button
                     icon="fad fa-edit"
-                    class="p-button-sm p-mr-3"
+                    class="p-button-sm mr-3"
                     @click="doHandleEditTemplate(index, data.label)"
                     v-tooltip.bottom="$translate('admin.action.edit.label')"
                   />
@@ -86,10 +86,10 @@
                   />
                 </div>
 
-                <div v-else-if="templateEditCheck === index" class="p-d-flex p-jc-center">
+                <div v-else-if="templateEditCheck === index" class="flex justify-content-center">
                   <Button
                     icon="fad fa-save"
-                    class="p-button-sm p-mr-3"
+                    class="p-button-sm mr-3"
                     :label="$translate('admin.generic.action.save')"
                     :disabled="!templateEditValue"
                     @click="doHandleEditTemplate(index)"
@@ -106,31 +106,31 @@
         </Panel>
       </div>
 
-      <div class="p-field p-col-12">
+      <div class="field col-12">
         <Panel :toggleable="true" :collapsed="collapsed">
           <template #header>
-            <div class="p-text-bold">
-              <i class="fad fa-filters p-mr-2"></i>
+            <div class="font-bold">
+              <i class="fad fa-filters mr-2"></i>
               <span>{{ $translate('admin.generic.fields') }}</span>
             </div>
           </template>
           <template #icons>
             <Button
-              class="p-mr-3"
+              class="mr-3"
               :label="$translate('admin.generic.select.all.fields')"
               :icon="checkFilters"
               :disabled="selectKeys.length === keys.length"
               @click="selectAllFilters()"
             />
             <Button
-              class="p-mr-3"
+              class="mr-3"
               icon="fad fa-floppy-disk"
               :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
               @click="doSaveTemplate([...selectKeys])"
               v-tooltip.bottom="$translate('admin.filter.store.template')"
             />
             <Button
-              class="p-button-danger p-mr-3"
+              class="p-button-danger mr-3"
               icon="fad fa-trash"
               :disabled="selectKeys.length === 0"
               @click="doDeleteFilters()"
@@ -146,12 +146,12 @@
             onIcon="fad fa-circle-check"
             offIcon="fad fa-circle-xmark"
             @change="toggleButtonPush(key.label)"
-            class="p-m-1"
+            class="m-1"
             style="width: auto"
           />
         </Panel>
       </div>
-      <div v-if="previewData.length > 0" class="p-field p-col-12">
+      <div v-if="previewData.length > 0" class="field col-12">
         <DataTable
           :value="previewData"
           responsiveLayout="scroll"
@@ -161,8 +161,8 @@
           :key="selectKeys.length"
         >
           <template #header>
-            <div class="p-text-bold p-d-flex p-ai-center">
-              <i class="fad fa-magnifying-glass p-mr-2" />
+            <div class="font-bold flex align-items-center">
+              <i class="fad fa-magnifying-glass mr-2" />
               <span>{{ $translate('admin.generic.preview') }}</span>
             </div>
           </template>
@@ -179,9 +179,9 @@
           </Column>
         </DataTable>
       </div>
-      <div v-if="selectKeys.length === 0" class="p-field p-col-12 p-as-center">
-        <Vue3Lottie :animationData="lottie.common" :height="190" :width="190" />
-        <div class="p-col-12 cx p-text-bold">
+      <div v-if="selectKeys.length === 0" class="field col-12 align-self-center">
+        <OLottie />
+        <div class="col-12 text-center font-bold">
           {{ $translate('admin.generic.no.select.export.column') }}
         </div>
       </div>
@@ -316,10 +316,10 @@ export default {
     },
     doSaveTemplate(template) {
       this.$store.dispatch('saveGlobalExportTemplates', {
-        page: this.currentPageName,
+        page: this.$route.path.replaceAll("/", ""),
         value: template
       })
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.currentPageName)
+      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", ""))
     },
     doUseTemplate(template) {
       this.selectKeys = template
@@ -348,18 +348,18 @@ export default {
       }
 
       this.$store.dispatch('updateGlobalExportTemplates', {
-        page: this.currentPageName,
+        page: this.$route.path.replaceAll("/", ""),
         index,
         value: this.templateEditValue
       })
 
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.currentPageName)
+      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", ""))
       this.templateEditCheck = null
       //this.templateEditValue = "";
     },
     doDeleteTemplate(index) {
-      this.$store.dispatch('deleteGlobalExportTemplates', { page: this.currentPageName, index })
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.currentPageName)
+      this.$store.dispatch('deleteGlobalExportTemplates', { page: this.$route.path.replaceAll("/", ""), index })
+      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", ""))
     },
     toggleButtonPush(key) {
       if (!this.selectKeys.includes(key)) {
@@ -434,6 +434,51 @@ export default {
         case 'XLS':
           return this.handlerTypeExport(key, value)
         case 'JSON':
+          return value
+      }
+    },
+    toast(severity, name, label = undefined, duration = 2700) {
+      let detail
+      if (typeof name === 'string') {
+        detail = this.$translate(`admin.toast.message.${name.toLowerCase()}`, label)
+      } else {
+        // CASE DELL'ERROR CHE PASSA L'ERROR MESSAGE DAL BACKEND
+        if (name.response) {
+          detail = `${name.response.data.code} - ${name.response.data.message}`
+        } else {
+          detail = this.$translate('admin.generic.error')
+        }
+      }
+      this.$toast.add({
+        severity: severity,
+        summary: this.$translate(`admin.toast.${severity}.title`),
+        detail: detail,
+        life: duration
+      })
+    },
+    handlerTypeExport(key, value) {
+      switch (key) {
+        case 'fromDate':
+        case 'dateHistory':
+        case 'dateOpen':
+        case 'lastLogin':
+        case 'birthDay':
+        case 'start':
+        case 'stop':
+        case 'toDate':
+          return this.$filters.asDate(value)
+        // case 'idLicensee': TODO
+        //   return this.$store.getters.getLicenseeDescription(value)
+        // case 'idSkin': TODO
+        //   return this.$store.getters.getSkinDescription(value)
+        case 'status':
+          return this.$translate(`decode.limit.status.${value}`)
+        case 'value':
+          return this.$translate(`decode.self.exclusion.period.${value}`)
+        case 'platformType':
+          return `${value} - ${this.$translate(`decode.platform.type.${value}`)}`
+
+        default:
           return value
       }
     },
@@ -531,11 +576,11 @@ export default {
       utils.book_append_sheet(wb, ws, 'Data')
       writeFileXLSX(wb, 'Customers.xlsx')
       this.toast('success', 'export.completed')
-    }
+    },
   },
   created() {
     this.globalExportTemplates =
-      this.$store.getters.globalExportTemplates(this.currentPageName) || []
+      this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", "")) || []
   }
 }
 </script>
