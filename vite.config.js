@@ -20,10 +20,12 @@ export default defineConfig({
         globals: {
           vue: 'Vue',
           moment: 'moment',
-          primevue: '$primevue'
+          primevue: '$primevue',
         }
       },
-      plugins: [resolveRUP()]
+      plugins: [resolveRUP({
+        moduleDirectories: ['node_modules']
+      })]
     }
   },
   resolve: {

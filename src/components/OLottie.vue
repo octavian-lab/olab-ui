@@ -8,10 +8,10 @@
 </template>
 
 <script>
-import { Vue3Lottie } from 'vue3-lottie'
+import common from '@/assets/lottie/common-search.json'
+
 export default {
   name: 'OLottie',
-  components: { Vue3Lottie },
   props: {
     name: { type: String, default: () => undefined },
     height: { type: [Number, String], default: () => 190 },
@@ -19,24 +19,27 @@ export default {
   },
   data() {
     return {
-      lottie: undefined
-    }
-  },
-  methods: {
-    getDynamicLottie(lottieName) {
-      return require(`@/assets/lottie/${lottieName}.json`)
-    }
-  },
-  created() {
-    const commonLottie = 'common-search'
-    try {
-      this.lottie = this.getDynamicLottie(this.name)
-    } catch (e) {
-      console.info(
-        `OLottie: "${this.name}" => a default lottie was inserted since it was not present in the assets/lottie folder.`
-      )
-      this.lottie = this.getDynamicLottie(commonLottie)
+      lottie: common
     }
   }
+  // methods: { TODO
+  //   async getDynamicLottie(lottieName) {
+  //     return await import(`@/assets/lottie/${lottieName}.json`)
+  //     // return this.$image(`@/assets/lottie/${lottieName}.json`) todo
+  //   }
+  // },
+  // async created() {
+  //   // const commonLottie = 'common-search'
+  //   try {
+  //     this.lottie = await this.getDynamicLottie(this.name)
+  //     console.log(this.lottie, 'try')
+  //   } catch (e) {
+  //     console.info(
+  //       `OLottie: "${this.name}" => a default lottie was inserted since it was not present in the assets/lottie folder.`
+  //     )
+  //     this.lottie = await this.getDynamicLottie(commonLottie)
+  //     console.log(this.lottie, 'catcb')
+  //   }
+  // }
 }
 </script>

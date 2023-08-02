@@ -1,0 +1,18 @@
+<template>
+    <div id="o-fields-container" :class="['p-grid p-formgrid p-fluid', { 'striped': striped }]">
+        <slot />
+    </div>
+    <small v-if="showRequiredText" class="ml-1">
+        {{ $translate("admin.generic.text.required") }}
+    </small>
+</template>
+
+<script>
+export default {
+    name: "OFieldsContainer",
+    props: {
+        striped: { type: Boolean, default: () => true },
+        showRequiredText: { type: Boolean, default: () => true },
+    }
+};
+</script>

@@ -2,7 +2,8 @@
   "name": "@octavianlab/olab-ui",
   "author": "octavianlab",
   "license": "MIT",
-  "version": "0.0.1",
+  "version": "0.0.4",
+  "description": "Octavianlab  ux/ui components",
   "private": false,
   "type": "module",
   "files": [
@@ -25,32 +26,34 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
     "format": "prettier --write src/"
   },
-  "dependencies": {
-    "pinia": "^2.1.3",
-    "primevue": "^3.30.1"
-  },
   "peerDependencies": {
+    "@vueuse/core": "^10.2.1",
+    "moment": "^2.29.4",
+    "primevue": "^3.30.1",
     "vue": "^3.0.0",
     "vue3-lottie": "^3.0.0",
-    "moment": "^2.29.4"
+    "xlsx": "^0.18.5"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^15.1.0",
     "@rushstack/eslint-patch": "^1.2.0",
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
+    "@vueuse/core": "^10.2.1",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
+    "moment": "^2.29.4",
     "pathe": "^1.1.1",
     "prettier": "^2.8.8",
+    "primevue": "^3.30.1",
+    "sass": "^1.64.2",
     "vite": "^4.3.9",
     "vue": "^3.0.0",
     "vue3-lottie": "^3.0.0",
-    "moment": "^2.29.4"
+    "xlsx": "^0.18.5"
   },
-  "description": "This template should help get you started developing with Vue 3 in Vite.",
   "repository": {
     "type": "git",
-    "url": "https://my.octavianlab.com/bitbucket/scm/web/olab-ui.git"
+    "url": "https://github.com/octavian-lab/olab-ui"
   }
 }

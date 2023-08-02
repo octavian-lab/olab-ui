@@ -4,14 +4,16 @@
       v-if="!advanced"
       class="w-full"
       v-model="modelValue"
+      v-bind="$attrs"
+      @show="setMidnight"
       hide-on-date-time-select
-      :showIcon="true"
-      :showTime="true"
+      :showIcon="$attrs.showIcon != null ? $attrs.showIcon : true"
+      :showTime="$attrs.showTime != null ? $attrs.showTime : true"
       :showButtonBar="true"
-      dateFormat="dd/mm/yy"
+      :dateFormat="$attrs.dateFormat ? $attrs.dateFormat : 'dd/mm/yy'"
       icon="fad fa-calendar"
       :touch-u-i="$isMobile"
-      :placeholder="$translate('admin.placeholder.ocalendar.dateformat') + ' dd / mm / yy hh:mm'"
+      placeholder="dd / mm / yy hh:mm"
     />
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
@@ -48,7 +50,7 @@
       <Calendar
         v-if="mode === 'range'"
         v-model="modelValue.date.from"
-        class="animate__animated animate__fadeIn p-mr-2"
+        class="animate__animated animate__fadeIn mr-2"
         showTime
         :placeholder="$translate('admin.generic.from')"
         dateFormat="dd/mm/yy"
@@ -97,7 +99,8 @@ export default {
     from: { type: [Date, Object, String], default: () => null },
     to: { type: [Date, Object, String], default: () => null },
     advanced: { type: Boolean, default: () => true },
-    empty: { type: Boolean, default: () => false }
+    empty: { type: Boolean, default: () => false },
+    filteredOptions: { type: Array, default: () => [] }
   },
   data() {
     return {
@@ -142,7 +145,8 @@ export default {
   },
   computed: {
     extQuery() {
-      return { from: this.from, to: this.to }
+      if (this.advanced) return { from: this.from, to: this.to }
+      return this.$attrs.modelValue
     },
     mode() {
       if (this.modelValue) {
@@ -159,6 +163,9 @@ export default {
     }
   },
   methods: {
+    setMidnight() {
+      if (this.modelValue == null) this.modelValue = getMidNight(moment()).toDate()
+    },
     getCalendarOption(value) {
       if (value) {
         if (typeof value === 'object') {
@@ -303,7 +310,14 @@ export default {
     }
   },
   created() {
-    if (this.advanced) this.selects.calendarOptions = this.generateOptions()
+    if (this.advanced) {
+      this.selects.calendarOptions = this.generateOptions()
+      if (this.filteredOptions.length > 0) {
+        this.selects.calendarOptions = this.selects.calendarOptions.filter((el) =>
+          this.filteredOptions.includes(el.value)
+        )
+      }
+    }
   },
   mounted() {
     if (this.advanced) {

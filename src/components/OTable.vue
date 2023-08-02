@@ -20,17 +20,18 @@
     sortMode="multiple"
     v-model:filters="filters"
     :key="refResponsiveLayout"
+    :editMode='$attrs.editMode'
   >
     <template #header v-if="hasHeader">
       <div
         :class="[
           'header-container',
-          name || icon || $slots['table-header'] ? 'p-jc-between' : 'p-jc-end'
+          name || icon || $slots['table-header'] ? 'justify-content-between' : 'justify-content-end'
         ]"
       >
         <slot name="table-header" />
         <div class="table-title" v-if="name || icon">
-          <i v-if="icon" :class="`fad ${icon} p-mr-3 fa-lg`"></i>
+          <i v-if="icon" :class="`fad ${icon} mr-3 fa-lg`"></i>
           <span v-if="name">
             {{ $translate(`admin.table.title.${name.toLowerCase()}`, label) }}
           </span>
@@ -39,30 +40,30 @@
           <slot name="header-buttons" />
           <Button
             v-if="exportable"
-            class="p-d-none p-d-md-flex p-button-outlined p-ml-2"
+            class="hidden md:inline-flex p-button-outlined ml-2"
             icon="fad fa-external-link"
             :label="$translate('admin.generic.action.export')"
             @click="doExport($event)"
           />
           <Button
             v-if="!$isDesktop && showHandleResponsiveLayout"
-            class="p-ml-2"
+            class="ml-2"
+            :label="$translate('admin.generic.view')"
             :icon="`fad ${handlerResponsiveLayout('icon', refResponsiveLayout)}`"
-            v-tooltip.top="handlerResponsiveLayout('label', refResponsiveLayout)"
             @click="handlerResponsiveLayout('handle', refResponsiveLayout)"
           />
         </div>
       </div>
     </template>
     <template #loading>
-      <div class="p-text-bold cx">
+      <div class="font-bold text-center">
         {{ $translate('admin.generic.loading') }}
       </div>
     </template>
     <template #empty>
-      <div class="p-grid cx">
-        <!--        <OLottie :name="lottieName" />-->
-        <div class="p-col-12 cx p-text-bold">
+      <div class="grid text-center">
+        <OLottie :name="lottieName" />
+        <div class="col-12 text-center font-bold">
           {{ $translate('admin.generic.empty.results') }}
         </div>
       </div>
@@ -72,7 +73,7 @@
       headerStyle="width: 3rem;"
       v-if="selectionMode"
     ></Column>
-    <Column :expander="expander" v-if="expander" class="w-3 cx" />
+    <Column :expander="expander" v-if="expander" class="w-3 text-center" />
     <template #expansion="el">
       <slot name="table-expansion" :data="el.data" :index="el.index" />
     </template>
@@ -80,7 +81,7 @@
       <slot name="column-group" />
     </ColumnGroup>
     <slot name="content" />
-    <DialogGlobalExport />
+    <ODialogExport :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
   </DataTable>
 </template>
 <script>
@@ -88,6 +89,10 @@ export default {
   name: 'OTable',
   props: {
     // PROPS OLAB
+      exportMode: {
+          type: String,
+          default: () => "all",
+      },
     exportable: {
       type: Boolean,
       default: () => false
@@ -192,7 +197,10 @@ export default {
     doExport() {
       const processedData = this.$refs.dt.processedData
       if (!this.$modal.id) {
-        this.doPrepareExport(processedData, this.defaultExportKeys)
+        this.$modal.open('ODialogExport', {
+          processed: processedData,
+          defaultExportKeys: this.defaultExportKeys
+        })
       }
     },
     handlerResponsiveLayout(type, value) {
@@ -201,35 +209,31 @@ export default {
           case 'handle':
             this.refResponsiveLayout = 'scroll'
             this.$store.dispatch('updateResponsiveTables', {
-              page: this.currentPageName,
+              page: this.$route.path.replaceAll("/", ""),
               value: 'scroll'
             })
             break
           case 'icon':
             return 'fa-chart-bar'
-          case 'label':
-            return 'Stack'
         }
       } else if (value === 'scroll') {
         switch (type) {
           case 'handle':
             this.refResponsiveLayout = 'stack'
             this.$store.dispatch('updateResponsiveTables', {
-              page: this.currentPageName,
+              page: this.$route.path.replaceAll("/", ""),
               value: 'stack'
             })
             break
           case 'icon':
             return 'fa-arrows-left-right-to-line'
-          case 'label':
-            return 'Scroll'
         }
       }
     }
   },
   mounted() {
     if (!this.$isDesktop && this.showHandleResponsiveLayout) {
-      const responsiveTable = this.$store.getters.responsiveTables(this.currentPageName)
+      const responsiveTable = this.$store.getters.responsiveTables(this.$route.path.replaceAll("/", ""))
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable
       }
