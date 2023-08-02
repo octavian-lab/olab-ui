@@ -9,14 +9,16 @@
     :breakpoints="breakpoints"
   >
     <template #header>
-      <div class="dialog-title">
-        <i :class="['mr-3', icon]" />
-        <span>{{ generateTitle() }}</span>
-      </div>
+        <slot name="header">
+            <div class="dialog-title">
+                <i :class="['mr-3', icon]" />
+                <span>{{ generateTitle() }}</span>
+            </div>
+        </slot>
     </template>
-    <div class="grid formgrid p-fluid">
-      <slot />
-    </div>
+      <OFieldsContainer :showRequiredText="false" :striped="false">
+          <slot />
+      </OFieldsContainer>
     <template #footer v-if="$slots.footer || $slots['footer-top']">
       <slot name="footer-top" />
       <div
@@ -27,7 +29,7 @@
       >
         <div class="footer-left-content">
           <Tag v-if="hasIdentifier" class="flex justify-content-start w-fit">
-            {{ getCloneOrEditLabel() }}:
+            {{ getCustomLabel() }}:
             <span class="ml-2"> #{{ modalIdentifier }}</span>
           </Tag>
           <small class="ml-1" v-if="showRequiredText">
@@ -89,13 +91,23 @@ export default {
     }
   },
   methods: {
-    getCloneOrEditLabel() {
-      let ret = this.$translate('admin.dialog.editing.id')
-      if (this.$modal.mode === 'clone') {
-        ret = this.$translate('admin.dialog.cloning.field')
-      }
-      return ret
-    },
+      handleClose() {
+          this.$modal.close();
+          this.$emit('close')
+      },
+      getCustomLabel() {
+          // Edit label
+          let ret = this.$translate("admin.dialog.editing.id");
+          // Clone label
+          if (this.$modal.mode === "clone") {
+              ret = this.$translate("admin.dialog.cloning.field");
+          }
+          // Custom label
+          if (this.$modal.mode != null && this.$modal.mode !== "clone") {
+              ret = this.$translate(`admin.dialog.${this.$modal.mode}.field`);
+          }
+          return ret;
+      },
     generateTitle() {
       let ret = `admin.dialog.title.${this.name.toLowerCase()}`
       if (this.$modal.mode != null) ret += `.${this.$modal.mode}`

@@ -20,6 +20,7 @@
     sortMode="multiple"
     v-model:filters="filters"
     :key="refResponsiveLayout"
+    :editMode='$attrs.editMode'
   >
     <template #header v-if="hasHeader">
       <div
@@ -47,8 +48,8 @@
           <Button
             v-if="!$isDesktop && showHandleResponsiveLayout"
             class="ml-2"
+            :label="$translate('admin.generic.view')"
             :icon="`fad ${handlerResponsiveLayout('icon', refResponsiveLayout)}`"
-            v-tooltip.top="handlerResponsiveLayout('label', refResponsiveLayout)"
             @click="handlerResponsiveLayout('handle', refResponsiveLayout)"
           />
         </div>
@@ -80,7 +81,7 @@
       <slot name="column-group" />
     </ColumnGroup>
     <slot name="content" />
-    <ODialogExport />
+    <ODialogExport :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
   </DataTable>
 </template>
 <script>
@@ -88,6 +89,10 @@ export default {
   name: 'OTable',
   props: {
     // PROPS OLAB
+      exportMode: {
+          type: String,
+          default: () => "all",
+      },
     exportable: {
       type: Boolean,
       default: () => false
@@ -210,8 +215,6 @@ export default {
             break
           case 'icon':
             return 'fa-chart-bar'
-          case 'label':
-            return 'Stack'
         }
       } else if (value === 'scroll') {
         switch (type) {
@@ -224,8 +227,6 @@ export default {
             break
           case 'icon':
             return 'fa-arrows-left-right-to-line'
-          case 'label':
-            return 'Scroll'
         }
       }
     }

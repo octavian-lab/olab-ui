@@ -26,9 +26,15 @@
           </template>
 
           <div class="my-3">
+            <i class="fad fa-triangle-exclamation text-warning fa-xl mr-2" />
+            <span class="font-bold">
+              {{ $translate('admin.global.export.stored.export.warning.text') }}
+            </span>
+          </div>
+          <div class="my-3">
             <i class="fad fa-circle-info fa-xl mr-2" />
             <span>
-              {{ $translate('admin.title.stored.export.info.text') }}
+              {{ $translate('admin.global.export.stored.export.info.text') }}
             </span>
           </div>
 
@@ -107,7 +113,7 @@
       </div>
 
       <div class="field col-12">
-        <Panel :toggleable="true" :collapsed="collapsed">
+        <Panel :toggleable="true" v-model:collapsed="collapsed">
           <template #header>
             <div class="font-bold">
               <i class="fad fa-filters mr-2"></i>
@@ -189,18 +195,21 @@
 
     <template #footer>
       <Button
+        v-if="exportMode === 'all' || exportMode === 'json'"
         icon="fad fa-brackets-curly"
         :label="$translate('admin.generic.export.json')"
         :disabled="disabled"
         @click="showPrevieworExport('JSON')"
       />
       <Button
+        v-if="exportMode === 'all' || exportMode === 'csv'"
         icon="fad fa-file-csv"
         :label="$translate('admin.generic.export.csv')"
         :disabled="disabled"
         @click="showPrevieworExport('CSV')"
       />
       <Button
+        v-if="exportMode === 'all' || exportMode === 'xls'"
         icon="fad fa-file-spreadsheet"
         :label="$translate('admin.generic.export.xls')"
         :disabled="disabled"
@@ -215,6 +224,10 @@ import { utils, writeFileXLSX } from 'xlsx'
 
 export default {
   name: 'ODialogExport',
+  props: {
+    exportFilename: { type: String, default: () => 'customers' },
+    exportMode: { type: String, default: () => 'all' }
+  },
   data() {
     return {
       displayedRows: 10,
@@ -316,12 +329,15 @@ export default {
     },
     doSaveTemplate(template) {
       this.$store.dispatch('saveGlobalExportTemplates', {
-        page: this.$route.path.replaceAll("/", ""),
+        page: this.$route.path.replaceAll('/', ''),
         value: template
       })
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", ""))
+      this.globalExportTemplates = this.$store.getters.globalExportTemplates(
+        this.$route.path.replaceAll('/', '')
+      )
     },
     doUseTemplate(template) {
+      this.collapsed = false
       this.selectKeys = template
       this.showPrevieworExport('preview')
 
@@ -348,18 +364,25 @@ export default {
       }
 
       this.$store.dispatch('updateGlobalExportTemplates', {
-        page: this.$route.path.replaceAll("/", ""),
+        page: this.$route.path.replaceAll('/', ''),
         index,
         value: this.templateEditValue
       })
 
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", ""))
+      this.globalExportTemplates = this.$store.getters.globalExportTemplates(
+        this.$route.path.replaceAll('/', '')
+      )
       this.templateEditCheck = null
       //this.templateEditValue = "";
     },
     doDeleteTemplate(index) {
-      this.$store.dispatch('deleteGlobalExportTemplates', { page: this.$route.path.replaceAll("/", ""), index })
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", ""))
+      this.$store.dispatch('deleteGlobalExportTemplates', {
+        page: this.$route.path.replaceAll('/', ''),
+        index
+      })
+      this.globalExportTemplates = this.$store.getters.globalExportTemplates(
+        this.$route.path.replaceAll('/', '')
+      )
     },
     toggleButtonPush(key) {
       if (!this.selectKeys.includes(key)) {
@@ -467,17 +490,16 @@ export default {
         case 'stop':
         case 'toDate':
           return this.$filters.asDate(value)
-        // case 'idLicensee': TODO
-        //   return this.$store.getters.getLicenseeDescription(value)
-        // case 'idSkin': TODO
-        //   return this.$store.getters.getSkinDescription(value)
+        case 'idLicensee':
+          return this.$store.getters.getLicenseeDescription(value)
+        case 'idSkin':
+          return this.$store.getters.getSkinDescription(value)
         case 'status':
           return this.$translate(`decode.limit.status.${value}`)
         case 'value':
           return this.$translate(`decode.self.exclusion.period.${value}`)
-        case 'platformType':
-          return `${value} - ${this.$translate(`decode.platform.type.${value}`)}`
-
+        case 'amount':
+          return this.$filters.asAmount(value)
         default:
           return value
       }
@@ -529,7 +551,7 @@ export default {
       const url = window.URL || window.webkitURL
       const link = url.createObjectURL(blob)
       const a = document.createElement('a')
-      a.download = 'Customers.json'
+      a.download = this.exportFilename + '.json'
       a.href = link
       document.body.appendChild(a)
       a.click()
@@ -553,7 +575,7 @@ export default {
       const url = window.URL || window.webkitURL
       const link = url.createObjectURL(blob)
       const a = document.createElement('a')
-      a.download = 'Customers.csv'
+      a.download = this.exportFilename + '.csv'
       a.href = link
       document.body.appendChild(a)
       a.click()
@@ -574,13 +596,13 @@ export default {
       const ws = utils.json_to_sheet(array)
       const wb = utils.book_new()
       utils.book_append_sheet(wb, ws, 'Data')
-      writeFileXLSX(wb, 'Customers.xlsx')
+      writeFileXLSX(wb, this.exportFilename + '.xlsx')
       this.toast('success', 'export.completed')
-    },
+    }
   },
   created() {
     this.globalExportTemplates =
-      this.$store.getters.globalExportTemplates(this.$route.path.replaceAll("/", "")) || []
+      this.$store.getters.globalExportTemplates(this.$route.path.replaceAll('/', '')) || []
   }
 }
 </script>
