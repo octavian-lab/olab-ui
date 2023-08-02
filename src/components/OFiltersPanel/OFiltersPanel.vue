@@ -47,7 +47,7 @@
             <div :class="filtersContainerClass()">
                 <slot name="filters" />
             </div>
-            <div class="filters-join col-12 p-md-5" v-if="showJoins()">
+            <div class="filters-join col-12 md:col-5" v-if="showJoins()">
                 <slot name="filters-join" />
             </div>
             <div class="col-12 overflow-hidden flex justify-content-center p-0 my-2 text-center h-fixed">
@@ -214,7 +214,7 @@ export default {
             const column = typeof this.col === "string" ? +this.col : this.col;
             return [
                 "col-12",
-                { "joins-divided p-md-7": this.showJoins() },
+                { "joins-divided md:col-7": this.showJoins() },
                 { "divided-columns": column > 1 },
             ];
         },
@@ -242,6 +242,35 @@ export default {
 <style lang="scss">
 $borderColor: rgba(149, 148, 148, 0.19);
 #filters-panel.p-panel {
+    // FASTFILTER BOX
+    .fastfilter-box,
+    .dynamic-fastfilter-container {
+        margin-right: 1rem;
+        display: flex;
+        justify-content: space-evenly;
+        align-content: center;
+        @media only screen and (max-width: 1200px) {
+            display: none;
+        }
+        .filter-field,
+        .filter-field > * {
+            width: 16rem !important;
+            margin-left: 1rem;
+        }
+        .filter.fastfilter {
+            width: 16rem;
+            padding: 0;
+        }
+        .p-dropdown,
+        .p-inputtext {
+            width: 16rem;
+            height: 100%;
+        }
+        .p-button:not(.p-datepicker-trigger) {
+            margin: 0 1rem;
+            padding: 0 1rem;
+        }
+    }
     // STYLE CON DIVIDED COLUMNS
     .divided-columns {
         display: flex;
@@ -289,7 +318,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
     .filter.fastfilter {
         .filter-field {
             width: 90%;
-            :first-child:not(.p-inputgroup .p-calendar) {
+            :first-child:not(.p-inputgroup, .p-calendar .p-chips-token) {
                 width: 100%;
             }
         }
@@ -304,7 +333,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
             @media screen and (max-width: 1200px) {
                 width: 57%;
             }
-            :first-child:not(.p-inputgroup .p-calendar) {
+            :first-child:not(.p-inputgroup, .p-calendar .p-chips-token) {
                 width: 100%;
             }
             :first-child#o-calendar .p-calendar {

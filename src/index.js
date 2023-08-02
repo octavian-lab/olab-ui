@@ -14,6 +14,7 @@ import asPercentage from '@/filters/asDate.js'
 
 // COMPONENTS IMPORT
 import OField from './components/OField.vue'
+import OFieldsContainer from "@/components/OFieldsContainer.vue";
 import OCard from './components/OCard.vue'
 import OCalendar from './components/OCalendar.vue'
 import ODialog from './components/ODialog.vue'
@@ -24,8 +25,6 @@ import OLottie from './components/OLottie.vue'
 import OTable from './components/OTable.vue'
 import OFilter from './components/OFiltersPanel/OFilter.vue'
 import OFiltersPanel from './components/OFiltersPanel/OFiltersPanel.vue'
-// import OFiltersPanelBtnSearch from './components/OFiltersPanel/OFiltersPanelBtnSearch.vue'
-// import ODialogStoredSearches from './components/OFiltersPanel/ODialogStoredSearches.vue'
 export default {
   install: (app, options = {}) => {
     if (!options.fxTranslate) {
@@ -57,9 +56,8 @@ export {
   OTable,
   ODialogExport,
   OField,
+  OFieldsContainer,
   OLottie,
   OFilter,
   OFiltersPanel,
-  // ODialogStoredSearches,
-  // OFiltersPanelBtnSearch
 }

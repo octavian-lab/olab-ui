@@ -1,16 +1,16 @@
 <template>
   <div
-    :class="['field', { 'inline-field': inline }, generateResponsiveColumns()]"
-    :data-multilanguage-key="setTranslateKeyAttribute('admin.dialog.field.', name)"
+    :class="['field o-field', { 'inline-field mb-0': inline }, generateResponsiveColumns()]"
+    :data-multilanguage-key="setTranslateKeyAttribute('admin.field.', name)"
   >
-    <label :for="name" class="font-bold" v-tooltip="generateTooltip()">
+    <label :for="name" :class="['o-field__label', { 'mb-0': inline }]" v-tooltip="generateTooltip()">
       <i class="fad fa-info-circle mr-2" v-if="tooltip" />
       <span :class="{ 'text-disabled': disabled }">
         {{ $translate(`admin.field.${name}`, label) }}
       </span>
       <span v-if="required" class="ml-1">*</span>
     </label>
-    <div :id="name">
+    <div :id="name" :class="[{ 'o-field__value': inline }]">
       <slot />
     </div>
   </div>
@@ -50,7 +50,7 @@ export default {
     generateTooltip() {
       if (this.tooltip === true) {
         return {
-          value: this.$translate(`admin.filter.tooltip.${this.name}`)
+          value: this.$translate(`admin.field.tooltip.${this.name}`)
         }
       }
     }
