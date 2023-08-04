@@ -31,9 +31,13 @@ export default {
   install: (app, options = {}) => {
     if (!options.fxTranslate) {
       console.warn('Please pass to the options a translate function: fxTranslate')
+      return
     }
     if (!options.site) {
       console.warn('Please pass to the options a site name: site')
+    }
+    if (!localStorage.getItem('site')) {
+      console.warn('Script with site name is missing, info here: https://wiki.octavianlab.com/it/devs/backoffice-agp')
     }
 
     app.use(store())
