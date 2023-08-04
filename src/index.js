@@ -1,9 +1,10 @@
+// STORE IMPORT
+import { store } from '@/store/index.js'
+
 // GLOBAL PLUGINS IMPORT
 import loadingplugin from '@/plugins/loadingplugin.js'
 import modalplugin from '@/plugins/modalplugin.js'
-
-// GLOBAL UTIL IMPORTS
-import { isMobile, isTablet, isDesktop, useImage } from '@/util/functions.js'
+import functionsplugin from '@/plugins/functionsplugin.js'
 
 // FILTERS IMPORT
 import asDate from '@/filters/asDate.js'
@@ -25,18 +26,26 @@ import OLottie from './components/OLottie.vue'
 import OTable from './components/OTable.vue'
 import OFilter from './components/OFiltersPanel/OFilter.vue'
 import OFiltersPanel from './components/OFiltersPanel/OFiltersPanel.vue'
+
 export default {
   install: (app, options = {}) => {
     if (!options.fxTranslate) {
-      console.warn('Please pass to the options a translate function')
+      console.warn('Please pass to the options a translate function: fxTranslate')
+      return
     }
+    if (!options.site) {
+      console.warn('Please pass to the options a site name: site')
+    }
+    if (!localStorage.getItem('site')) {
+      console.warn('Script with site name is missing, info here: https://wiki.octavianlab.com/it/devs/backoffice-agp')
+    }
+
+    app.use(store())
+    app.use(functionsplugin, { site: options.site, fxTranslate: options.fxTranslate })
     app.use(loadingplugin)
     app.use(modalplugin)
-    app.config.globalProperties.$image = useImage
+
     app.config.globalProperties.$translate = options.fxTranslate
-    app.config.globalProperties.$isMobile = isMobile()
-    app.config.globalProperties.$isTablet = isTablet()
-    app.config.globalProperties.$isDesktop = isDesktop()
     app.config.globalProperties.$filters = {
       asDate,
       asAmount,

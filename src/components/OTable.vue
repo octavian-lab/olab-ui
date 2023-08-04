@@ -46,7 +46,7 @@
             @click="doExport($event)"
           />
           <Button
-            v-if="!$isDesktop && showHandleResponsiveLayout"
+            v-if="!$functions.isDesktop() && showHandleResponsiveLayout"
             class="ml-2"
             :label="$translate('admin.generic.view')"
             :icon="`fad ${handlerResponsiveLayout('icon', refResponsiveLayout)}`"
@@ -85,6 +85,8 @@
   </DataTable>
 </template>
 <script>
+import { useSettingsStore } from "@/store/settings.js";
+
 export default {
   name: 'OTable',
   props: {
@@ -160,6 +162,7 @@ export default {
   },
   data() {
     return {
+      useSettingsStore: useSettingsStore(),
       refResponsiveLayout: this.responsiveLayout,
       table: { resultsLimit: 20 },
       expandedRows: [],
@@ -178,7 +181,7 @@ export default {
         this.exportable ||
         !!this.$slots['table-header'] ||
         !!this.$slots['header-buttons'] ||
-        (this.showHandleResponsiveLayout && !this.$isDesktop)
+        (this.showHandleResponsiveLayout && !this.$functions.isDesktop())
       )
     }
   },
@@ -208,7 +211,7 @@ export default {
         switch (type) {
           case 'handle':
             this.refResponsiveLayout = 'scroll'
-            this.$store.dispatch('updateResponsiveTables', {
+            this.useSettingsStore.updateResponsiveTables({
               page: this.$route.path.replaceAll("/", ""),
               value: 'scroll'
             })
@@ -220,7 +223,7 @@ export default {
         switch (type) {
           case 'handle':
             this.refResponsiveLayout = 'stack'
-            this.$store.dispatch('updateResponsiveTables', {
+            this.useSettingsStore.updateResponsiveTables({
               page: this.$route.path.replaceAll("/", ""),
               value: 'stack'
             })
@@ -232,8 +235,8 @@ export default {
     }
   },
   mounted() {
-    if (!this.$isDesktop && this.showHandleResponsiveLayout) {
-      const responsiveTable = this.$store.getters.responsiveTables(this.$route.path.replaceAll("/", ""))
+    if (!this.$functions.isDesktop() && this.showHandleResponsiveLayout) {
+      const responsiveTable = this.useSettingsStore.getResponsiveTables(this.$route.path.replaceAll("/", ""))
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable
       }

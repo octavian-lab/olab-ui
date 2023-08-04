@@ -140,12 +140,14 @@
 </template>
 
 <script>
+import { useQueryStore } from "@/store/query.js";
 export default {
     name: "ODialogStoredSearches",
     emits: ["onUseSavedQuery"],
     inject: ["query"],
     data() {
         return {
+            useQueryStore: useQueryStore(),
             savedSearch: {
                 selected: null,
                 newLabel: "",
@@ -159,7 +161,7 @@ export default {
     },
     methods: {
         doHandleDelete(data) {
-            this.$store.dispatch("deleteQueryPerPage", { page: this.$route.path.replaceAll("/", ""), id: data.id });
+            this.useQueryStore.deleteQueryPerPage({ page: this.$route.path.replaceAll("/", ""), id: data.id });
             this.$toast.add({
                 severity: "success",
                 summary: this.$translate("admin.generic.operation.completed"),
@@ -182,14 +184,14 @@ export default {
                 });
                 return;
             }
-            this.$store.dispatch("saveQueryPerPage", {
+            this.useQueryStore.saveQueryPerPage({
                 page: this.$route.path.replaceAll("/", ""),
                 value: this.query,
             });
         },
         doHandleEdit(data, saveEdit) {
             if (saveEdit) {
-                this.$store.dispatch("updateQuerySearchName", {
+                this.useQueryStore.updateQuerySearchName({
                     page: this.$route.path.replaceAll("/", ""),
                     id: this.savedSearch.selected,
                     newLabel: data.label,

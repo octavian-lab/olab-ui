@@ -65,6 +65,8 @@
 import { computed } from "vue";
 import ODialogStoredSearches from "./ODialogStoredSearches.vue";
 import OFiltersPanelBtnSearch from "./OFiltersPanelBtnSearch.vue";
+import { useSettingsStore } from "@/store/settings.js";
+import { useQueryStore } from "@/store/query.js";
 export default {
     name: "OFiltersPanel",
     components: { ODialogStoredSearches, OFiltersPanelBtnSearch },
@@ -85,6 +87,8 @@ export default {
     },
     data() {
         return {
+            useSettingsStore: useSettingsStore(),
+            useQueryStore: useQueryStore(),
             requiredFilters: [],
             page: this.$route.path.replaceAll("/", ""),
             collapsed: false,
@@ -114,7 +118,7 @@ export default {
         ctxMenuItems() {
             let action = {};
             if (
-                !this.$store.getters.fastfilters[this.$route.path.replaceAll("/", "")]?.includes(
+                !this.useSettingsStore.getFastfilters[this.$route.path.replaceAll("/", "")]?.includes(
                     this.teleportFilter.name
                 )
             ) {
@@ -129,7 +133,7 @@ export default {
                     ),
                     icon: `fad ${action.icon}`,
                     command: () => {
-                        this.$store.dispatch("updateFastfilters", {
+                        this.useSettingsStore.updateFastfilters({
                             page: this.$route.path.replaceAll("/", ""),
                             value: this.teleportFilter.name,
                         });
@@ -148,7 +152,7 @@ export default {
             ];
         },
         showFastFilters() {
-            return this.$store.getters.fastfilters[this.$route.path.replaceAll("/", "")]?.length > 0;
+            return this.useSettingsStore.getFastfilters[this.$route.path.replaceAll("/", "")]?.length > 0;
         },
         checkFilters() {
             let icon;
@@ -178,7 +182,7 @@ export default {
         handleOpenDialog() {
             this.$modal.open("ODialogStoredSearches", {
                 title: this.$route.path.replaceAll("/", ""),
-                list: computed(() => this.$store.getters.getQueryPerPage(this.$route.path.replaceAll("/", ""))),
+                list: computed(() => this.useQueryStore.getQueryPerPage(this.$route.path.replaceAll("/", ""))),
             });
         },
         doReuseQuery(savedQuery) {
@@ -219,14 +223,14 @@ export default {
             ];
         },
         onRememberUserChoice(e) {
-            this.$store.dispatch("updateStoredPanels", {
+            this.useSettingsStore.updateStoredPanels({
                 page: this.$route.path.replaceAll("/", ""),
                 value: e.value,
             });
         },
     },
     created() {
-        this.collapsed = this.$store.getters.storedPanelByName(this.$route.path.replaceAll("/", ""));
+        this.collapsed = this.useSettingsStore.getStoredPanelByName(this.$route.path.replaceAll("/", ""));
         if (this.query == null) {
             console.error(
                 "-- ATTENTION -- -> You have to provide Query from the parent for the component to work properly"

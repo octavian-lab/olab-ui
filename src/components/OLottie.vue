@@ -25,7 +25,7 @@ export default {
   // methods: { TODO
   //   async getDynamicLottie(lottieName) {
   //     return await import(`@/assets/lottie/${lottieName}.json`)
-  //     // return this.$image(`@/assets/lottie/${lottieName}.json`) todo
+  //     // return this.$image(`@/assets/lottie/${lottieName}.json`) todo non è più $image
   //   }
   // },
   // async created() {
