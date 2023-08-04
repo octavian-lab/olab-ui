@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useSettingsStore = defineStore(`olab-ui-${localStorage.getItem('site')}:settings`, {
+export const useSettingsStore = defineStore('settings', {
     state: () => ({
         panels: {},
         fastfilters: {},

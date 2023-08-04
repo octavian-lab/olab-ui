@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useQueryStore = defineStore(`olab-ui-${localStorage.getItem('site')}:query`, {
+export const useQueryStore = defineStore('query', {
     state: () => ({
         saved: {}
     }),
