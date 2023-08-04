@@ -30,6 +30,7 @@
 </template>
 
 <script>
+import { useSettingsStore } from "@/store/settings.js";
 export default {
   name: 'OFilter',
   props: {
@@ -41,6 +42,11 @@ export default {
     required: { type: Boolean, default: () => false }
   },
   inject: ['doToggleCtxMenu', 'teleportFilter', 'collapsed'],
+  data() {
+    return {
+      useSettingsStore: useSettingsStore(),
+    }
+  },
   watch: {
     collapsed: {
       immediate: true,
@@ -55,7 +61,7 @@ export default {
   computed: {
     teleportDisabled() {
       if (!this.collapsed) return true
-      return !this.$store.getters.fastfilters[this.$route.path.replaceAll('/', '')]?.includes(
+      return !this.useSettingsStore.getFastfilters[this.$route.path.replaceAll('/', '')]?.includes(
         this.name
       )
     },
@@ -92,7 +98,7 @@ export default {
       const container = document.querySelector('.dynamic-fastfilter-container')
       for (let el of Array.from(container.children)) {
         el.children[0].classList.add('placeholder-generated')
-        el.children[0].placeholder = this.$store.getters.translate(
+        el.children[0].placeholder = this.$translate(
           `admin.fastfilter.placeholder.${el.attributes['data-name'].value}`
         )
       }

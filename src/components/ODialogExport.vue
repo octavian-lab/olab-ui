@@ -221,6 +221,7 @@
 <script>
 import common from '@/assets/lottie/common-search.json'
 import { utils, writeFileXLSX } from 'xlsx'
+import { useSettingsStore } from "@/store/settings.js";
 
 export default {
   name: 'ODialogExport',
@@ -230,6 +231,7 @@ export default {
   },
   data() {
     return {
+      useSettingsStore: useSettingsStore(),
       displayedRows: 10,
       selectKeys: [],
       buttonSwitch: {},
@@ -328,11 +330,11 @@ export default {
       this.collapsed = true
     },
     doSaveTemplate(template) {
-      this.$store.dispatch('saveGlobalExportTemplates', {
+      this.useSettingsStore.saveGlobalExportTemplates({
         page: this.$route.path.replaceAll('/', ''),
         value: template
       })
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(
+      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
         this.$route.path.replaceAll('/', '')
       )
     },
@@ -363,24 +365,24 @@ export default {
         return
       }
 
-      this.$store.dispatch('updateGlobalExportTemplates', {
+      this.useSettingsStore.updateGlobalExportTemplates({
         page: this.$route.path.replaceAll('/', ''),
         index,
         value: this.templateEditValue
       })
 
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(
+      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
         this.$route.path.replaceAll('/', '')
       )
       this.templateEditCheck = null
       //this.templateEditValue = "";
     },
     doDeleteTemplate(index) {
-      this.$store.dispatch('deleteGlobalExportTemplates', {
+      this.useSettingsStore.deleteGlobalExportTemplates({
         page: this.$route.path.replaceAll('/', ''),
         index
       })
-      this.globalExportTemplates = this.$store.getters.globalExportTemplates(
+      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
         this.$route.path.replaceAll('/', '')
       )
     },
@@ -602,7 +604,7 @@ export default {
   },
   created() {
     this.globalExportTemplates =
-      this.$store.getters.globalExportTemplates(this.$route.path.replaceAll('/', '')) || []
+      this.useSettingsStore.getGlobalExportTemplates(this.$route.path.replaceAll('/', '')) || []
   }
 }
 </script>

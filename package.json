@@ -40,6 +40,8 @@
     "@vitejs/plugin-vue": "^4.2.3",
     "@vue/eslint-config-prettier": "^7.1.0",
     "@vueuse/core": "^10.2.1",
+    "pinia": "^2.1.6",
+    "pinia-plugin-persist": "^1.0.0",
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
     "moment": "^2.29.4",
