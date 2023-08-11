@@ -7,15 +7,15 @@ import modalplugin from '@/plugins/modalplugin.js'
 import functionsplugin from '@/plugins/functionsplugin.js'
 
 // FILTERS IMPORT
-import asDate from '@/filters/asDate.js'
-import asAmount from '@/filters/asDate.js'
-import toAmount from '@/filters/asDate.js'
-import asHHmm from '@/filters/asDate.js'
-import asPercentage from '@/filters/asDate.js'
+import asDate from './filters/asDate.js'
+import asAmount from './filters/asDate.js'
+import toAmount from './filters/asDate.js'
+import asHHmm from './filters/asDate.js'
+import asPercentage from './filters/asDate.js'
 
 // COMPONENTS IMPORT
 import OField from './components/OField.vue'
-import OFieldsContainer from "@/components/OFieldsContainer.vue";
+import OFieldsContainer from "./components/OFieldsContainer.vue";
 import OCard from './components/OCard.vue'
 import OCalendar from './components/OCalendar.vue'
 import ODialog from './components/ODialog.vue'

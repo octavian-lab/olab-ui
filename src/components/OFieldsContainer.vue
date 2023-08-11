@@ -1,5 +1,5 @@
 <template>
-    <div id="o-fields-container" :class="['p-grid p-formgrid p-fluid', { 'striped': striped }]">
+    <div id="o-fields-container" :class="['grid formgrid fluid', { 'striped': striped }]">
         <slot />
     </div>
     <small v-if="showRequiredText" class="ml-1">
