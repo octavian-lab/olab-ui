@@ -28,7 +28,7 @@
         </template>
         <template #icons>
             <Button
-                v-if="$store.getters.isAdminRoot"
+                v-if="showSaveQuery && $store.getters.isAdminRoot"
                 class="mr-2"
                 v-tooltip.left="{ value: $translate('admin.filter.memorize.search') }"
                 icon="fad fa-floppy-disk fa-lg"
@@ -58,7 +58,7 @@
             </div>
         </div>
         <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
-        <ODialogStoredSearches v-if="$store.getters.isAdminRoot" @onUseSavedQuery="doReuseQuery" />
+        <ODialogStoredSearches v-if="showSaveQuery && $store.getters.isAdminRoot" @onUseSavedQuery="doReuseQuery" />
     </Panel>
 </template>
 <script>
@@ -73,6 +73,7 @@ export default {
     props: {
         btnDisabled: { type: Boolean, default: () => false },
         col: { type: [Number, String], default: () => 1 },
+		showSaveQuery: { type: Boolean, default: () => true },
         panelClass: String,
     },
     inject: {
