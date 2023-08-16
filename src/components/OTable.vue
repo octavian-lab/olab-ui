@@ -46,7 +46,7 @@
             @click="doExport($event)"
           />
           <Button
-            v-if="!$functions.isDesktop() && showHandleResponsiveLayout"
+            v-if="!isDesktop && showHandleResponsiveLayout"
             class="ml-2"
             :label="$translate('admin.generic.view')"
             :icon="`fad ${handlerResponsiveLayout('icon', refResponsiveLayout)}`"
@@ -181,7 +181,7 @@ export default {
         this.exportable ||
         !!this.$slots['table-header'] ||
         !!this.$slots['header-buttons'] ||
-        (this.showHandleResponsiveLayout && !this.$functions.isDesktop())
+        (this.showHandleResponsiveLayout && !this.isDesktop)
       )
     }
   },
@@ -235,7 +235,7 @@ export default {
     }
   },
   mounted() {
-    if (!this.$functions.isDesktop() && this.showHandleResponsiveLayout) {
+    if (!this.isDesktop && this.showHandleResponsiveLayout) {
       const responsiveTable = this.useSettingsStore.getResponsiveTables(this.$route.path.replaceAll("/", ""))
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable
