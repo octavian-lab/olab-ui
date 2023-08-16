@@ -13,7 +13,7 @@
       :dateFormat="$attrs.dateFormat ? $attrs.dateFormat : 'dd/mm/yy'"
       icon="fad fa-calendar"
       :touch-u-i="isMobile"
-      :placeholder="placeholder ? placeholder : 'dd / mm / yy hh:mm'"
+      :placeholder="placeholder"
     />
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
@@ -22,6 +22,7 @@
         v-if="!isDesktop && mode === 'default'"
         :options="selects.calendarOptions"
         :showClear="unselectable"
+        dataKey="value"
         option-label="label"
         :placeholder="$translate('admin.generic.select.date.type')"
       />
@@ -31,7 +32,7 @@
         :options="selects.calendarOptions"
         v-model="modelValue"
         optionLabel="value"
-        :unselectable="unselectable"
+        :unselectable="unselectable === true ? undefined : false"
       >
         <template #option="{ option }">
           <div class="font-xs">{{ option.label }}</div>
@@ -47,7 +48,6 @@
         option-value="value"
         :placeholder="$translate('admin.generic.select.date.type')"
       />
-
       <!-- CALENDAR DEFAULT: @CLICK RANGE -->
       <Calendar
         v-if="mode === 'range'"
@@ -89,7 +89,7 @@ export default {
   name: 'OCalendar',
   emits: ['update:from', 'update:to', 'update:modelValue'],
   props: {
-    placeholder: { type: String, default: () => undefined },
+    placeholder: { type: String, default: () => 'dd / mm / yy hh:mm' },
     unselectable: { type: Boolean, default: () => true },
     from: { type: [Date, Object, String], default: () => null },
     to: { type: [Date, Object, String], default: () => null },
@@ -122,7 +122,6 @@ export default {
     modelValue: {
       deep: true,
       handler(vmodel, oldVal) {
-        console.log('VMODEL', vmodel)
         if (!vmodel) {
           this.$emit('update:from', null)
           this.$emit('update:to', null)
@@ -236,7 +235,7 @@ export default {
     },
     doReset() {
       // RESETTERÀ IL VMODEL
-      this.modelValue = !this.unselectable ? this.getCalendarOption(this.startValue) : null
+      this.modelValue = this.unselectable === true ? this.getCalendarOption(this.startValue) : null
     },
     generateOptions() {
       return [
