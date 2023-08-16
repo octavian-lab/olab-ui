@@ -28,7 +28,7 @@
           fastfilter ? 'ml-3' : 'mr-3'
         ]"
       />
-      <span v-if="!fastfilter" class="font-bold text-responsive font-uppercase">
+      <span v-if="!fastfilter" class="font-bold text-responsive text-uppercase">
         {{ $translate('admin.filter.panel.compile.required.filters') }}
       </span>
     </div>

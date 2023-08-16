@@ -18,10 +18,10 @@
       :disabled="teleportDisabled"
       v-if="teleportFilter?.isMounted"
     >
-      <!-- TODO LABEL IN TELEPORT FARLA teleportFilter[name] e stylarla per terminare <label> {{teleportFilter?.name}} </label>-->
       <div
         @contextmenu="type === 'default' ? doToggleCtxMenu($event, name) : undefined"
         :class="{ 'filter-field': type !== 'join', 'filer-field-join': type === 'join' }"
+        :data-name="name"
       >
         <slot />
       </div>
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import { useSettingsStore } from "@/store/settings.js";
+import { useSettingsStore } from '@/store/settings.js'
 export default {
   name: 'OFilter',
   props: {
@@ -44,7 +44,7 @@ export default {
   inject: ['doToggleCtxMenu', 'teleportFilter', 'collapsed'],
   data() {
     return {
-      useSettingsStore: useSettingsStore(),
+      useSettingsStore: useSettingsStore()
     }
   },
   watch: {
@@ -70,7 +70,7 @@ export default {
       return [
         'filter-name',
         'md:flex align-items-center',
-        { 'font-uppercase': !uppercaseCondition }
+        { 'text-uppercase': !uppercaseCondition }
       ]
     }
   },
