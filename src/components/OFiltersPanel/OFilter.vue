@@ -70,7 +70,7 @@ export default {
       return [
         'filter-name',
         'md:flex align-items-center',
-        { 'font-uppercase': !uppercaseCondition }
+        { 'text-uppercase': !uppercaseCondition }
       ]
     }
   },

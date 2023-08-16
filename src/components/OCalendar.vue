@@ -2,24 +2,26 @@
   <div id="o-calendar">
     <Calendar
       v-if="!advanced"
-      class="w-full"
+      class="w-100"
       v-model="modelValue"
       v-bind="$attrs"
-      @show="setMidnight"
       hide-on-date-time-select
-      :showIcon="$attrs.showIcon != null ? $attrs.showIcon : true"
+      @show="setMidnight"
+      :showIcon="true"
       :showTime="$attrs.showTime != null ? $attrs.showTime : true"
       :showButtonBar="true"
       :dateFormat="$attrs.dateFormat ? $attrs.dateFormat : 'dd/mm/yy'"
       icon="fad fa-calendar"
       :touch-u-i="$functions.isMobile()"
-      placeholder="dd / mm / yy hh:mm"
+      :placeholder="placeholder ? placeholder : 'dd / mm / yy hh:mm'"
     />
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
       <Dropdown
+        v-model="modelValue"
         v-if="!$functions.isDesktop() && mode === 'default'"
         :options="selects.calendarOptions"
+        :showClear="unselectable"
         option-label="label"
         :placeholder="$translate('admin.generic.select.date.type')"
       />
@@ -50,13 +52,13 @@
       <Calendar
         v-if="mode === 'range'"
         v-model="modelValue.date.from"
-        class="animate__animated animate__fadeIn mr-2"
+        class="animate__animated animate__fadeIn p-mr-2"
         showTime
         :placeholder="$translate('admin.generic.from')"
         dateFormat="dd/mm/yy"
         icon="fad fa-calendar"
         hide-on-date-time-select
-        :touch-u-i="!$functions.isDesktop()"
+        :touch-u-i="!$functions.isDesktop"
       />
       <Calendar
         v-if="mode === 'range'"
@@ -82,11 +84,11 @@
 
 <script>
 import moment from 'moment'
-
 export default {
   name: 'OCalendar',
   emits: ['update:from', 'update:to', 'update:modelValue'],
   props: {
+    placeholder: { type: String, default: () => undefined },
     unselectable: { type: Boolean, default: () => true },
     from: { type: [Date, Object, String], default: () => null },
     to: { type: [Date, Object, String], default: () => null },
@@ -106,28 +108,32 @@ export default {
   },
   watch: {
     extQuery(val) {
-      if (!val.from && !val.to) this.doReset()
-      if (val && typeof val.from === 'string' && this.advanced) {
-        this.modelValue = this.getNumberFromDate()
+      if (this.advanced) {
+        if (!val.from && !val.to) this.doReset()
+        if (val && typeof val.from === 'string' && this.advanced) {
+          this.modelValue = this.getNumberFromDate()
+        }
+      } else {
+        this.modelValue = val
       }
     },
     // Trasformazione da oggetto calendar smart a query per tutti i panels.
     modelValue: {
       deep: true,
       handler(vmodel, oldVal) {
+        console.log('VMODEL', vmodel)
+        if (!vmodel) {
+          this.$emit('update:from', null)
+          this.$emit('update:to', null)
+        }
         if (vmodel?.date != null) {
           this.$emit('update:from', vmodel.date.from)
           this.$emit('update:to', vmodel.date.to)
         }
-        if (!this.advanced && !$functions.compareDate(oldVal, vmodel, 'equal')) {
-          this.$emit(
-            'update:modelValue',
-            moment(vmodel).set({ seconds: 0, milliseconds: 0 }).toDate()
-          )
-        }
-        if (!vmodel && this.advanced) {
-          this.$emit('update:from', null)
-          this.$emit('update:to', null)
+        if (!this.advanced && !this.$functions.compareDate(oldVal, vmodel, 'equal')) {
+          const valueToEmit =
+            vmodel != null ? moment(vmodel).set({ seconds: 0, milliseconds: 0 }).toDate() : null
+          this.$emit('update:modelValue', valueToEmit)
         }
       }
     },
@@ -156,7 +162,7 @@ export default {
   },
   methods: {
     setMidnight() {
-      if (this.modelValue == null) this.modelValue = $functions.getMidNight(moment()).toDate()
+      if (this.modelValue == null) this.modelValue = this.$functions.getMidNight(moment()).toDate()
     },
     getCalendarOption(value) {
       if (value) {
@@ -205,8 +211,12 @@ export default {
           ret = 7
           tmp = this.getCalendarOption(ret)
           tmp.date = {
-            from: this.from ? moment(this.from).toDate() : $functions.getMidNight(moment()).toDate(),
-            to: this.to ? moment(this.to).toDate() : $functions.getEndOf(moment(), 'day').toDate()
+            from: this.from
+              ? moment(this.from).toDate()
+              : this.$functions.getMidNight(moment()).toDate(),
+            to: this.to
+              ? moment(this.to).toDate()
+              : this.$functions.getEndOf(moment(), 'day').toDate()
           }
           return tmp
       }
@@ -217,8 +227,8 @@ export default {
       let ret = []
       for (let i = 1; i <= 12; i++) {
         //AGGIUNGO 1 PERCHÈ I DECODE PARTONO DA 1 E I MONTH DA 0
-        const monthValue = $functions.addPeriod(moment(), -i, 'months').month() + 1
-        const yearValue = $functions.addPeriod(moment(), -i, 'months').year()
+        const monthValue = this.$functions.addPeriod(moment(), -i, 'months').month() + 1
+        const yearValue = this.$functions.addPeriod(moment(), -i, 'months').year()
 
         ret.push({
           label: this.$translate('decode.month.' + monthValue) + ' ' + yearValue,
@@ -237,55 +247,83 @@ export default {
           value: 1,
           label: this.$translate('admin.generic.calendar.today'),
           date: {
-            from: $functions.getMidNight(moment()).toDate(),
-            to: $functions.getEndOf(moment(), 'day').toDate()
+            from: this.$functions.getMidNight(moment()).toDate(),
+            to: this.$functions.getEndOf(moment(), 'day').toDate()
           }
         },
         {
           value: 2,
           label: this.$translate('admin.generic.calendar.yesterday'),
           date: {
-            from: $functions.getMidNight($functions.getYesterday()).toDate(),
-            to: $functions.getEndOf($functions.getYesterday(), 'day').toDate()
+            from: this.$functions.getMidNight(this.$functions.getYesterday()).toDate(),
+            to: this.$functions.getEndOf(this.$functions.getYesterday(), 'day').toDate()
           }
         },
         {
           value: 3,
           label: this.$translate('admin.generic.calendar.this.week'),
           date: {
-            from: $functions.getMidNight($functions.getStartOf(moment(), 'isoweek')).toDate(),
-            to: $functions.getMidNight($functions.getEndOf(moment(), 'isoweek')).toDate()
+            from: this.$functions
+              .getMidNight(this.$functions.getStartOf(moment(), 'isoweek'))
+              .toDate(),
+            to: this.$functions.getMidNight(this.$functions.getEndOf(moment(), 'isoweek')).toDate()
           }
         },
         {
           value: 4,
           label: this.$translate('admin.generic.calendar.last.week'),
           date: {
-            from: $functions.getMidNight($functions.getStartOf($functions.addPeriod(moment(), -1, 'weeks'), 'isoweek')).toDate(),
-            to: $functions.getMidNight($functions.getEndOf($functions.addPeriod(moment(), -1, 'weeks'), 'isoweek')).toDate()
+            from: this.$functions
+              .getMidNight(
+                this.$functions.getStartOf(
+                  this.$functions.addPeriod(moment(), -1, 'weeks'),
+                  'isoweek'
+                )
+              )
+              .toDate(),
+            to: this.$functions
+              .getMidNight(
+                this.$functions.getEndOf(
+                  this.$functions.addPeriod(moment(), -1, 'weeks'),
+                  'isoweek'
+                )
+              )
+              .toDate()
           }
         },
         {
           value: 5,
           label: this.$translate('admin.generic.calendar.this.month'),
           date: {
-            from: $functions.getMidNight($functions.getStartOf(moment(), 'month')).toDate(),
-            to: $functions.getMidNight($functions.getEndOf(moment(), 'month')).toDate()
+            from: this.$functions
+              .getMidNight(this.$functions.getStartOf(moment(), 'month'))
+              .toDate(),
+            to: this.$functions.getMidNight(this.$functions.getEndOf(moment(), 'month')).toDate()
           }
         },
         {
           value: 6,
           label: this.$translate('admin.generic.other.months'),
           date: {
-            from: $functions.getStartOf($functions.addPeriod(moment(), -1, 'months'), 'month').toDate(),
-            to: $functions.getEndOf($functions.addPeriod(moment(), -1, 'months'), 'month').toDate()
+            from: this.$functions
+              .getStartOf(this.$functions.addPeriod(moment(), -1, 'months'), 'month')
+              .toDate(),
+            to: this.$functions
+              .getEndOf(this.$functions.addPeriod(moment(), -1, 'months'), 'month')
+              .toDate()
           },
           updateDate(value) {
             return {
               ...this,
-              date: {
-                from: $functions.getStartOf($functions.addPeriod(moment(), -value, 'months'), 'month').toDate(),
-                to: $functions.getEndOf($functions.addPeriod(moment(), -value, 'months'), 'month').toDate()
+              date: () => {
+                return {
+                  from: this.$functions
+                    .getStartOf(this.$functions.addPeriod(moment(), -value, 'months'), 'month')
+                    .toDate(),
+                  to: this.$functions
+                    .getEndOf(this.$functions.addPeriod(moment(), -value, 'months'), 'month')
+                    .toDate()
+                }
               }
             }
           }
@@ -294,8 +332,8 @@ export default {
           value: 7,
           label: this.$translate('admin.generic.select.date.range'),
           date: {
-            from: $functions.getMidNight(moment()).toDate(),
-            to: $functions.getEndOf(moment(), 'day').toDate()
+            from: this.$functions.getMidNight(moment()).toDate(),
+            to: this.$functions.getEndOf(moment(), 'day').toDate()
           }
         }
       ]
@@ -324,7 +362,7 @@ export default {
                 milliseconds: 0
               })
               .toDate()
-          : $functions.getMidNight(moment()).toDate()
+          : this.$functions.getMidNight(moment()).toDate()
       }
     }
   }
@@ -335,7 +373,7 @@ export default {
 #o-calendar {
   .p-inputgroup {
     width: 100%;
-    min-height: 26px;
+    min-height: 2.5rem;
 
     :deep(.p-button) {
       padding: 0.2rem;
