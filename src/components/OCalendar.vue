@@ -84,6 +84,7 @@
 
 <script>
 import moment from 'moment'
+import Datemixin from '@/mixins/datemixin.js'
 export default {
   name: 'OCalendar',
   emits: ['update:from', 'update:to', 'update:modelValue'],
@@ -293,14 +294,13 @@ export default {
           updateDate(value) {
             return {
               ...this,
-              date: () => {
-                return {
-                  from: this.getStartOf(
-                    this.addPeriod(moment(), -value, 'months'),
-                    'month'
-                  ).toDate(),
-                  to: this.getEndOf(this.addPeriod(moment(), -value, 'months'), 'month').toDate()
-                }
+              date: {
+                from: Datemixin.methods
+                  .getStartOf(Datemixin.methods.addPeriod(moment(), -value, 'months'), 'month')
+                  .toDate(),
+                to: Datemixin.methods
+                  .getEndOf(Datemixin.methods.addPeriod(moment(), -value, 'months'), 'month')
+                  .toDate()
               }
             }
           }

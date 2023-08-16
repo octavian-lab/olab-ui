@@ -49,7 +49,7 @@ export default {
   methods: {
     oListClass() {
       const dynamicClass = this.striped ? 'striped-row' : 'border-bottom'
-      return [`flex justify-content-between align-items-center py-2`, [dynamicClass]]
+      return [`flex justify-content-between align-items-center py-2 w-full`, [dynamicClass]]
     },
     checkType(valueType) {
       if (valueType == null) return 'string'
