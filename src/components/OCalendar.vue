@@ -12,14 +12,14 @@
       :showButtonBar="true"
       :dateFormat="$attrs.dateFormat ? $attrs.dateFormat : 'dd/mm/yy'"
       icon="fad fa-calendar"
-      :touch-u-i="$functions.isMobile()"
+      :touch-u-i="isMobile"
       :placeholder="placeholder ? placeholder : 'dd / mm / yy hh:mm'"
     />
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
       <Dropdown
         v-model="modelValue"
-        v-if="!$functions.isDesktop() && mode === 'default'"
+        v-if="!isDesktop && mode === 'default'"
         :options="selects.calendarOptions"
         :showClear="unselectable"
         option-label="label"
@@ -27,7 +27,7 @@
       />
       <!--  CALENDAR DEFAULT: VISIBILE DA DESKTOP  -->
       <SelectButton
-        v-else-if="$functions.isDesktop() && mode === 'default'"
+        v-else-if="isDesktop && mode === 'default'"
         :options="selects.calendarOptions"
         v-model="modelValue"
         optionLabel="value"
@@ -58,7 +58,7 @@
         dateFormat="dd/mm/yy"
         icon="fad fa-calendar"
         hide-on-date-time-select
-        :touch-u-i="!$functions.isDesktop"
+        :touch-u-i="!isDesktop"
       />
       <Calendar
         v-if="mode === 'range'"
@@ -69,7 +69,7 @@
         dateFormat="dd/mm/yy"
         icon="fad fa-calendar"
         hide-on-date-time-select
-        :touch-u-i="!$functions.isDesktop()"
+        :touch-u-i="!isDesktop"
       />
       <span
         v-if="mode === 'range' || mode === 'more-months'"
@@ -130,7 +130,7 @@ export default {
           this.$emit('update:from', vmodel.date.from)
           this.$emit('update:to', vmodel.date.to)
         }
-        if (!this.advanced && !this.$functions.compareDate(oldVal, vmodel, 'equal')) {
+        if (!this.advanced && !this.compareDate(oldVal, vmodel, 'equal')) {
           const valueToEmit =
             vmodel != null ? moment(vmodel).set({ seconds: 0, milliseconds: 0 }).toDate() : null
           this.$emit('update:modelValue', valueToEmit)
@@ -162,7 +162,7 @@ export default {
   },
   methods: {
     setMidnight() {
-      if (this.modelValue == null) this.modelValue = this.$functions.getMidNight(moment()).toDate()
+      if (this.modelValue == null) this.modelValue = this.getMidNight(moment()).toDate()
     },
     getCalendarOption(value) {
       if (value) {
@@ -213,10 +213,10 @@ export default {
           tmp.date = {
             from: this.from
               ? moment(this.from).toDate()
-              : this.$functions.getMidNight(moment()).toDate(),
+              : this.getMidNight(moment()).toDate(),
             to: this.to
               ? moment(this.to).toDate()
-              : this.$functions.getEndOf(moment(), 'day').toDate()
+              : this.getEndOf(moment(), 'day').toDate()
           }
           return tmp
       }
@@ -227,8 +227,8 @@ export default {
       let ret = []
       for (let i = 1; i <= 12; i++) {
         //AGGIUNGO 1 PERCHÈ I DECODE PARTONO DA 1 E I MONTH DA 0
-        const monthValue = this.$functions.addPeriod(moment(), -i, 'months').month() + 1
-        const yearValue = this.$functions.addPeriod(moment(), -i, 'months').year()
+        const monthValue = this.addPeriod(moment(), -i, 'months').month() + 1
+        const yearValue = this.addPeriod(moment(), -i, 'months').year()
 
         ret.push({
           label: this.$translate('decode.month.' + monthValue) + ' ' + yearValue,
@@ -247,16 +247,16 @@ export default {
           value: 1,
           label: this.$translate('admin.generic.calendar.today'),
           date: {
-            from: this.$functions.getMidNight(moment()).toDate(),
-            to: this.$functions.getEndOf(moment(), 'day').toDate()
+            from: this.getMidNight(moment()).toDate(),
+            to: this.getEndOf(moment(), 'day').toDate()
           }
         },
         {
           value: 2,
           label: this.$translate('admin.generic.calendar.yesterday'),
           date: {
-            from: this.$functions.getMidNight(this.$functions.getYesterday()).toDate(),
-            to: this.$functions.getEndOf(this.$functions.getYesterday(), 'day').toDate()
+            from: this.getMidNight(this.getYesterday()).toDate(),
+            to: this.getEndOf(this.getYesterday(), 'day').toDate()
           }
         },
         {
@@ -264,9 +264,9 @@ export default {
           label: this.$translate('admin.generic.calendar.this.week'),
           date: {
             from: this.$functions
-              .getMidNight(this.$functions.getStartOf(moment(), 'isoweek'))
+              .getMidNight(this.getStartOf(moment(), 'isoweek'))
               .toDate(),
-            to: this.$functions.getMidNight(this.$functions.getEndOf(moment(), 'isoweek')).toDate()
+            to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toDate()
           }
         },
         {
@@ -275,16 +275,16 @@ export default {
           date: {
             from: this.$functions
               .getMidNight(
-                this.$functions.getStartOf(
-                  this.$functions.addPeriod(moment(), -1, 'weeks'),
+                this.getStartOf(
+                  this.addPeriod(moment(), -1, 'weeks'),
                   'isoweek'
                 )
               )
               .toDate(),
             to: this.$functions
               .getMidNight(
-                this.$functions.getEndOf(
-                  this.$functions.addPeriod(moment(), -1, 'weeks'),
+                this.getEndOf(
+                  this.addPeriod(moment(), -1, 'weeks'),
                   'isoweek'
                 )
               )
@@ -296,9 +296,9 @@ export default {
           label: this.$translate('admin.generic.calendar.this.month'),
           date: {
             from: this.$functions
-              .getMidNight(this.$functions.getStartOf(moment(), 'month'))
+              .getMidNight(this.getStartOf(moment(), 'month'))
               .toDate(),
-            to: this.$functions.getMidNight(this.$functions.getEndOf(moment(), 'month')).toDate()
+            to: this.getMidNight(this.getEndOf(moment(), 'month')).toDate()
           }
         },
         {
@@ -306,10 +306,10 @@ export default {
           label: this.$translate('admin.generic.other.months'),
           date: {
             from: this.$functions
-              .getStartOf(this.$functions.addPeriod(moment(), -1, 'months'), 'month')
+              .getStartOf(this.addPeriod(moment(), -1, 'months'), 'month')
               .toDate(),
             to: this.$functions
-              .getEndOf(this.$functions.addPeriod(moment(), -1, 'months'), 'month')
+              .getEndOf(this.addPeriod(moment(), -1, 'months'), 'month')
               .toDate()
           },
           updateDate(value) {
@@ -318,10 +318,10 @@ export default {
               date: () => {
                 return {
                   from: this.$functions
-                    .getStartOf(this.$functions.addPeriod(moment(), -value, 'months'), 'month')
+                    .getStartOf(this.addPeriod(moment(), -value, 'months'), 'month')
                     .toDate(),
                   to: this.$functions
-                    .getEndOf(this.$functions.addPeriod(moment(), -value, 'months'), 'month')
+                    .getEndOf(this.addPeriod(moment(), -value, 'months'), 'month')
                     .toDate()
                 }
               }
@@ -332,8 +332,8 @@ export default {
           value: 7,
           label: this.$translate('admin.generic.select.date.range'),
           date: {
-            from: this.$functions.getMidNight(moment()).toDate(),
-            to: this.$functions.getEndOf(moment(), 'day').toDate()
+            from: this.getMidNight(moment()).toDate(),
+            to: this.getEndOf(moment(), 'day').toDate()
           }
         }
       ]
@@ -362,7 +362,7 @@ export default {
                 milliseconds: 0
               })
               .toDate()
-          : this.$functions.getMidNight(moment()).toDate()
+          : this.getMidNight(moment()).toDate()
       }
     }
   }

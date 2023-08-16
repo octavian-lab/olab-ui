@@ -4,7 +4,8 @@ import { store } from '@/store/index.js'
 // GLOBAL PLUGINS IMPORT
 import loadingplugin from '@/plugins/loadingplugin.js'
 import modalplugin from '@/plugins/modalplugin.js'
-import functionsplugin from '@/plugins/functionsplugin.js'
+import functionmixin from "@/mixins/functionmixin.js";
+import datemixin from "@/mixins/datemixin.js";
 
 // FILTERS IMPORT
 import asDate from './filters/asDate.js'
@@ -33,17 +34,16 @@ export default {
       console.warn('Please pass to the options a translate function: fxTranslate')
       return
     }
-    if (!options.site) {
-      console.warn('Please pass to the options a site name: site')
-    }
     if (!localStorage.getItem('site')) {
       console.warn('Script with site name is missing, info here: https://wiki.octavianlab.com/it/devs/backoffice-agp')
     }
 
     app.use(store())
-    app.use(functionsplugin, { site: options.site, fxTranslate: options.fxTranslate })
     app.use(loadingplugin)
     app.use(modalplugin)
+
+    app.mixin(functionmixin)
+    app.mixin(datemixin)
 
     app.config.globalProperties.$translate = options.fxTranslate
     app.config.globalProperties.$filters = {
