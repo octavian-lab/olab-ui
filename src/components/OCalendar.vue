@@ -211,12 +211,8 @@ export default {
           ret = 7
           tmp = this.getCalendarOption(ret)
           tmp.date = {
-            from: this.from
-              ? moment(this.from).toDate()
-              : this.getMidNight(moment()).toDate(),
-            to: this.to
-              ? moment(this.to).toDate()
-              : this.getEndOf(moment(), 'day').toDate()
+            from: this.from ? moment(this.from).toDate() : this.getMidNight(moment()).toDate(),
+            to: this.to ? moment(this.to).toDate() : this.getEndOf(moment(), 'day').toDate()
           }
           return tmp
       }
@@ -263,9 +259,7 @@ export default {
           value: 3,
           label: this.$translate('admin.generic.calendar.this.week'),
           date: {
-            from: this.$functions
-              .getMidNight(this.getStartOf(moment(), 'isoweek'))
-              .toDate(),
+            from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toDate(),
             to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toDate()
           }
         },
@@ -273,31 +267,19 @@ export default {
           value: 4,
           label: this.$translate('admin.generic.calendar.last.week'),
           date: {
-            from: this.$functions
-              .getMidNight(
-                this.getStartOf(
-                  this.addPeriod(moment(), -1, 'weeks'),
-                  'isoweek'
-                )
-              )
-              .toDate(),
-            to: this.$functions
-              .getMidNight(
-                this.getEndOf(
-                  this.addPeriod(moment(), -1, 'weeks'),
-                  'isoweek'
-                )
-              )
-              .toDate()
+            from: this.getMidNight(
+              this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+            ).toDate(),
+            to: this.getMidNight(
+              this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+            ).toDate()
           }
         },
         {
           value: 5,
           label: this.$translate('admin.generic.calendar.this.month'),
           date: {
-            from: this.$functions
-              .getMidNight(this.getStartOf(moment(), 'month'))
-              .toDate(),
+            from: this.getMidNight(this.getStartOf(moment(), 'month')).toDate(),
             to: this.getMidNight(this.getEndOf(moment(), 'month')).toDate()
           }
         },
@@ -305,24 +287,19 @@ export default {
           value: 6,
           label: this.$translate('admin.generic.other.months'),
           date: {
-            from: this.$functions
-              .getStartOf(this.addPeriod(moment(), -1, 'months'), 'month')
-              .toDate(),
-            to: this.$functions
-              .getEndOf(this.addPeriod(moment(), -1, 'months'), 'month')
-              .toDate()
+            from: this.getStartOf(this.addPeriod(moment(), -1, 'months'), 'month').toDate(),
+            to: this.getEndOf(this.addPeriod(moment(), -1, 'months'), 'month').toDate()
           },
           updateDate(value) {
             return {
               ...this,
               date: () => {
                 return {
-                  from: this.$functions
-                    .getStartOf(this.addPeriod(moment(), -value, 'months'), 'month')
-                    .toDate(),
-                  to: this.$functions
-                    .getEndOf(this.addPeriod(moment(), -value, 'months'), 'month')
-                    .toDate()
+                  from: this.getStartOf(
+                    this.addPeriod(moment(), -value, 'months'),
+                    'month'
+                  ).toDate(),
+                  to: this.getEndOf(this.addPeriod(moment(), -value, 'months'), 'month').toDate()
                 }
               }
             }
