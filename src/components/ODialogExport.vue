@@ -147,8 +147,8 @@
             v-for="key in keys"
             :key="key"
             v-model="buttonSwitch[key.label]"
-            :onLabel="checkTraslate(key.label)"
-            :offLabel="checkTraslate(key.label)"
+            :onLabel="translator === true ? checkTraslate(key.label) : key.label"
+            :offLabel="translator === true ? checkTraslate(key.label) : key.label"
             onIcon="fad fa-circle-check"
             offIcon="fad fa-circle-xmark"
             @change="toggleButtonPush(key.label)"
@@ -176,7 +176,7 @@
             v-for="key in selectKeys"
             :field="key"
             :key="key"
-            :header="checkTraslate(key)"
+            :header="translator === true ? checkTraslate(key) : key"
             bodyClass="cx"
           >
             <template #body="el">
@@ -221,13 +221,14 @@
 <script>
 import common from '@/assets/lottie/common-search.json'
 import { utils, writeFileXLSX } from 'xlsx'
-import { useSettingsStore } from "@/store/settings.js";
+import { useSettingsStore } from '@/store/settings.js'
 
 export default {
   name: 'ODialogExport',
   props: {
     exportFilename: { type: String, default: () => 'customers' },
-    exportMode: { type: String, default: () => 'all' }
+    exportMode: { type: String, default: () => 'all' },
+    translator: { type: Boolean, default: () => false }
   },
   data() {
     return {
@@ -562,8 +563,9 @@ export default {
     },
     doExportCSV() {
       let csv = '\ufeff'
+      const t = this.translator === true ? this.checkTraslate : (el) => el
       this.selectKeys.forEach((key) => {
-        csv += this.checkTraslate(key).replaceAll(' ', '') + ';'
+        csv += t(key).replaceAll(' ', '') + ';'
       })
       csv += '\n'
       this.selectColumnsData.forEach((el) => {
