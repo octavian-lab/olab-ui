@@ -2,7 +2,7 @@
   "name": "@octavianlab/olab-ui",
   "author": "octavianlab",
   "license": "MIT",
-  "version": "0.0.9",
+  "version": "0.1.0",
   "description": "Octavianlab  ux/ui components",
   "private": false,
   "type": "module",

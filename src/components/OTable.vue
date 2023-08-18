@@ -7,6 +7,8 @@
     :paginatorTemplate="getDtTemplate('paginator')"
     class="p-datatable-sm p-datatable-striped dt-text-responsive"
     ref="dt"
+    :stateStorage="storeSession ? 'session' : undefined"
+    :stateKey="storeSession ? `octavianlab-${site}:datatable-state` : undefined"
     :filterDisplay="filters ? 'row' : null"
     showGridlines
     removableSort
@@ -20,7 +22,7 @@
     sortMode="multiple"
     v-model:filters="filters"
     :key="refResponsiveLayout"
-    :editMode='$attrs.editMode'
+    :editMode="$attrs.editMode"
   >
     <template #header v-if="hasHeader">
       <div
@@ -85,16 +87,20 @@
   </DataTable>
 </template>
 <script>
-import { useSettingsStore } from "@/store/settings.js";
+import { useSettingsStore } from '@/store/settings.js'
 
 export default {
   name: 'OTable',
   props: {
     // PROPS OLAB
-      exportMode: {
-          type: String,
-          default: () => "all",
-      },
+    storeSession: {
+      type: Boolean,
+      default: () => false
+    },
+    exportMode: {
+      type: String,
+      default: () => 'all'
+    },
     exportable: {
       type: Boolean,
       default: () => false
@@ -212,7 +218,7 @@ export default {
           case 'handle':
             this.refResponsiveLayout = 'scroll'
             this.useSettingsStore.updateResponsiveTables({
-              page: this.$route.path.replaceAll("/", ""),
+              page: this.$route.path.replaceAll('/', ''),
               value: 'scroll'
             })
             break
@@ -224,7 +230,7 @@ export default {
           case 'handle':
             this.refResponsiveLayout = 'stack'
             this.useSettingsStore.updateResponsiveTables({
-              page: this.$route.path.replaceAll("/", ""),
+              page: this.$route.path.replaceAll('/', ''),
               value: 'stack'
             })
             break
@@ -236,7 +242,9 @@ export default {
   },
   mounted() {
     if (!this.isDesktop && this.showHandleResponsiveLayout) {
-      const responsiveTable = this.useSettingsStore.getResponsiveTables(this.$route.path.replaceAll("/", ""))
+      const responsiveTable = this.useSettingsStore.getResponsiveTables(
+        this.$route.path.replaceAll('/', '')
+      )
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable
       }
