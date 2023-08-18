@@ -4,19 +4,19 @@ import { store } from '@/store/index.js'
 // GLOBAL PLUGINS IMPORT
 import loadingplugin from '@/plugins/loadingplugin.js'
 import modalplugin from '@/plugins/modalplugin.js'
-import functionmixin from "@/mixins/functionmixin.js";
-import datemixin from "@/mixins/datemixin.js";
+import functionmixin from '@/mixins/functionmixin.js'
+import datemixin from '@/mixins/datemixin.js'
 
 // FILTERS IMPORT
 import asDate from './filters/asDate.js'
-import asAmount from './filters/asDate.js'
-import toAmount from './filters/asDate.js'
-import asHHmm from './filters/asDate.js'
-import asPercentage from './filters/asDate.js'
+import asAmount from './filters/asAmount.js'
+import toAmount from './filters/toAmount.js'
+import asHHmm from './filters/asHHmm.js'
+import asPercentage from './filters/asPercentage.js'
 
 // COMPONENTS IMPORT
 import OField from './components/OField.vue'
-import OFieldsContainer from "./components/OFieldsContainer.vue";
+import OFieldsContainer from './components/OFieldsContainer.vue'
 import OCard from './components/OCard.vue'
 import OCalendar from './components/OCalendar.vue'
 import ODialog from './components/ODialog.vue'
@@ -35,7 +35,9 @@ export default {
       return
     }
     if (!localStorage.getItem('site')) {
-      console.warn('Script with site name is missing, info here: https://wiki.octavianlab.com/it/devs/backoffice-agp')
+      console.warn(
+        'Script with site name is missing, info here: https://wiki.octavianlab.com/it/devs/backoffice-agp'
+      )
     }
 
     app.use(store())
@@ -68,5 +70,5 @@ export {
   OFieldsContainer,
   OLottie,
   OFilter,
-  OFiltersPanel,
+  OFiltersPanel
 }
