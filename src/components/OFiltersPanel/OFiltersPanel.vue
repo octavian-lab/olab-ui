@@ -286,7 +286,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
       &:nth-child(4n + 3) {
         background: var(--bluegray-100) !important;
       }
-      &:nth-child(odd) {
+      &:nth-child(even) {
         background: transparent;
         border-right: 2px solid $borderColor;
         .filter-name {
