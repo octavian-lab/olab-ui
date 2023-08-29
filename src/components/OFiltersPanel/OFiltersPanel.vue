@@ -272,6 +272,25 @@ $borderColor: rgba(149, 148, 148, 0.19);
       padding: 0 1rem;
     }
   }
+
+  // FILTER FIELD DEFAULT STYLE
+  .filter {
+    &:nth-child(even) {
+      background: var(--bluegray-100);
+    }
+    .filter-field {
+      width: 33.3%;
+      @media screen and (max-width: 1200px) {
+        width: 57%;
+      }
+      :first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox) {
+        width: 100%;
+      }
+      :first-child#o-calendar .p-calendar {
+        width: 100% !important;
+      }
+    }
+  }
   // STYLE CON DIVIDED COLUMNS
   .divided-columns {
     display: flex;
@@ -324,10 +343,19 @@ $borderColor: rgba(149, 148, 148, 0.19);
     }
   }
   .filters-join {
+    .filter {
+      &:nth-child(odd) {
+        background: var(--bluegray-100) !important;
+      }
+      &:nth-child(even) {
+        background: transparent !important;
+      }
+    }
     .filter-field {
       text-align: right;
     }
   }
+
   // FILTER FIELD FASTFILTER STYLE
   .filter.fastfilter {
     .filter-field {
@@ -337,24 +365,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
       }
     }
   }
-  // FILTER FIELD DEFAULT STYLE
-  .filter {
-    &:nth-child(even) {
-      background: var(--bluegray-100);
-    }
-    .filter-field {
-      width: 33.3%;
-      @media screen and (max-width: 1200px) {
-        width: 57%;
-      }
-      :first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox) {
-        width: 100%;
-      }
-      :first-child#o-calendar .p-calendar {
-        width: 100% !important;
-      }
-    }
-  }
+
   .h-fixed {
     height: 2.7rem;
   }
