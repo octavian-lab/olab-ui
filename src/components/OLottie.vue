@@ -9,7 +9,7 @@
 
 <script>
 import common from '@/assets/lottie/common-search.json'
-
+import axios from 'axios'
 export default {
   name: 'OLottie',
   props: {
@@ -19,27 +19,21 @@ export default {
   },
   data() {
     return {
-      lottie: common
+      cdnLottiePath: 'https://cdn.octavianlab.com/v3/bo/common/lottie/',
+      lottie: null
+    }
+  },
+  async created() {
+    try {
+      const lottieName = this.name.startsWith('/') ? this.name.replace('/', '') : this.name
+      const { data } = await axios.get(this.cdnLottiePath + lottieName + '.json')
+      this.lottie = data
+    } catch (e) {
+      this.lottie = common
+      console.info(
+        `OLottie: "${this.name}" => a default lottie was inserted since it was not present in the assets/lottie folder.`
+      )
     }
   }
-  // methods: { TODO
-  //   async getDynamicLottie(lottieName) {
-  //     return await import(`@/assets/lottie/${lottieName}.json`)
-  //     // return this.$image(`@/assets/lottie/${lottieName}.json`) todo non è più $image
-  //   }
-  // },
-  // async created() {
-  //   // const commonLottie = 'common-search'
-  //   try {
-  //     this.lottie = await this.getDynamicLottie(this.name)
-  //     console.log(this.lottie, 'try')
-  //   } catch (e) {
-  //     console.info(
-  //       `OLottie: "${this.name}" => a default lottie was inserted since it was not present in the assets/lottie folder.`
-  //     )
-  //     this.lottie = await this.getDynamicLottie(commonLottie)
-  //     console.log(this.lottie, 'catcb')
-  //   }
-  // }
 }
 </script>

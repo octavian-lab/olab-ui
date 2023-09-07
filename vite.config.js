@@ -14,12 +14,13 @@ export default defineConfig({
       formats: ['es', 'cjs', 'umd', 'iife']
     },
     rollupOptions: {
-      external: ['vue', 'primevue', 'moment'],
+      external: ['vue', 'primevue', 'moment', 'axios'],
       output: {
         exports: 'named',
         globals: {
           vue: 'Vue',
           moment: 'moment',
+          axios: 'axios',
           primevue: '$primevue',
         }
       },
