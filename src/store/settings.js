@@ -6,6 +6,7 @@ export const useSettingsStore = defineStore('settings', {
         fastfilters: {},
         responsiveTables: {},
         globalExportTemplates: {},
+        searchTemplates: {}
     }),
     getters: {
         getFastfilters: (state) => {
@@ -26,6 +27,13 @@ export const useSettingsStore = defineStore('settings', {
                 return;
             }
             return state.globalExportTemplates[`global-export-templates-${page}`];
+        },
+        getSearchTemplates: (state) => (page) => {
+            if (!page) {
+                console.warn("ALERT! -- page -- parameter is required");
+                return;
+            }
+            return state.searchTemplates[`search-templates-${page}`];
         },
         getStoredPanelByName: (state) => (page) => {
             if (!page) {
@@ -67,6 +75,7 @@ export const useSettingsStore = defineStore('settings', {
                 const obj = {
                     value: value,
                     label: `${page} - ${templates.length}`,
+                    dateCreated: new Date()
                 };
                 this.globalExportTemplates[`global-export-templates-${page}`].push(obj);
             }
@@ -81,6 +90,33 @@ export const useSettingsStore = defineStore('settings', {
             const templates = this.globalExportTemplates[`global-export-templates-${page}`];
             if (templates?.length > 0) {
                 this.globalExportTemplates[`global-export-templates-${page}`].splice(index, 1);
+            }
+        },
+        saveSearchTemplates({ page, value }) {
+            let templates = this.searchTemplates[`search-templates-${page}`];
+            if (!templates) {
+                this.searchTemplates[`search-templates-${page}`] = [];
+            }
+            templates = this.searchTemplates[`search-templates-${page}`];
+            if (templates.length < 10) {
+                const obj = {
+                    value: value,
+                    label: `${page} - ${templates.length}`,
+                    dateCreated: new Date()
+                };
+                this.searchTemplates[`search-templates-${page}`].push(obj);
+            }
+        },
+        updateSearchTemplates({ page, index, value }) {
+            const templates = this.searchTemplates[`search-templates-${page}`];
+            if (templates?.length > 0) {
+                this.searchTemplates[`search-templates-${page}`][index].label = value;
+            }
+        },
+        deleteSearchTemplates({ page, index }) {
+            const templates = this.searchTemplates[`search-templates-${page}`];
+            if (templates?.length > 0) {
+                this.searchTemplates[`search-templates-${page}`].splice(index, 1);
             }
         },
         updateStoredPanels({ page, value }) {

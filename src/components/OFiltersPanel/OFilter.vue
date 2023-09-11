@@ -61,7 +61,7 @@ export default {
   computed: {
     teleportDisabled() {
       if (!this.collapsed) return true
-      return !this.useSettingsStore.getFastfilters[this.$route.path.replaceAll('/', '')]?.includes(
+      return !this.useSettingsStore.getFastfilters[this.currentPageName]?.includes(
         this.name
       )
     },
