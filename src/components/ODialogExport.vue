@@ -1,5 +1,6 @@
 <template>
   <Dialog
+    id="dialog-global-export"
     :dismissableMask="false"
     :style="{ width: '95vw' }"
     :visible="$modal.isVisible($options.name)"
@@ -17,99 +18,21 @@
     </template>
     <div class="grid formgrid fluid">
       <div class="field col-12">
-        <Panel :toggleable="true" :collapsed="true">
-          <template #header>
-            <div class="font-bold">
-              <i class="fad fa-floppy-disk-circle-arrow-right mr-2"></i>
-              <span>{{ $translate('admin.title.stored.export') }}</span>
-            </div>
-          </template>
+        <OPageSettingApi
+          v-if="api"
+          :results="globalExportTemplates"
+          @onUseTemplate="doUseTemplate($event)"
+          @onEditTemplate="doEditTemplateApi($event)"
+          @onDeleteTemplate="doDeleteTemplateApi($event)"
+        />
 
-          <div class="my-3">
-            <i class="fad fa-triangle-exclamation text-warning fa-xl mr-2" />
-            <span class="font-bold">
-              {{ $translate('admin.global.export.stored.export.warning.text') }}
-            </span>
-          </div>
-          <div class="my-3">
-            <i class="fad fa-circle-info fa-xl mr-2" />
-            <span>
-              {{ $translate('admin.global.export.stored.export.info.text') }}
-            </span>
-          </div>
-
-          <DataTable :value="globalExportTemplates">
-            <template #empty>
-              <div class="col-12 cx font-bold">
-                {{ $translate('admin.generic.empty.results') }}
-              </div>
-            </template>
-
-            <Column :header="$translate('admin.generic.label')" headerClass="w-15" bodyClass="w-15">
-              <template #body="{ index, data }">
-                <div v-if="templateEditCheck !== index" class="font-bold">
-                  {{ data.label }}
-                </div>
-                <InputText
-                  v-else-if="templateEditCheck === index"
-                  v-model="templateEditValue"
-                  :placeholder="$translate('admin.generic.enter.label')"
-                />
-              </template>
-            </Column>
-            <Column :header="$translate('admin.generic.value')" field="value">
-              <template #body="{ data }">
-                <div>
-                  <span v-for="(el, i) in data.value" :key="i">
-                    {{ `${checkTraslate(el)}; ` }}
-                  </span>
-                </div>
-              </template>
-            </Column>
-            <Column
-              :header="$translate('admin.generic.operations')"
-              headerClass="w-10"
-              bodyClass="w-10"
-            >
-              <template #body="{ index, data }">
-                <div v-if="templateEditCheck !== index" class="flex justify-content-center">
-                  <Button
-                    icon="fas fa-arrow-down"
-                    class="p-button-outlined p-button-sm mr-3"
-                    :label="$translate('admin.generic.action.use')"
-                    @click="doUseTemplate(data.value)"
-                  />
-                  <Button
-                    icon="fad fa-edit"
-                    class="p-button-sm mr-3"
-                    @click="doHandleEditTemplate(index, data.label)"
-                    v-tooltip.bottom="$translate('admin.action.edit.label')"
-                  />
-                  <Button
-                    icon="fad fa-trash"
-                    class="p-button-danger p-button-sm"
-                    @click="doDeleteTemplate(index)"
-                  />
-                </div>
-
-                <div v-else-if="templateEditCheck === index" class="flex justify-content-center">
-                  <Button
-                    icon="fad fa-save"
-                    class="p-button-sm mr-3"
-                    :label="$translate('admin.generic.action.save')"
-                    :disabled="!templateEditValue"
-                    @click="doHandleEditTemplate(index)"
-                  />
-                  <Button
-                    icon="fad fa-xmark"
-                    class="p-button-danger p-button-sm p-button-outlined"
-                    @click="doHandleEditTemplate()"
-                  />
-                </div>
-              </template>
-            </Column>
-          </DataTable>
-        </Panel>
+        <OPageSettingStore
+          v-if="!api"
+          :results="globalExportTemplates"
+          @onUseTemplate="doUseTemplate($event)"
+          @onEditTemplate="doEditTemplateStore($event)"
+          @onDeleteTemplate="doDeleteTemplateStore($event)"
+        />
       </div>
 
       <div class="field col-12">
@@ -122,17 +45,40 @@
           </template>
           <template #icons>
             <Button
-              class="mr-3"
+              class="mr-3 p-button-info"
               :label="$translate('admin.generic.select.all.fields')"
               :icon="checkFilters"
               :disabled="selectKeys.length === keys.length"
               @click="selectAllFilters()"
             />
+
             <Button
+              v-if="api"
+              :disabled="selectKeys.length === 0"
+              class="mr-3 p-button-secondary"
+              @click="doAddTemplateApi([...selectKeys], 0)"
+              v-tooltip.bottom="$translate('admin.filter.store.template.global')"
+            >
+              <i class="fad fa-floppy-disk mr-2"></i>
+              <i class="fad fa-globe"></i>
+            </Button>
+            <Button
+              v-if="api"
+              :disabled="selectKeys.length === 0"
+              class="mr-3"
+              @click="doAddTemplateApi([...selectKeys], 1)"
+              v-tooltip.bottom="$translate('admin.filter.store.template.personal')"
+            >
+              <i class="fad fa-floppy-disk p-mr-2"></i>
+              <i class="fad fa-user"></i>
+            </Button>
+
+            <Button
+              v-if="!api"
+              :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
               class="mr-3"
               icon="fad fa-floppy-disk"
-              :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
-              @click="doSaveTemplate([...selectKeys])"
+              @click="doAddTemplateStore([...selectKeys])"
               v-tooltip.bottom="$translate('admin.filter.store.template')"
             />
             <Button
@@ -147,8 +93,8 @@
             v-for="key in keys"
             :key="key"
             v-model="buttonSwitch[key.label]"
-            :onLabel="translator === true ? checkTraslate(key.label) : key.label"
-            :offLabel="translator === true ? checkTraslate(key.label) : key.label"
+            :onLabel="translator === true ? checkTranslate(key.label) : key.label"
+            :offLabel="translator === true ? checkTranslate(key.label) : key.label"
             onIcon="fad fa-circle-check"
             offIcon="fad fa-circle-xmark"
             @change="toggleButtonPush(key.label)"
@@ -176,7 +122,7 @@
             v-for="key in selectKeys"
             :field="key"
             :key="key"
-            :header="translator === true ? checkTraslate(key) : key"
+            :header="translator === true ? checkTranslate(key) : key"
             bodyClass="cx"
           >
             <template #body="el">
@@ -222,10 +168,25 @@
 import common from '@/assets/lottie/common-search.json'
 import { utils, writeFileXLSX } from 'xlsx'
 import { useSettingsStore } from '@/store/settings.js'
+import OPageSettingApi from '@/components/OPageSettingApi.vue'
+import OPageSettingStore from '@/components/OPageSettingStore.vue'
 
 export default {
   name: 'ODialogExport',
+  components: { OPageSettingApi, OPageSettingStore },
+  provide() {
+    return {
+      checkTranslate: this.checkTranslate
+    }
+  },
+  inject: {
+    doSearchTemplate: { default: undefined },
+    doAddTemplate: { default: undefined },
+    doEditTemplate: { default: undefined },
+    doDeleteTemplate: { default: undefined }
+  },
   props: {
+    api: { type: Boolean, default: () => false },
     exportFilename: { type: String, default: () => 'customers' },
     exportMode: { type: String, default: () => 'all' },
     translator: { type: Boolean, default: () => false }
@@ -289,7 +250,7 @@ export default {
       this.doDeleteFilters()
       this.$modal.close()
     },
-    checkTraslate(key) {
+    checkTranslate(key) {
       if (`${this.$translate(`decode.field.${key}`)}`.includes('--')) {
         return key
       } else {
@@ -330,15 +291,6 @@ export default {
       this.selectColumnsData = []
       this.collapsed = true
     },
-    doSaveTemplate(template) {
-      this.useSettingsStore.saveGlobalExportTemplates({
-        page: this.$route.path.replaceAll('/', ''),
-        value: template
-      })
-      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
-        this.$route.path.replaceAll('/', '')
-      )
-    },
     doUseTemplate(template) {
       this.collapsed = false
       this.selectKeys = template
@@ -354,38 +306,59 @@ export default {
         }
       }
     },
-    doHandleEditTemplate(index, value) {
-      if (typeof index !== 'number') {
-        this.templateEditCheck = null
-        this.templateEditValue = ''
-        return
+    async doAddTemplateApi(template, mode) {
+      try {
+        await this.doAddTemplate(template, mode)
+        this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        this.toast('success', 'edit.export')
+      } catch (e) {
+        this.toast('error', e)
+        console.log(e)
       }
-      if (value) {
-        this.templateEditCheck = index
-        this.templateEditValue = value
-        return
-      }
-
-      this.useSettingsStore.updateGlobalExportTemplates({
-        page: this.$route.path.replaceAll('/', ''),
-        index,
-        value: this.templateEditValue
-      })
-
-      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
-        this.$route.path.replaceAll('/', '')
-      )
-      this.templateEditCheck = null
-      //this.templateEditValue = "";
     },
-    doDeleteTemplate(index) {
+    doAddTemplateStore(template) {
+      this.useSettingsStore.saveGlobalExportTemplates({
+        page: this.currentPageName,
+        value: template
+      })
+    },
+    async doEditTemplateApi({ data, name, mode }) {
+      const json = {
+        name: name,
+        mode: mode
+      }
+
+      try {
+        await this.doEditTemplate(data.id, json)
+        this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        this.toast('success', 'edit.export')
+      } catch (e) {
+        this.toast('error', e)
+        console.log(e)
+      }
+    },
+    doEditTemplateStore({ index, name }) {
+      this.useSettingsStore.updateGlobalExportTemplates({
+        page: this.currentPageName,
+        index,
+        value: name
+      })
+    },
+    async doDeleteTemplateApi(id) {
+      try {
+        await this.doDeleteTemplate(id)
+        this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        this.toast('success', 'delete.export')
+      } catch (e) {
+        this.toast('error', e)
+        console.log(e)
+      }
+    },
+    doDeleteTemplateStore(index) {
       this.useSettingsStore.deleteGlobalExportTemplates({
-        page: this.$route.path.replaceAll('/', ''),
+        page: this.currentPageName,
         index
       })
-      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
-        this.$route.path.replaceAll('/', '')
-      )
     },
     toggleButtonPush(key) {
       if (!this.selectKeys.includes(key)) {
@@ -563,7 +536,7 @@ export default {
     },
     doExportCSV() {
       let csv = '\ufeff'
-      const t = this.translator === true ? this.checkTraslate : (el) => el
+      const t = this.translator === true ? this.checkTranslate : (el) => el
       this.selectKeys.forEach((key) => {
         csv += t(key).replaceAll(' ', '') + ';'
       })
@@ -592,7 +565,7 @@ export default {
         const obj = {}
 
         this.selectKeys.forEach((key) => {
-          obj[this.checkTraslate(key)] = element[key]
+          obj[this.checkTranslate(key)] = element[key]
         })
 
         array.push(obj)
@@ -604,9 +577,14 @@ export default {
       this.toast('success', 'export.completed')
     }
   },
-  created() {
-    this.globalExportTemplates =
-      this.useSettingsStore.getGlobalExportTemplates(this.$route.path.replaceAll('/', '')) || []
+  async created() {
+    if (this.api) {
+      this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+    }
+    if (!this.api) {
+      this.globalExportTemplates =
+      this.useSettingsStore.getGlobalExportTemplates(this.currentPageName) || []
+    }
   }
 }
 </script>

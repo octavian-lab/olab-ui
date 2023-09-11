@@ -83,7 +83,7 @@
       <slot name="column-group" />
     </ColumnGroup>
     <slot name="content" />
-    <ODialogExport :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
+    <ODialogExport :api="api" :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
   </DataTable>
 </template>
 <script>
@@ -93,6 +93,10 @@ export default {
   name: 'OTable',
   props: {
     // PROPS OLAB
+    api: {
+      type: Boolean,
+      default: () => false
+    },
     storeSession: {
       type: Boolean,
       default: () => false
@@ -192,23 +196,14 @@ export default {
     }
   },
   methods: {
-    getDtTemplate(type) {
-      switch (type) {
-        case 'currentPageReport':
-          return `
-                 ${this.$translate('admin.generic.showing')} {first}
-                 ${this.$translate('admin.generic.showing.to')} {last}
-                 ${this.$translate('admin.generic.showing.of')} {totalRecords}`
-        case 'paginator':
-          return 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
-      }
-    },
     doExport() {
       const processedData = this.$refs.dt.processedData
       if (!this.$modal.id) {
         this.$modal.open('ODialogExport', {
           processed: processedData,
-          defaultExportKeys: this.defaultExportKeys
+          defaultExportKeys: this.defaultExportKeys,
+          key: this.currentPageName,
+          type: 0
         })
       }
     },
@@ -218,7 +213,7 @@ export default {
           case 'handle':
             this.refResponsiveLayout = 'scroll'
             this.useSettingsStore.updateResponsiveTables({
-              page: this.$route.path.replaceAll('/', ''),
+              page: this.currentPageName,
               value: 'scroll'
             })
             break
@@ -230,7 +225,7 @@ export default {
           case 'handle':
             this.refResponsiveLayout = 'stack'
             this.useSettingsStore.updateResponsiveTables({
-              page: this.$route.path.replaceAll('/', ''),
+              page: this.currentPageName,
               value: 'stack'
             })
             break
@@ -243,7 +238,7 @@ export default {
   mounted() {
     if (!this.isDesktop && this.showHandleResponsiveLayout) {
       const responsiveTable = this.useSettingsStore.getResponsiveTables(
-        this.$route.path.replaceAll('/', '')
+        this.currentPageName
       )
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable

@@ -28,11 +28,10 @@
     </template>
     <template #icons>
       <Button
-        v-if="showSaveQuery && $store.getters.isAdminRoot"
         class="mr-2"
         v-tooltip.left="{ value: $translate('admin.filter.memorize.search') }"
         icon="fad fa-floppy-disk fa-lg"
-        @click="handleOpenDialog"
+        @click="$modal.open('ODialogStoredSearches', { key: currentPageName, type: 1, list: [] })"
       />
 
       <Button
@@ -55,10 +54,7 @@
       </div>
     </div>
     <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
-    <ODialogStoredSearches
-      v-if="showSaveQuery && $store.getters.isAdminRoot"
-      @onUseSavedQuery="doReuseQuery"
-    />
+    <ODialogStoredSearches v-if="$modal.isVisible('ODialogStoredSearches')" @onUseTemplate="doUseTemplate" :api="api" />
   </Panel>
 </template>
 <script>
@@ -66,11 +62,11 @@ import { computed } from 'vue'
 import ODialogStoredSearches from './ODialogStoredSearches.vue'
 import OFiltersPanelBtnSearch from './OFiltersPanelBtnSearch.vue'
 import { useSettingsStore } from '@/store/settings.js'
-import { useQueryStore } from '@/store/query.js'
 export default {
   name: 'OFiltersPanel',
   components: { ODialogStoredSearches, OFiltersPanelBtnSearch },
   props: {
+    api: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean, default: () => false },
     col: { type: [Number, String], default: () => 1 },
     showSaveQuery: { type: Boolean, default: () => true },
@@ -89,9 +85,8 @@ export default {
   data() {
     return {
       useSettingsStore: useSettingsStore(),
-      useQueryStore: useQueryStore(),
       requiredFilters: [],
-      page: this.$route.path.replaceAll('/', ''),
+      page: this.currentPageName,
       collapsed: false,
       defaultQuery: { ...this.query },
       teleportFilter: {
@@ -119,7 +114,7 @@ export default {
     ctxMenuItems() {
       let action = {}
       if (
-        !this.useSettingsStore.getFastfilters[this.$route.path.replaceAll('/', '')]?.includes(
+        !this.useSettingsStore.getFastfilters[this.currentPageName]?.includes(
           this.teleportFilter.name
         )
       ) {
@@ -133,7 +128,7 @@ export default {
           icon: `fad ${action.icon}`,
           command: () => {
             this.useSettingsStore.updateFastfilters({
-              page: this.$route.path.replaceAll('/', ''),
+              page: this.currentPageName,
               value: this.teleportFilter.name
             })
             this.$toast.add({
@@ -147,7 +142,7 @@ export default {
       ]
     },
     showFastFilters() {
-      return this.useSettingsStore.getFastfilters[this.$route.path.replaceAll('/', '')]?.length > 0
+      return this.useSettingsStore.getFastfilters[this.currentPageName]?.length > 0
     },
     checkFilters() {
       let icon
@@ -174,15 +169,7 @@ export default {
     }
   },
   methods: {
-    handleOpenDialog() {
-      this.$modal.open('ODialogStoredSearches', {
-        title: this.$route.path.replaceAll('/', ''),
-        list: computed(() =>
-          this.useQueryStore.getQueryPerPage(this.$route.path.replaceAll('/', ''))
-        )
-      })
-    },
-    doReuseQuery(savedQuery) {
+    doUseTemplate(savedQuery) {
       for (let [key, val] of Object.entries(savedQuery)) {
         this.query[key] = val
       }
@@ -219,15 +206,13 @@ export default {
     },
     onRememberUserChoice(e) {
       this.useSettingsStore.updateStoredPanels({
-        page: this.$route.path.replaceAll('/', ''),
+        page: this.currentPageName,
         value: e.value
       })
     }
   },
   created() {
-    this.collapsed = this.useSettingsStore.getStoredPanelByName(
-      this.$route.path.replaceAll('/', '')
-    )
+    this.collapsed = this.useSettingsStore.getStoredPanelByName(this.currentPageName)
     if (this.query == null) {
       console.error(
         '-- ATTENTION -- -> You have to provide Query from the parent for the component to work properly'

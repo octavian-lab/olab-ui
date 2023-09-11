@@ -7,6 +7,8 @@ export default {
             isMobile: useMediaQuery("(max-width: 640px)"),
             isTablet: useMediaQuery("(min-width: 641px) and (max-width: 991px)"),
             isDesktop:  useMediaQuery("(min-width: 992px)"),
+            currentPageName: this.$route.path.replaceAll("/", ""),
+            currentPath: this.$route.path,
         };
     },
     methods: {
@@ -77,6 +79,17 @@ export default {
                 return true
             } catch (e) {
                 return false
+            }
+        },
+        getDtTemplate(type) {
+            switch (type) {
+                case 'currentPageReport':
+                    return `
+                 ${this.$translate('admin.generic.showing')} {first}
+                 ${this.$translate('admin.generic.showing.to')} {last}
+                 ${this.$translate('admin.generic.showing.of')} {totalRecords}`
+                case 'paginator':
+                    return 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
             }
         },
 
