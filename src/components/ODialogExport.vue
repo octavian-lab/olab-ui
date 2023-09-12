@@ -172,7 +172,7 @@ import OPageSettingApi from '@/components/OPageSettingApi.vue'
 import OPageSettingStore from '@/components/OPageSettingStore.vue'
 const site = localStorage.getItem('site')
 let API
-import(`@/api/${site}/index.js`).then((resource) => {
+import(`../api/${site}/index.js`).then((resource) => {
   API = resource.default
 })
 
@@ -306,8 +306,6 @@ export default {
       }
     },
     async doSearchTemplate() {
-      console.log('API', API)
-
       try {
         const { data } = await API.pagesetting.search({
           key: this.$modal.data.key,

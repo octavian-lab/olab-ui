@@ -1,10 +1,18 @@
 import axios from 'axios'
-const baseURL = import.meta.env.VUE_APP_API_URL_V3
-
 let store = localStorage.getItem('octavianlab-admin')
-if (store) {
-  store = JSON.parse(store)
+if (store) store = JSON.parse(store)
+
+const endpoints = {
+  stage: {
+    v2: 'https://stage.octavianlab.com/accounting-service/admin/v2/',
+    base: 'https://stage.octavianlab.com/accounting-service/v3/admin/api'
+  },
+  production: {
+    v2: 'https://live.octavianlab.com/accounting-service/admin/v2/',
+    base: 'https://live.octavianlab.com/accounting-service/v3/admin/api'
+  }
 }
+const baseURL = endpoints[store.site.currentEnvironment].base
 
 const axiosRequest = axios.create({
   baseURL,
