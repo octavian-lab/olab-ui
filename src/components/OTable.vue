@@ -83,7 +83,7 @@
       <slot name="column-group" />
     </ColumnGroup>
     <slot name="content" />
-    <ODialogExport :api="api" :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
+    <ODialogExport v-if="$modal.isVisible('ODialogExport')" :api="api" :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
   </DataTable>
 </template>
 <script>

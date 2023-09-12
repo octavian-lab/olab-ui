@@ -94,11 +94,11 @@
           {{ data.dateCreated ? $filters.asDate(data.dateCreated) : '-' }}
         </template>
       </Column>
-      <Column :header="$translate('admin.generic.operations')" headerClass="w-10" bodyClass="w-10">
+      <Column :header="$translate('admin.generic.operations')" headerClass="w-10 cx" bodyClass="w-10 cx">
         <template #body="{ index, data }">
           <div v-if="$modal.data.templateEditCheck !== index">
             <SplitButton
-              icon="fad fa-arrow-down"
+              icon="fas fa-arrow-down"
               class="p-button-sm mr-3"
               :label="$translate('admin.generic.action.use')"
               @click="$emit('onUseTemplate', data.value)"
@@ -112,7 +112,7 @@
                 },
                 {
                   label: $translate('admin.generic.action.delete'),
-                  icon: 'fad fa-trash',
+                  icon: 'fad fa-trash text-danger',
                   command: () => {
                     $emit('onDeleteTemplate', data.id)
                   }
@@ -121,7 +121,7 @@
             />
           </div>
 
-          <div v-else-if="$modal.data.templateEditCheck === index">
+          <div v-else-if="$modal.data.templateEditCheck === index" class="flex">
             <Button
               icon="fad fa-save"
               class="p-button-sm mr-3"

@@ -28,6 +28,7 @@
     </template>
     <template #icons>
       <Button
+        v-if="$store.getters.isAdminRoot"
         class="mr-2"
         v-tooltip.left="{ value: $translate('admin.filter.memorize.search') }"
         icon="fad fa-floppy-disk fa-lg"
@@ -54,7 +55,11 @@
       </div>
     </div>
     <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
-    <ODialogStoredSearches v-if="$modal.isVisible('ODialogStoredSearches')" @onUseTemplate="doUseTemplate" :api="api" />
+    <ODialogStoredSearches
+      v-if="$store.getters.isAdminRoot && $modal.isVisible('ODialogStoredSearches')"
+      @onUseTemplate="doUseTemplate"
+      :api="api"
+    />
   </Panel>
 </template>
 <script>

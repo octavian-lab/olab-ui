@@ -326,7 +326,7 @@ export default {
         name: `${this.$modal.data.key} - ${this.globalExportTemplates.length}`,
         value: JSON.stringify(template),
         mode: mode,
-        type: this.query.type
+        type: this.$modal.data.type
       }
 
       try {

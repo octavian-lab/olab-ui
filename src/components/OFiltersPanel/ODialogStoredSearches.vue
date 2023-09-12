@@ -69,6 +69,9 @@ export default {
           key: this.$modal.data.key,
           type: this.$modal.data.type
         })
+        data.data.forEach((el) => {
+          el.value = JSON.parse(el.value)
+        })
         this.$modal.data.list = data.data
       } catch (e) {
         this.toast('error', e)
@@ -79,9 +82,9 @@ export default {
       const json = {
         key: this.$modal.data.key,
         name: `${this.$modal.data.key} - ${this.$modal.data.list.length}`,
-        value: this.query,
+        value: JSON.stringify(this.query),
         mode: mode,
-        type: this.query.type
+        type: this.$modal.data.type
       }
 
       try {

@@ -66,12 +66,13 @@
 
       <Column v-if="mode === 'filter'" expander class="w-3 text-center" />
       <Column field="name" :header="$translate('admin.generic.name')" bodyClass="cx">
+        {{ $modal.data }}
         <template #body="{ index, data }">
-          <div v-if="$modal.data.templateEditName !== index" class="font-bold">
+          <div v-if="$modal.data.templateEditCheck !== index" class="font-bold">
             {{ data.name }}
           </div>
           <InputText
-            v-if="$modal.data.templateEditName === index"
+            v-if="$modal.data.templateEditCheck === index"
             v-model="$modal.data.templateEditName"
             :placeholder="$translate('admin.generic.enter.name')"
           />
@@ -108,7 +109,7 @@
       <Column field="author" :header="$translate('admin.generic.author')" bodyClass="cx" />
       <Column field="mode" :header="$translate('admin.field.type')" bodyClass="cx">
         <template #body="{ data, index }">
-          <div v-if="$modal.data.templateEditName !== index" class="font-bold">
+          <div v-if="$modal.data.templateEditCheck !== index" class="font-bold">
             <i
               v-if="data.mode === 0"
               v-tooltip.bottom="$translate('admin.field.type.global')"
@@ -121,7 +122,7 @@
             ></i>
           </div>
           <SelectButton
-            v-if="$modal.data.templateEditName === index"
+            v-if="$modal.data.templateEditCheck === index"
             v-model="$modal.data.templateEditMode"
             :options="[0, 1]"
             aria-labelledby="basic"
@@ -134,11 +135,15 @@
         </template>
       </Column>
 
-      <Column :header="$translate('admin.generic.operations')" headerClass="w-10" bodyClass="w-10">
+      <Column
+        :header="$translate('admin.generic.operations')"
+        headerClass="w-10 cx"
+        bodyClass="w-10 cx"
+      >
         <template #body="{ index, data }">
-          <div v-if="$modal.data.templateEditName !== index">
+          <div v-if="$modal.data.templateEditCheck !== index">
             <SplitButton
-              icon="fad fa-arrow-down"
+              icon="fas fa-arrow-down"
               class="p-button-sm mr-3"
               :label="$translate('admin.generic.action.use')"
               @click="$emit('onUseTemplate', data.value)"
@@ -152,7 +157,7 @@
                 },
                 {
                   label: $translate('admin.generic.action.delete'),
-                  icon: 'fad fa-trash',
+                  icon: 'fad fa-trash text-danger',
                   command: () => {
                     $emit('onDeleteTemplate', data.id)
                   }
@@ -161,7 +166,7 @@
             />
           </div>
 
-          <div v-else-if="$modal.data.templateEditName === index">
+          <div v-else-if="$modal.data.templateEditCheck === index" class="flex">
             <Button
               icon="fad fa-save"
               class="p-button-sm mr-3"
@@ -204,18 +209,20 @@ export default {
           name: this.$modal.data.templateEditName,
           mode: this.$modal.data.templateEditMode
         })
+        this.$modal.data.templateEditCheck = null
         this.$modal.data.templateEditName = null
         this.$modal.data.templateEditName = null
         return
       }
 
       if (typeof index !== 'number') {
+        this.$modal.data.templateEditCheck = null
         this.$modal.data.templateEditName = null
         this.$modal.data.templateEditName = null
         return
       }
 
-      this.$modal.data.templateEditName = index
+      this.$modal.data.templateEditCheck = index
       this.$modal.data.templateEditName = data.name
       this.$modal.data.templateEditMode = data.mode
     }
