@@ -130,20 +130,12 @@ export default {
       default: () => null
     },
     // PROPS DI PRIMEVUE
-    value: {
-      type: Array,
-      required: true
-    },
     paginator: {
       type: Boolean,
       default: () => true
     },
     loading: {
       type: Boolean
-    },
-    rowClass: {
-      type: Function,
-      default: () => null
     },
     rowsPerPageOptions: {
       type: Array,
@@ -159,10 +151,6 @@ export default {
     },
     filtersModel: {
       type: Object,
-      default: () => null
-    },
-    style: {
-      type: String,
       default: () => null
     },
     selectionMode: {
