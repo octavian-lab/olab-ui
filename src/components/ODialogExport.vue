@@ -170,6 +170,11 @@ import { utils, writeFileXLSX } from 'xlsx'
 import { useSettingsStore } from '@/store/settings.js'
 import OPageSettingApi from '@/components/OPageSettingApi.vue'
 import OPageSettingStore from '@/components/OPageSettingStore.vue'
+const site = localStorage.getItem('site')
+let API
+import(`@/api/${site}/index.js`).then((resource) => {
+  API = resource.default
+})
 
 export default {
   name: 'ODialogExport',
@@ -178,12 +183,6 @@ export default {
     return {
       checkTranslate: this.checkTranslate
     }
-  },
-  inject: {
-    doSearchTemplate: { default: undefined },
-    doAddTemplate: { default: undefined },
-    doEditTemplate: { default: undefined },
-    doDeleteTemplate: { default: undefined }
   },
   props: {
     api: { type: Boolean, default: () => false },
@@ -306,10 +305,35 @@ export default {
         }
       }
     },
-    async doAddTemplateApi(template, mode) {
+    async doSearchTemplate() {
+      console.log('API', API)
+
       try {
-        await this.doAddTemplate(template, mode)
-        this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        const { data } = await API.pagesetting.search({
+          key: this.$modal.data.key,
+          type: this.$modal.data.type
+        })
+        data.data.forEach((el) => {
+          el.value = JSON.parse(el.value)
+        })
+        this.globalExportTemplates = data.data
+      } catch (e) {
+        this.toast('error', e)
+        console.log(e)
+      }
+    },
+    async doAddTemplateApi(template, mode) {
+      const json = {
+        key: this.$modal.data.key,
+        name: `${this.$modal.data.key} - ${this.globalExportTemplates.length}`,
+        value: JSON.stringify(template),
+        mode: mode,
+        type: this.query.type
+      }
+
+      try {
+        await API.pagesetting.add(json)
+        await this.doSearchTemplate()
         this.toast('success', 'edit.export')
       } catch (e) {
         this.toast('error', e)
@@ -329,8 +353,8 @@ export default {
       }
 
       try {
-        await this.doEditTemplate(data.id, json)
-        this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        await API.pagesetting.edit(data.id, json)
+        await this.doSearchTemplate()
         this.toast('success', 'edit.export')
       } catch (e) {
         this.toast('error', e)
@@ -346,8 +370,8 @@ export default {
     },
     async doDeleteTemplateApi(id) {
       try {
-        await this.doDeleteTemplate(id)
-        this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        await API.pagesetting.delete(id)
+        await this.doSearchTemplate()
         this.toast('success', 'delete.export')
       } catch (e) {
         this.toast('error', e)
@@ -577,13 +601,13 @@ export default {
       this.toast('success', 'export.completed')
     }
   },
-  async created() {
+  async mounted() {
     if (this.api) {
-      this.globalExportTemplates = await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+      await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
     }
     if (!this.api) {
       this.globalExportTemplates =
-      this.useSettingsStore.getGlobalExportTemplates(this.currentPageName) || []
+        this.useSettingsStore.getGlobalExportTemplates(this.currentPageName) || []
     }
   }
 }

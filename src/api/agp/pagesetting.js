@@ -1,4 +1,4 @@
-import axios from './request'
+import axios from './request.js'
 export default {
   search(params) {
     return axios.get('/pageSettings', { params })

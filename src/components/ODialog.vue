@@ -5,7 +5,7 @@
     :dismissableMask="false"
     :style="style"
     :visible="$modal.isVisible(name.toLowerCase())"
-    @update:visible="$modal.close()"
+    @update:visible="handleClose()"
     :breakpoints="breakpoints"
   >
     <template #header>
@@ -74,7 +74,11 @@ export default {
       immediate: true,
       handler(dialogOpenLabel) {
         if (dialogOpenLabel) {
-          this.modalIdentifier = this.$modal.data[this.identifier]
+          if (this.identifier.includes('.')) {
+            const firstResource = this.identifier.split('.')[0]
+            const secondResource = this.identifier.split('.')[1]
+            this.modalIdentifier = this.$modal.data[firstResource][secondResource]
+          } else this.modalIdentifier = this.$modal.data[this.identifier]
         }
       }
     }
