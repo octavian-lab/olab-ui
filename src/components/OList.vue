@@ -1,35 +1,37 @@
 <template>
-  <div v-for="el in items" :key="el" :class="oListClass()">
-    <!-- LABEL -->
-    <div :class="['font-bold', el.labelClass, { 'px-3': striped }]">
+  <div id="o-list" :class="col > 1 ? 'divided' : ''">
+    <div v-for="el in items" :key="el" :class="oListClass()">
+      <!-- LABEL -->
+      <div :class="['font-bold', el.labelClass, { 'px-3': striped }]">
         {{ elaborateLabel(el.label) }}:
-    </div>
-    <!-- VALUE -->
-    <div :class="{ 'px-3 text-right': striped }">
-      <span v-if="el.value == null || el.value === '' || (Array.isArray(el.value) && el.value.length === 0)">-</span>
-      <img
-        v-else-if="checkType(el.valueType) === 'flag'"
-        :class="`flag flag-${el.value.toLowerCase()}`"
-      />
-      <span v-else-if="checkType(el.valueType) === 'boolean' && el.valueType.showIcon === false">
+      </div>
+      <!-- VALUE -->
+      <div :class="{ 'px-3 text-right': striped }">
+        <span v-if="el.value == null || el.value === '' || (Array.isArray(el.value) && el.value.length === 0)">-</span>
+        <img
+            v-else-if="checkType(el.valueType) === 'flag'"
+            :class="`flag flag-${el.value.toLowerCase()}`"
+        />
+        <span v-else-if="checkType(el.valueType) === 'boolean' && el.valueType.showIcon === false">
         {{ $translate(`admin.message.olist.boolean.${el.value}`) }}
       </span>
-      <span
-        v-else-if="checkType(el.valueType?.type) === 'boolean' && el.valueType.reverse === true"
-      >
+        <span
+            v-else-if="checkType(el.valueType?.type) === 'boolean' && el.valueType.reverse === true"
+        >
         <span>{{ $translate(`admin.message.olist.boolean.${el.value}`) }} - </span>
-        <i :class="`fad fa-lg ${setIcon(!el.value)}`" />
+        <i :class="`fad fa-lg ${setIcon(!el.value)}`"/>
       </span>
-      <i
-        v-else-if="checkType(el.valueType) === 'boolean'"
-        :class="`fad fa-lg ${setIcon(el.value)}`"
-      />
-      <span v-else-if="checkType(el.valueType) !== 'string' && Array.isArray(elaborateValue(el))">
+        <i
+            v-else-if="checkType(el.valueType) === 'boolean'"
+            :class="`fad fa-lg ${setIcon(el.value)}`"
+        />
+        <span v-else-if="checkType(el.valueType) !== 'string' && Array.isArray(elaborateValue(el))">
         <Tag :class="el.valueClass" v-for="tag in elaborateValue(el)" :key="tag">{{ tag }}</Tag>
       </span>
-      <span v-else :class="el.valueClass">
+        <span v-else :class="el.valueClass">
         {{ elaborateValue(el) }}
       </span>
+      </div>
     </div>
   </div>
 </template>
@@ -38,18 +40,20 @@
 export default {
   name: 'OList',
   props: {
-    items: { type: Array, required: false, default: () => [] },
-    striped: { Type: Boolean, default: () => true }
+    items: {type: Array, required: false, default: () => []},
+    striped: {Type: Boolean, default: () => true},
+    col: {Type: Number, default: () => 1}
   },
-    data() {
-      return {
-          defaultCurrency: "EUR"
-      }
-    },
+  data() {
+    return {
+      defaultCurrency: "EUR"
+    }
+  },
   methods: {
     oListClass() {
-      const dynamicClass = this.striped ? 'striped-row' : 'border-bottom'
-      return [`flex justify-content-between align-items-center py-2 w-full`, [dynamicClass]]
+      let dynamicClass = this.striped ? 'striped-row' : 'border-bottom'
+      if (this.col === 1) dynamicClass += ' w-full'
+      return [`o-list-item flex justify-content-between align-items-center py-2`, [dynamicClass]]
     },
     checkType(valueType) {
       if (valueType == null) return 'string'
@@ -64,58 +68,75 @@ export default {
           return 'fa-circle-xmark text-danger'
       }
     },
-      elaborateLabel(label) {
-          let ret = label;
-          if (label.startsWith("admin")) ret = this.$translate(ret);
-          return ret;
-      },
-      elaborateValue(field) {
-          let ret = field.value;
-          const type = this.checkType(field.valueType);
-          if (!type) {
-              console.warn("Type is not defined");
-              return;
-          }
-          // CASO IN CUI RICEVO UNA STRINGA SOTTOFORMA DI ARRAY LA TRANSFORMO COME TALE
-          if (type === "array" && this.isParsable(ret)) ret = JSON.parse(ret);
+    elaborateLabel(label) {
+      let ret = label;
+      if (label.startsWith("admin")) ret = this.$translate(ret);
+      return ret;
+    },
+    elaborateValue(field) {
+      let ret = field.value;
+      const type = this.checkType(field.valueType);
+      if (!type) {
+        console.warn("Type is not defined");
+        return;
+      }
+      // CASO IN CUI RICEVO UNA STRINGA SOTTOFORMA DI ARRAY LA TRANSFORMO COME TALE
+      if (type === "array" && this.isParsable(ret)) ret = JSON.parse(ret);
 
-          // CASO IN CUI IL VALORE DA STAMPARE È VINCOLATO DA UNA TRADUZIONE
-          if (field.translator != null) {
-              ret = this.$translate(`${field.translator}.${ret}`);
-              if (field.prependValue) ret = `${field.value} - ${ret}`;
-          }
+      // CASO IN CUI IL VALORE DA STAMPARE È VINCOLATO DA UNA TRADUZIONE
+      if (field.translator != null) {
+        ret = this.$translate(`${field.translator}.${ret}`);
+        if (field.prependValue) ret = `${field.value} - ${ret}`;
+      }
 
-          if (type === "number") {
-              const symbol =
-                  field.valueType.symbol ||
-                  this.$store.getters.info?.idCurrency ||
-                  this.defaultCurrency;
-              if (type === "number" && symbol === "%") {
-                  ret = this.$filters.asPercentage(ret);
-              } else {
-                  ret = this.$filters.asAmount(ret, symbol);
-              }
-          }
+      if (type === "number") {
+        const symbol =
+            field.valueType.symbol ||
+            this.$store.getters.info?.idCurrency ||
+            this.defaultCurrency;
+        if (type === "number" && symbol === "%") {
+          ret = this.$filters.asPercentage(ret);
+        } else {
+          ret = this.$filters.asAmount(ret, symbol);
+        }
+      }
 
-          if (type === "date") {
-              ret = this.$filters.asDate(ret, field.valueType.format);
-          }
+      if (type === "date") {
+        ret = this.$filters.asDate(ret, field.valueType.format);
+      }
 
-          return ret;
-      },
+      return ret;
+    },
   }
 }
 </script>
 <style lang="scss" scoped>
-.border-bottom:not(:last-child) {
-  border-bottom: 1px solid #e0e0e0;
-}
-.striped-row {
-  &:nth-child(odd) {
-    background-color: transparent;
+#o-list {
+  &.divided {
+    display: flex;
+    flex-wrap: wrap;
+
+    .o-list-item {
+      width: 50%;
+
+      &:nth-child(4n + 2),
+      &:nth-child(4n + 3) {
+        background: var(--bluegray-100) !important;
+      }
+    }
   }
-  &:nth-child(even) {
-    background-color: #e8e8e8;
+
+  .border-bottom:not(:last-child) {
+    border-bottom: 1px solid #e0e0e0;
+  }
+  .striped-row {
+    &:nth-child(odd) {
+      background-color: transparent;
+    }
+
+    &:nth-child(even) {
+      background-color: #e8e8e8;
+    }
   }
 }
 </style>
