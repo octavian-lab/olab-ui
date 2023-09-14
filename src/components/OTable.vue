@@ -83,7 +83,12 @@
       <slot name="column-group" />
     </ColumnGroup>
     <slot name="content" />
-    <ODialogExport v-if="$modal.isVisible('ODialogExport')" :api="api" :exportFilename="$attrs.exportFilename" :exportMode="exportMode" />
+    <ODialogExport
+      v-if="$modal.isVisible('ODialogExport')"
+      :useApi="useApi"
+      :exportFilename="$attrs.exportFilename"
+      :exportMode="exportMode"
+    />
   </DataTable>
 </template>
 <script>
@@ -93,7 +98,7 @@ export default {
   name: 'OTable',
   props: {
     // PROPS OLAB
-    api: {
+    useApi: {
       type: Boolean,
       default: () => false
     },
@@ -225,9 +230,7 @@ export default {
   },
   mounted() {
     if (!this.isDesktop && this.showHandleResponsiveLayout) {
-      const responsiveTable = this.useSettingsStore.getResponsiveTables(
-        this.currentPageName
-      )
+      const responsiveTable = this.useSettingsStore.getResponsiveTables(this.currentPageName)
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable
       }

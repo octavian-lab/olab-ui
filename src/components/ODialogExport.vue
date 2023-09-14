@@ -19,7 +19,7 @@
     <div class="grid formgrid fluid">
       <div class="field col-12">
         <OPageSettingApi
-          v-if="api"
+          v-if="useApi"
           :results="globalExportTemplates"
           @onUseTemplate="doUseTemplate($event)"
           @onEditTemplate="doEditTemplateApi($event)"
@@ -27,7 +27,7 @@
         />
 
         <OPageSettingStore
-          v-if="!api"
+          v-if="!useApi"
           :results="globalExportTemplates"
           @onUseTemplate="doUseTemplate($event)"
           @onEditTemplate="doEditTemplateStore($event)"
@@ -53,7 +53,7 @@
             />
 
             <Button
-              v-if="api"
+              v-if="useApi"
               :disabled="selectKeys.length === 0"
               class="mr-3 p-button-secondary"
               @click="doAddTemplateApi([...selectKeys], 0)"
@@ -63,7 +63,7 @@
               <i class="fad fa-globe"></i>
             </Button>
             <Button
-              v-if="api"
+              v-if="useApi"
               :disabled="selectKeys.length === 0"
               class="mr-3"
               @click="doAddTemplateApi([...selectKeys], 1)"
@@ -74,7 +74,7 @@
             </Button>
 
             <Button
-              v-if="!api"
+              v-if="!useApi"
               :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
               class="mr-3"
               icon="fad fa-floppy-disk"
@@ -170,13 +170,6 @@ import { utils, writeFileXLSX } from 'xlsx'
 import { useSettingsStore } from '@/store/settings.js'
 import OPageSettingApi from '@/components/OPageSettingApi.vue'
 import OPageSettingStore from '@/components/OPageSettingStore.vue'
-let API
-try {
-    const site = localStorage.getItem('site')
-    import(`../api/${site}/index.js`).then((resource) => {
-        API = resource.default
-    })
-} catch {}
 
 export default {
   name: 'ODialogExport',
@@ -187,13 +180,14 @@ export default {
     }
   },
   props: {
-    api: { type: Boolean, default: () => false },
+    useApi: { type: Boolean, default: () => false },
     exportFilename: { type: String, default: () => 'customers' },
     exportMode: { type: String, default: () => 'all' },
     translator: { type: Boolean, default: () => false }
   },
   data() {
     return {
+      API: null,
       useSettingsStore: useSettingsStore(),
       displayedRows: 10,
       selectKeys: [],
@@ -309,7 +303,7 @@ export default {
     },
     async doSearchTemplate() {
       try {
-        const { data } = await API.pagesetting.search({
+        const { data } = await this.API.pagesetting.search({
           key: this.$modal.data.key,
           type: this.$modal.data.type
         })
@@ -332,9 +326,9 @@ export default {
       }
 
       try {
-        await API.pagesetting.add(json)
+        await this.API.pagesetting.add(json)
         await this.doSearchTemplate()
-        this.toast('success', 'edit.export')
+        this.toast('success', 'add.export')
       } catch (e) {
         this.toast('error', e)
         console.log(e)
@@ -353,7 +347,7 @@ export default {
       }
 
       try {
-        await API.pagesetting.edit(data.id, json)
+        await this.API.pagesetting.edit(data.id, json)
         await this.doSearchTemplate()
         this.toast('success', 'edit.export')
       } catch (e) {
@@ -370,7 +364,7 @@ export default {
     },
     async doDeleteTemplateApi(id) {
       try {
-        await API.pagesetting.delete(id)
+        await this.API.pagesetting.delete(id)
         await this.doSearchTemplate()
         this.toast('success', 'delete.export')
       } catch (e) {
@@ -601,11 +595,17 @@ export default {
       this.toast('success', 'export.completed')
     }
   },
-  async mounted() {
-    if (this.api) {
-      await this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+  created() {
+    if (this.useApi) {
+      const site = localStorage.getItem('site')
+      import(`../api/${site}/index.js`).then((module) => {
+        this.API = module.default
+        this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+      })
     }
-    if (!this.api) {
+  },
+  mounted() {
+    if (!this.useApi) {
       this.globalExportTemplates =
         this.useSettingsStore.getGlobalExportTemplates(this.currentPageName) || []
     }

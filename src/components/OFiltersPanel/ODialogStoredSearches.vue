@@ -3,7 +3,7 @@
     id="dialog-search"
     :dismissableMask="false"
     modal
-    :style="{ width: api ? '900px' : '700px' }"
+    :style="{ width: useApi ? '900px' : '700px' }"
     :visible="$modal.isVisible($options.name)"
     :breakpoints="{ '960px': '75vw', '640px': '95%' }"
     @update:visible="$modal.close()"
@@ -17,7 +17,7 @@
     <div class="p-grid">
       <div class="col-12 mt-3">
         <OPageSettingApi
-          v-if="api"
+          v-if="useApi"
           mode="filter"
           :results="$modal.data.list"
           @onUseTemplate="$emit('onUseTemplate', $event)"
@@ -27,7 +27,7 @@
         />
 
         <OPageSettingStore
-          v-if="!api"
+          v-if="!useApi"
           mode="filter"
           :results="$modal.data.list"
           @onUseTemplate="$emit('onUseTemplate', $event)"
@@ -44,30 +44,24 @@
 import { useSettingsStore } from '@/store/settings.js'
 import OPageSettingApi from '@/components/OPageSettingApi.vue'
 import OPageSettingStore from '@/components/OPageSettingStore.vue'
-let API
-try {
-    const site = localStorage.getItem('site')
-    import(`../../api/${site}/index.js`).then((resource) => {
-        API = resource.default
-    })
-} catch {}
 
 export default {
   name: 'ODialogStoredSearches',
   components: { OPageSettingApi, OPageSettingStore },
   inject: ['query'],
   props: {
-    api: { type: Boolean, default: () => false }
+    useApi: { type: Boolean, default: () => false }
   },
   data() {
     return {
-      useSettingsStore: useSettingsStore()
+      useSettingsStore: useSettingsStore(),
+      API: null
     }
   },
   methods: {
     async doSearchTemplate() {
       try {
-        const { data } = await API.pagesetting.search({
+        const { data } = await this.API.pagesetting.search({
           key: this.$modal.data.key,
           type: this.$modal.data.type
         })
@@ -90,7 +84,7 @@ export default {
       }
 
       try {
-        await API.pagesetting.add(json)
+        await this.API.pagesetting.add(json)
         await this.doSearchTemplate()
         this.toast('success', 'add.search')
       } catch (e) {
@@ -111,7 +105,7 @@ export default {
       }
 
       try {
-        await API.pagesetting.edit(data.id, json)
+        await this.API.pagesetting.edit(data.id, json)
         await this.doSearchTemplate()
         this.toast('success', 'edit.search')
       } catch (e) {
@@ -128,9 +122,9 @@ export default {
     },
     async doDeleteTemplateApi(id) {
       try {
-        await API.pagesetting.delete(id)
+        await this.API.pagesetting.delete(id)
         await this.doSearchTemplate()
-        this.toast('success', 'delete.export')
+        this.toast('success', 'delete.search')
       } catch (e) {
         this.toast('error', e)
         console.log(e)
@@ -143,11 +137,17 @@ export default {
       })
     }
   },
-  async mounted() {
-    if (this.api) {
-      await this.doSearchTemplate()
+  created() {
+    if (this.useApi) {
+      const site = localStorage.getItem('site')
+      import(`../../api/${site}/index.js`).then((module) => {
+        this.API = module.default
+        this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+      })
     }
-    if (!this.api) {
+  },
+  mounted() {
+    if (!this.useApi) {
       this.$modal.data.list = this.useSettingsStore.getSearchTemplates(this.currentPageName)
     }
   }

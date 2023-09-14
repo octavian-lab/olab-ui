@@ -58,7 +58,7 @@
     <ODialogStoredSearches
       v-if="$store.getters.isAdminRoot && $modal.isVisible('ODialogStoredSearches')"
       @onUseTemplate="doUseTemplate"
-      :api="api"
+      :useApi="useApi"
     />
   </Panel>
 </template>
@@ -71,7 +71,7 @@ export default {
   name: 'OFiltersPanel',
   components: { ODialogStoredSearches, OFiltersPanelBtnSearch },
   props: {
-    api: { type: Boolean, default: () => false },
+    useApi: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean, default: () => false },
     col: { type: [Number, String], default: () => 1 },
     showSaveQuery: { type: Boolean, default: () => true },
