@@ -44,12 +44,14 @@
 import { useSettingsStore } from '@/store/settings.js'
 import OPageSettingApi from '@/components/OPageSettingApi.vue'
 import OPageSettingStore from '@/components/OPageSettingStore.vue'
-
-const site = localStorage.getItem('site')
 let API
-import(`../../api/${site}/index.js`).then((resource) => {
-  API = resource.default
-})
+try {
+    const site = localStorage.getItem('site')
+    import(`../../api/${site}/index.js`).then((resource) => {
+        API = resource.default
+    })
+} catch {}
+
 export default {
   name: 'ODialogStoredSearches',
   components: { OPageSettingApi, OPageSettingStore },
