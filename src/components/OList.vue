@@ -41,7 +41,6 @@
             <Tag :class="el.valueClass" v-for="tag in elaborateValue(el)" :key="tag">{{ tag }}</Tag>
           </span>
           <span v-else :class="el.valueClass">
-            {{ el.value }}
             {{ elaborateValue(el) }}
           </span>
         </div>
