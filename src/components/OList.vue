@@ -1,38 +1,52 @@
 <template>
-  <div id="o-list" :class="col > 1 ? 'divided' : ''">
-    <div v-for="el in items" :key="el" :class="oListClass()">
-      <!-- LABEL -->
-      <div :class="['font-bold', el.labelClass, { 'px-3': striped }]">
-        {{ elaborateLabel(el.label) }}:
-      </div>
-      <!-- VALUE -->
-      <div :class="{ 'px-3 text-right': striped }">
-        <span v-if="el.value == null || el.value === '' || (Array.isArray(el.value) && el.value.length === 0)">-</span>
-        <img
+  <div id="o-list" :class="oListContainerClass()">
+    <slot>
+      <div v-for="el in items" :key="el" :class="oListClass()">
+        <!-- LABEL -->
+        <div :class="['font-bold', el.labelClass, { 'px-3': striped }]">
+          {{ elaborateLabel(el.label) }}:
+        </div>
+        <!-- VALUE -->
+        <div :class="{ 'px-3 text-right': striped }">
+          <span
+            v-if="
+              el.value == null ||
+              el.value === '' ||
+              (Array.isArray(el.value) && el.value.length === 0)
+            "
+            >-
+          </span>
+          <img
             v-else-if="checkType(el.valueType) === 'flag'"
             :class="`flag flag-${el.value.toLowerCase()}`"
-        />
-        <span v-else-if="checkType(el.valueType) === 'boolean' && el.valueType.showIcon === false">
-        {{ $translate(`admin.message.olist.boolean.${el.value}`) }}
-      </span>
-        <span
+          />
+          <span
+            v-else-if="checkType(el.valueType) === 'boolean' && el.valueType.showIcon === false"
+          >
+            {{ $translate(`admin.message.olist.boolean.${el.value}`) }}
+          </span>
+          <span
             v-else-if="checkType(el.valueType?.type) === 'boolean' && el.valueType.reverse === true"
-        >
-        <span>{{ $translate(`admin.message.olist.boolean.${el.value}`) }} - </span>
-        <i :class="`fad fa-lg ${setIcon(!el.value)}`"/>
-      </span>
-        <i
+          >
+            <span>{{ $translate(`admin.message.olist.boolean.${el.value}`) }} - </span>
+            <i :class="`fad fa-lg ${setIcon(!el.value)}`" />
+          </span>
+          <i
             v-else-if="checkType(el.valueType) === 'boolean'"
             :class="`fad fa-lg ${setIcon(el.value)}`"
-        />
-        <span v-else-if="checkType(el.valueType) !== 'string' && Array.isArray(elaborateValue(el))">
-        <Tag :class="el.valueClass" v-for="tag in elaborateValue(el)" :key="tag">{{ tag }}</Tag>
-      </span>
-        <span v-else :class="el.valueClass">
-        {{ elaborateValue(el) }}
-      </span>
+          />
+          <span
+            v-else-if="checkType(el.valueType) !== 'string' && Array.isArray(elaborateValue(el))"
+          >
+            <Tag :class="el.valueClass" v-for="tag in elaborateValue(el)" :key="tag">{{ tag }}</Tag>
+          </span>
+          <span v-else :class="el.valueClass">
+            {{ el.value }}
+            {{ elaborateValue(el) }}
+          </span>
+        </div>
       </div>
-    </div>
+    </slot>
   </div>
 </template>
 
@@ -40,13 +54,14 @@
 export default {
   name: 'OList',
   props: {
-    items: {type: Array, required: false, default: () => []},
-    striped: {Type: Boolean, default: () => true},
-    col: {Type: Number, default: () => 1}
+    items: { type: Array, required: false, default: () => [] },
+    striped: { Type: Boolean, default: () => true },
+    col: { Type: Number, default: () => 1 },
+    groupTable: { Type: Boolean, default: () => false }
   },
   data() {
     return {
-      defaultCurrency: "EUR"
+      defaultCurrency: 'EUR'
     }
   },
   methods: {
@@ -54,6 +69,13 @@ export default {
       let dynamicClass = this.striped ? 'striped-row' : 'border-bottom'
       if (this.col === 1) dynamicClass += ' w-full'
       return [`o-list-item flex justify-content-between align-items-center py-2`, [dynamicClass]]
+    },
+    oListContainerClass() {
+      return [
+        { divided: this.col > 1 },
+        { 'group-table-mode': this.groupTable },
+        { 'slot-olist': this.$slots.default }
+      ]
     },
     checkType(valueType) {
       if (valueType == null) return 'string'
@@ -69,48 +91,47 @@ export default {
       }
     },
     elaborateLabel(label) {
-      let ret = label;
-      if (label.startsWith("admin")) ret = this.$translate(ret);
-      return ret;
+      let ret = label
+      if (label.startsWith('admin')) ret = this.$translate(ret)
+      return ret
     },
     elaborateValue(field) {
-      let ret = field.value;
-      const type = this.checkType(field.valueType);
+      let ret = field.value
+      const type = this.checkType(field.valueType)
       if (!type) {
-        console.warn("Type is not defined");
-        return;
+        console.warn('Type is not defined')
+        return
       }
       // CASO IN CUI RICEVO UNA STRINGA SOTTOFORMA DI ARRAY LA TRANSFORMO COME TALE
-      if (type === "array" && this.isParsable(ret)) ret = JSON.parse(ret);
+      if (type === 'array' && this.isParsable(ret)) ret = JSON.parse(ret)
 
       // CASO IN CUI IL VALORE DA STAMPARE È VINCOLATO DA UNA TRADUZIONE
       if (field.translator != null) {
-        ret = this.$translate(`${field.translator}.${ret}`);
-        if (field.prependValue) ret = `${field.value} - ${ret}`;
+        ret = this.$translate(`${field.translator}.${ret}`)
+        if (field.prependValue) ret = `${field.value} - ${ret}`
       }
 
-      if (type === "number") {
+      if (type === 'number') {
         const symbol =
-            field.valueType.symbol ||
-            this.$store.getters.info?.idCurrency ||
-            this.defaultCurrency;
-        if (type === "number" && symbol === "%") {
-          ret = this.$filters.asPercentage(ret);
+          field.valueType.symbol || this.$store.getters.info?.idCurrency || this.defaultCurrency
+        if (type === 'number' && symbol === '%') {
+          ret = this.$filters.asPercentage(ret)
         } else {
-          ret = this.$filters.asAmount(ret, symbol);
+          ret = this.$filters.asAmount(ret, symbol)
         }
       }
 
-      if (type === "date") {
-        ret = this.$filters.asDate(ret, field.valueType.format);
+      if (type === 'date') {
+        ret = this.$filters.asDate(ret, field.valueType.format)
       }
 
-      return ret;
-    },
+      return ret
+    }
   }
 }
 </script>
 <style lang="scss" scoped>
+$borderColor: #e0e0e0;
 #o-list {
   &.divided {
     display: flex;
@@ -126,9 +147,38 @@ export default {
     }
   }
 
-  .border-bottom:not(:last-child) {
-    border-bottom: 1px solid #e0e0e0;
+  &.slot-olist {
+    :deep(div) {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0.3rem 0;
+      border-bottom: 1px solid $borderColor;
+      &:last-child {
+        border-bottom: none;
+      }
+      > div,
+      > span {
+        &:first-child {
+          font-weight: bold;
+        }
+      }
+    }
   }
+
+  //TODO: una volta rimossa la classe group-table dalla cdn rinominare questa classe group-table
+  &.group-table-mode {
+    font-size: 0.8rem !important;
+
+    .o-list-item {
+      padding: 0.3rem 0.2rem !important;
+    }
+  }
+
+  .border-bottom:not(:last-child) {
+    border-bottom: 1px solid $borderColor;
+  }
+
   .striped-row {
     &:nth-child(odd) {
       background-color: transparent;
