@@ -43,14 +43,14 @@
         :label="isMobile ? '' : $translate('admin.generic.clear.filters')"
       />
     </template>
-    <div class="grid grid-nogutter">
+    <div class="grid grid-nogutter overflow-hidden">
       <div :class="filtersContainerClass()">
         <slot name="filters" />
       </div>
       <div class="filters-join col-12 md:col-5" v-if="showJoins()">
         <slot name="filters-join" />
       </div>
-      <div class="col-12 overflow-hidden flex justify-content-center p-0 my-2 text-center h-fixed">
+      <div class="col-12 flex justify-content-center p-0 my-2 text-center h-fixed">
         <OFiltersPanelBtnSearch :btnDisable="btnDisabled" :requiredFilters="requiredFilters" />
       </div>
     </div>

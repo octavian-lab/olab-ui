@@ -32,7 +32,7 @@
       </div>
     </div>
 
-    <DataTable :value="results" v-model:expandedRows="expandedRows">
+    <DataTable :value="results" v-model:expandedRows="expandedRows" striped-rows>
       <template #empty>
         <div class="col-12 cx font-bold">
           {{ $translate('admin.generic.empty.results') }}

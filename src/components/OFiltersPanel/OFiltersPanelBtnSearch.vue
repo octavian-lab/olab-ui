@@ -5,15 +5,17 @@
     leave-active-class="fadeOutDown-custom"
     mode="out-in"
   >
-    <Button
-      v-if="requiredFilters.length === 0"
-      :class="['search-btn', { 'fadeInUp-custom': fastfilter }]"
-      :label="$translate('admin.action.search')"
-      icon="fad fa-magnifying-glass"
-      :disabled="btnDisabled"
-      :loading="$loading.isLoading('search')"
-      @click="doRefreshData()"
-    />
+    <div v-if="requiredFilters.length === 0">
+      <Button
+        :class="['search-btn', { 'fadeInUp-custom': fastfilter }]"
+        :label="$translate('admin.action.search')"
+        icon="fad fa-magnifying-glass"
+        :disabled="btnDisabled"
+        :loading="$loading.isLoading('search')"
+        @click="doRefreshData()"
+      />
+    </div>
+
     <div class="flex align-items-center justify-content-center" v-else>
       <i
         v-tooltip="
@@ -50,6 +52,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.search-btn {
+  height: 100%;
+}
 .fadeInUp-custom {
   animation: fadeInUp;
   animation-duration: 0.2s;
