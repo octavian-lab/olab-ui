@@ -6,7 +6,7 @@ export default {
     methods: {
         // DATE
         normalizeForRequest(date) {
-            return moment(date).utc().toDate().Date
+            return moment(date).utc().toDate()
         },
         getMidNight(date) {
             return moment(date).set({ hours: 0, minutes: 0, seconds: 0, milliseconds: 0 })
