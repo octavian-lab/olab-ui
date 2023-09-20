@@ -26,12 +26,20 @@ export const useSettingsStore = defineStore('settings', {
                 console.warn("ALERT! -- page -- parameter is required");
                 return;
             }
+            const templates = state.globalExportTemplates[`global-export-templates-${page}`];
+            if (!templates) {
+                state.globalExportTemplates[`global-export-templates-${page}`] = [];
+            }
             return state.globalExportTemplates[`global-export-templates-${page}`];
         },
         getSearchTemplates: (state) => (page) => {
             if (!page) {
                 console.warn("ALERT! -- page -- parameter is required");
                 return;
+            }
+            const templates = state.searchTemplates[`search-templates-${page}`];
+            if (!templates) {
+                state.searchTemplates[`search-templates-${page}`] = [];
             }
             return state.searchTemplates[`search-templates-${page}`];
         },
@@ -66,11 +74,7 @@ export const useSettingsStore = defineStore('settings', {
             this.responsiveTables[`responsive-table-${page}`] = value;
         },
         saveGlobalExportTemplates({ page, value }) {
-            let templates = this.globalExportTemplates[`global-export-templates-${page}`];
-            if (!templates) {
-                this.globalExportTemplates[`global-export-templates-${page}`] = [];
-            }
-            templates = this.globalExportTemplates[`global-export-templates-${page}`];
+            const templates = this.globalExportTemplates[`global-export-templates-${page}`];
             if (templates.length < 10) {
                 const obj = {
                     value: value,
@@ -82,22 +86,18 @@ export const useSettingsStore = defineStore('settings', {
         },
         updateGlobalExportTemplates({ page, index, value }) {
             const templates = this.globalExportTemplates[`global-export-templates-${page}`];
-            if (templates?.length > 0) {
+            if (templates.length > 0) {
                 this.globalExportTemplates[`global-export-templates-${page}`][index].label = value;
             }
         },
         deleteGlobalExportTemplates({ page, index }) {
             const templates = this.globalExportTemplates[`global-export-templates-${page}`];
-            if (templates?.length > 0) {
+            if (templates.length > 0) {
                 this.globalExportTemplates[`global-export-templates-${page}`].splice(index, 1);
             }
         },
         saveSearchTemplates({ page, value }) {
-            let templates = this.searchTemplates[`search-templates-${page}`];
-            if (!templates) {
-                this.searchTemplates[`search-templates-${page}`] = [];
-            }
-            templates = this.searchTemplates[`search-templates-${page}`];
+            const templates = this.searchTemplates[`search-templates-${page}`];
             if (templates.length < 10) {
                 const obj = {
                     value: value,
@@ -109,13 +109,13 @@ export const useSettingsStore = defineStore('settings', {
         },
         updateSearchTemplates({ page, index, value }) {
             const templates = this.searchTemplates[`search-templates-${page}`];
-            if (templates?.length > 0) {
+            if (templates.length > 0) {
                 this.searchTemplates[`search-templates-${page}`][index].label = value;
             }
         },
         deleteSearchTemplates({ page, index }) {
             const templates = this.searchTemplates[`search-templates-${page}`];
-            if (templates?.length > 0) {
+            if (templates.length > 0) {
                 this.searchTemplates[`search-templates-${page}`].splice(index, 1);
             }
         },

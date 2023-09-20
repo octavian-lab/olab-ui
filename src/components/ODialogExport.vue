@@ -607,7 +607,7 @@ export default {
   mounted() {
     if (!this.useApi) {
       this.globalExportTemplates =
-        this.useSettingsStore.getGlobalExportTemplates(this.currentPageName) || []
+        this.useSettingsStore.getGlobalExportTemplates(this.currentPageName)
     }
   }
 }
