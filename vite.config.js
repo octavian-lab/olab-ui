@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ['es', 'cjs', 'umd', 'iife']
     },
     rollupOptions: {
-      external: ['vue', 'primevue', 'moment', 'axios'],
+      external: ['vue', 'primevue', 'moment', 'axios', 'chart.js'],
       output: {
         exports: 'named',
         globals: {
@@ -22,6 +22,8 @@ export default defineConfig({
           moment: 'moment',
           axios: 'axios',
           primevue: '$primevue',
+          'chart.js': 'Chart',
+          'chart.js/helpers': 'Chart.helpers'
         }
       },
       plugins: [resolveRUP({

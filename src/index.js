@@ -19,6 +19,7 @@ import OField from './components/OField.vue'
 import OFieldsContainer from './components/OFieldsContainer.vue'
 import OCard from './components/OCard.vue'
 import OCalendar from './components/OCalendar.vue'
+import OChart from './components/OChart.vue'
 import ODialog from './components/ODialog.vue'
 import ODialogExport from './components/ODialogExport.vue'
 import ODropdown from './components/ODropdown.vue'
@@ -64,6 +65,7 @@ export {
   OList,
   OCard,
   OCalendar,
+  OChart,
   ODialog,
   ODropdown,
   OTable,
