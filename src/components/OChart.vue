@@ -9,7 +9,7 @@ import { Chart, Colors } from 'chart.js'
 Chart.register(Colors)
 
 export default {
-  name: 'Chart',
+  name: 'OChart',
   components: { PrimeChart },
   props: {
     hasDataset: {
