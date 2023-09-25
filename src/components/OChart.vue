@@ -3,19 +3,17 @@
 </template>
 
 <script>
-import PrimeChart from "primevue/chart";
+import PrimeChart from 'primevue/chart'
+import { Chart, Colors } from 'chart.js'
 
-import { Chart } from "chart.js";
-import autocolors from "chartjs-plugin-autocolors";
-
-Chart.register(autocolors);
+Chart.register(Colors)
 
 export default {
-  name: "Chart",
+  name: 'Chart',
   components: { PrimeChart },
   props: {
-    hasDataset:{
-      type:Boolean,
+    hasDataset: {
+      type: Boolean,
       default: false
     },
     type: String,
@@ -23,53 +21,55 @@ export default {
     labels: Array,
     options: Object,
     height: {
-      type:[String,Number],
+      type: [String, Number],
       default: 150
     }
   },
   data() {
     return {
-      loading: null,
-    };
+      loading: null
+    }
   },
   computed: {
     dataSet() {
-      if (!this.hasDataset) return {
-        labels: this.labels,
-        hoverOffset: 4,
-        datasets: [
-          {
-            data: this.data,
-          },
-        ],
-      };
-      else return {
-        labels: this.labels,
-        hoverOffset: 4,
-        datasets: this.data,
-      };
+      if (!this.hasDataset)
+        return {
+          labels: this.labels,
+          hoverOffset: 4,
+          datasets: [
+            {
+              data: this.data
+            }
+          ]
+        }
+      else
+        return {
+          labels: this.labels,
+          hoverOffset: 4,
+          datasets: this.data
+        }
     },
     optionsSet() {
       return this.options
-          ? {
+        ? {
             ...this.options,
             plugins: {
               ...this.options.plugins,
-              autocolors: {
-                mode: "data",
-              },
-            },
+              colors: {
+                forceOverride: true
+              }
+            }
           }
-          : {
+        : {
             plugins: {
-              autocolors: {
-                mode: "data",
-              },
-            },
-          };
-    },
-  },
-};
+              colors: {
+                forceOverride: true
+              }
+            }
+          }
+    }
+  }
+}
 </script>
 
 <style scoped lang="scss">

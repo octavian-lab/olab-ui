@@ -23,7 +23,6 @@ export default defineConfig({
           axios: 'axios',
           primevue: '$primevue',
           'chart.js': 'Chart',
-          'chart.js/helpers': 'Chart.helpers'
         }
       },
       plugins: [resolveRUP({
