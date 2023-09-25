@@ -66,7 +66,7 @@ export default {
   methods: {
     oListClass() {
       let dynamicClass = this.striped ? 'striped-row' : 'border-bottom'
-      if (this.col === 1) dynamicClass += ' w-full'
+      if (this.col === 1 || this.isMobile) dynamicClass += ' w-full'
       return [`o-list-item flex justify-content-between align-items-center py-2`, [dynamicClass]]
     },
     oListContainerClass() {

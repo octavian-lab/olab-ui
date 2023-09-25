@@ -1,6 +1,5 @@
 <template>
   <DataTable
-    :value="value"
     paginator-position="both"
     :rows="50"
     :currentPageReportTemplate="getDtTemplate('currentPageReport')"
@@ -15,7 +14,6 @@
     autoLayout
     :paginator="paginator"
     :loading="loading || $loading.isLoading('search')"
-    :rowClass="rowClass"
     v-model:expandedRows="expandedRows"
     :rowsPerPageOptions="rowsPerPageOptions"
     :responsiveLayout="refResponsiveLayout"
