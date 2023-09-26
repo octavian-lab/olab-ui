@@ -68,6 +68,7 @@
               class="mr-3"
               @click="doAddTemplateApi([...selectKeys], 1)"
               v-tooltip.bottom="$translate('admin.filter.store.template.personal')"
+              :loading="$loading.isLoading('add')"
             >
               <i class="fad fa-floppy-disk p-mr-2"></i>
               <i class="fad fa-user"></i>
@@ -80,6 +81,7 @@
               icon="fad fa-floppy-disk"
               @click="doAddTemplateStore([...selectKeys])"
               v-tooltip.bottom="$translate('admin.filter.store.template')"
+              :loading="$loading.isLoading('add')"
             />
             <Button
               class="p-button-danger mr-3"
@@ -111,6 +113,7 @@
           :reorderableColumns="true"
           @columnReorder="columnReorder($event)"
           :key="selectKeys.length"
+          stripedRows
         >
           <template #header>
             <div class="font-bold flex align-items-center">
@@ -287,6 +290,7 @@ export default {
       this.collapsed = true
     },
     doUseTemplate(template) {
+      this.toast('success', 'use.export')
       this.collapsed = false
       this.selectKeys = template
       this.showPrevieworExport('preview')
@@ -301,7 +305,8 @@ export default {
         }
       }
     },
-    async doSearchTemplate() {
+    async doSearchTemplateApi() {
+      this.$loading.start('search')
       try {
         const { data } = await this.API.pagesetting.search({
           key: this.$modal.data.key,
@@ -312,11 +317,13 @@ export default {
         })
         this.globalExportTemplates = data.data
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+      } finally {
+        this.$loading.stop('search')
       }
     },
     async doAddTemplateApi(template, mode) {
+      this.$loading.start('add')
       const json = {
         key: this.$modal.data.key,
         name: `${this.$modal.data.key} - ${this.globalExportTemplates.length}`,
@@ -327,11 +334,15 @@ export default {
 
       try {
         await this.API.pagesetting.add(json)
-        await this.doSearchTemplate()
+        await this.doSearchTemplateApi()
         this.toast('success', 'add.export')
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('add')
       }
     },
     doAddTemplateStore(template) {
@@ -341,6 +352,7 @@ export default {
       })
     },
     async doEditTemplateApi({ data, name, mode }) {
+      this.$loading.start('edit')
       const json = {
         name: name,
         mode: mode
@@ -348,11 +360,15 @@ export default {
 
       try {
         await this.API.pagesetting.edit(data.id, json)
-        await this.doSearchTemplate()
+        await this.doSearchTemplateApi()
         this.toast('success', 'edit.export')
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('edit')
       }
     },
     doEditTemplateStore({ index, name }) {
@@ -363,13 +379,18 @@ export default {
       })
     },
     async doDeleteTemplateApi(id) {
+      this.$loading.start('delete')
       try {
         await this.API.pagesetting.delete(id)
-        await this.doSearchTemplate()
+        await this.doSearchTemplateApi()
         this.toast('success', 'delete.export')
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('delete')
       }
     },
     doDeleteTemplateStore(index) {
@@ -600,14 +621,15 @@ export default {
       const site = localStorage.getItem('site')
       import(`../api/${site}/index.js`).then((module) => {
         this.API = module.default
-        this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        this.doSearchTemplateApi({ key: this.$modal.data.key, type: this.$modal.data.type })
       })
     }
   },
   mounted() {
     if (!this.useApi) {
-      this.globalExportTemplates =
-        this.useSettingsStore.getGlobalExportTemplates(this.currentPageName)
+      this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
+        this.currentPageName
+      )
     }
   }
 }

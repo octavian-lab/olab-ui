@@ -175,6 +175,7 @@ export default {
   },
   methods: {
     doUseTemplate(savedQuery) {
+      this.toast('success', 'use.search')
       for (let [key, val] of Object.entries(savedQuery)) {
         this.query[key] = val
       }

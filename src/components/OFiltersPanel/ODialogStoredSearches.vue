@@ -59,7 +59,8 @@ export default {
     }
   },
   methods: {
-    async doSearchTemplate() {
+    async doSearchTemplateApi() {
+      this.$loading.start('search')
       try {
         const { data } = await this.API.pagesetting.search({
           key: this.$modal.data.key,
@@ -70,11 +71,13 @@ export default {
         })
         this.$modal.data.list = data.data
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+      } finally {
+        this.$loading.stop('search')
       }
     },
     async doAddTemplateApi(mode) {
+      this.$loading.start('add')
       const json = {
         key: this.$modal.data.key,
         name: `${this.$modal.data.key} - ${this.$modal.data.list.length}`,
@@ -85,11 +88,15 @@ export default {
 
       try {
         await this.API.pagesetting.add(json)
-        await this.doSearchTemplate()
+        await this.doSearchTemplateApi()
         this.toast('success', 'add.search')
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('add')
       }
     },
     doAddTemplateStore() {
@@ -99,6 +106,7 @@ export default {
       })
     },
     async doEditTemplateApi({ data, name, mode }) {
+      this.$loading.start('edit')
       const json = {
         name: name,
         mode: mode
@@ -106,11 +114,15 @@ export default {
 
       try {
         await this.API.pagesetting.edit(data.id, json)
-        await this.doSearchTemplate()
+        await this.doSearchTemplateApi()
         this.toast('success', 'edit.search')
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('edit')
       }
     },
     doEditTemplateStore({ index, name }) {
@@ -121,13 +133,18 @@ export default {
       })
     },
     async doDeleteTemplateApi(id) {
+      this.$loading.start('delete')
       try {
         await this.API.pagesetting.delete(id)
-        await this.doSearchTemplate()
+        await this.doSearchTemplateApi()
         this.toast('success', 'delete.search')
       } catch (e) {
-        this.toast('error', e)
         console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('delete')
       }
     },
     doDeleteTemplateStore(index) {
@@ -142,7 +159,7 @@ export default {
       const site = localStorage.getItem('site')
       import(`../../api/${site}/index.js`).then((module) => {
         this.API = module.default
-        this.doSearchTemplate({ key: this.$modal.data.key, type: this.$modal.data.type })
+        this.doSearchTemplateApi({ key: this.$modal.data.key, type: this.$modal.data.type })
       })
     }
   },
@@ -153,6 +170,7 @@ export default {
   }
 }
 </script>
+
 <style scoped>
 :deep(.p-datatable) .p-datatable-footer {
   padding: 0.5rem;

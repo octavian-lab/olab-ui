@@ -25,6 +25,8 @@
       :rows="10"
       :paginatorTemplate="getDtTemplate('paginator')"
       v-model:expandedRows="expandedRows"
+      :loading="$loading.isLoading('search')"
+      stripedRows
     >
       <template #empty>
         <div class="col-12 cx font-bold">
@@ -41,6 +43,7 @@
               class="mr-3 p-button-secondary"
               @click="$emit('onAddTemplate', 0)"
               v-tooltip.bottom="$translate('admin.filter.store.search.global')"
+              :loading="$loading.isLoading('add')"
             >
               <i class="fad fa-floppy-disk mr-2"></i>
               <i class="fad fa-globe"></i>
@@ -49,6 +52,7 @@
               class="mr-3"
               @click="$emit('onAddTemplate', 1)"
               v-tooltip.bottom="$translate('admin.filter.store.search.personal')"
+              :loading="$loading.isLoading('add')"
             >
               <i class="fad fa-floppy-disk mr-2"></i>
               <i class="fad fa-user"></i>
@@ -66,7 +70,6 @@
 
       <Column v-if="mode === 'filter'" expander class="w-3 text-center" />
       <Column field="name" :header="$translate('admin.generic.name')" bodyClass="cx">
-        {{ $modal.data }}
         <template #body="{ index, data }">
           <div v-if="$modal.data.templateEditCheck !== index" class="font-bold">
             {{ data.name }}
@@ -75,6 +78,7 @@
             v-if="$modal.data.templateEditCheck === index"
             v-model="$modal.data.templateEditName"
             :placeholder="$translate('admin.generic.enter.name')"
+            @keyup.enter="doHandleEditTemplate(index, data, 'edit')"
           />
         </template>
       </Column>
@@ -160,7 +164,8 @@
                   icon: 'fad fa-trash text-danger',
                   command: () => {
                     $emit('onDeleteTemplate', data.id)
-                  }
+                  },
+                  loading: $loading.isLoading('delete')
                 }
               ]"
             />
@@ -173,6 +178,7 @@
               :label="$translate('admin.generic.action.save')"
               :disabled="!$modal.data.templateEditName"
               @click="doHandleEditTemplate(index, data, 'edit')"
+              :loading="$loading.isLoading('edit')"
             />
             <Button
               icon="fad fa-xmark"

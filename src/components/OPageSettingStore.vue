@@ -32,7 +32,11 @@
       </div>
     </div>
 
-    <DataTable :value="results" v-model:expandedRows="expandedRows" striped-rows>
+    <DataTable
+        :value="results"
+        v-model:expandedRows="expandedRows"
+        stripedRows
+    >
       <template #empty>
         <div class="col-12 cx font-bold">
           {{ $translate('admin.generic.empty.results') }}
@@ -69,6 +73,7 @@
             v-else-if="$modal.data.templateEditCheck === index"
             v-model="$modal.data.templateEditName"
             :placeholder="$translate('admin.generic.enter.label')"
+            @keyup.enter="doHandleEditTemplate(index, undefined, 'edit')"
           />
         </template>
       </Column>
