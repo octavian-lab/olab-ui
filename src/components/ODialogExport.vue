@@ -204,16 +204,19 @@ export default {
     }
   },
   watch: {
-    '$modal.id'(modalId) {
-      // Modal ID sarà sempre lowercase. + check se ci sono defaultExportKeys
-      if (modalId === this.$options.name.toLowerCase() && this.$modal.data.defaultExportKeys) {
-        this.preValorizeDefaultFilters()
-      }
+    '$modal.id':{
+      handler(modalId){
+          // Modal ID sarà sempre lowercase. + check se ci sono defaultExportKeys
+          if (modalId === this.$options.name.toLowerCase() && this.$modal.data.defaultExportKeys) {
+              this.preValorizeDefaultFilters()
+          }
+      },immediate:true
     },
     buttonSwitch: {
       handler() {
         if (this.$modal.id) this.showPrevieworExport('preview')
       },
+      immediate:true,
       deep: true
     }
   },
@@ -270,6 +273,7 @@ export default {
       }
     },
     preValorizeDefaultFilters() {
+      console.log('prevalorize',this.$modal.data.defaultExportKeys)
       for (const defaultExportKey of this.$modal.data.defaultExportKeys) {
         for (const key of this.keys) {
           if (defaultExportKey === key.label) {
