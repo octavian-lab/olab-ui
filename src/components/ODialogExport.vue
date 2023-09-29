@@ -273,7 +273,6 @@ export default {
       }
     },
     preValorizeDefaultFilters() {
-      console.log('prevalorize',this.$modal.data.defaultExportKeys)
       for (const defaultExportKey of this.$modal.data.defaultExportKeys) {
         for (const key of this.keys) {
           if (defaultExportKey === key.label) {
