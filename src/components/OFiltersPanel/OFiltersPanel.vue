@@ -274,7 +274,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
       @media screen and (max-width: 1200px) {
         width: 57%;
       }
-      :first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
+      .p-component:first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
         width: 100%;
       }
       :first-child#o-calendar .p-calendar {
