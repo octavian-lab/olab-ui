@@ -6,12 +6,19 @@
     :data-multilanguage-key="setTranslateKeyAttribute('admin.filter.', name)"
     :data-required-field="required"
   >
-    <span :class="generateFilterClass" v-tooltip="generateTooltip()">
+    <span
+      :class="generateFilterClass"
+      @click="!isDesktop ? $refs['tooltip-op'].toggle($event) : undefined"
+      v-tooltip="generateTooltip()"
+    >
       <i class="fad fa-info-circle mr-2" v-if="tooltip" />
       <span :class="{ 'text-disabled': disabled }">
         {{ $translate('admin.filter.' + name, label) }}
       </span>
       <span class="ml-2 font-bold" v-if="required">*</span>
+      <OverlayPanel ref="tooltip-op">
+        {{ generateTooltip().value }}
+      </OverlayPanel>
     </span>
     <Teleport
       :to="teleportFilter?.to"
@@ -61,9 +68,7 @@ export default {
   computed: {
     teleportDisabled() {
       if (!this.collapsed) return true
-      return !this.useSettingsStore.getFastfilters[this.currentPageName]?.includes(
-        this.name
-      )
+      return !this.useSettingsStore.getFastfilters[this.currentPageName]?.includes(this.name)
     },
     generateFilterClass() {
       const uppercaseCondition = this.$translate('admin.filter.' + this.name).startsWith('--')
