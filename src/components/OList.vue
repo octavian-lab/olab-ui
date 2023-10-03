@@ -65,9 +65,21 @@ export default {
   },
   methods: {
     oListClass() {
-      let dynamicClass = this.striped ? 'striped-row' : 'border-bottom'
+      let dynamicClass = 'o-list-item flex justify-content-between align-items-center py-2'
+      switch (this.striped) {
+        case true:
+          if (this.col === 1) {
+            dynamicClass += ' striped-row'
+          } else {
+            dynamicClass += ' divided-striped'
+          }
+          break
+        case false:
+          dynamicClass += ' border-bottom'
+          break
+      }
       if (this.col === 1 || this.isMobile) dynamicClass += ' w-full'
-      return [`o-list-item flex justify-content-between align-items-center py-2`, [dynamicClass]]
+      return dynamicClass
     },
     oListContainerClass() {
       return [
@@ -132,16 +144,18 @@ export default {
 <style lang="scss" scoped>
 $borderColor: #e0e0e0;
 #o-list {
+  //CASO COL 2
   &.divided {
     display: flex;
     flex-wrap: wrap;
 
     .o-list-item {
       width: 50%;
-
-      &:nth-child(4n + 2),
-      &:nth-child(4n + 3) {
-        background: var(--bluegray-100) !important;
+      &.divided-striped {
+        &:nth-child(4n + 2),
+        &:nth-child(4n + 3) {
+          background: var(--bluegray-100) !important;
+        }
       }
     }
   }
@@ -177,7 +191,7 @@ $borderColor: #e0e0e0;
   .border-bottom:not(:last-child) {
     border-bottom: 1px solid $borderColor;
   }
-
+  //PER SINGOLA COLONNA
   .striped-row {
     &:nth-child(odd) {
       background-color: transparent;
