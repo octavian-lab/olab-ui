@@ -436,7 +436,7 @@ export default {
       const ret = []
       for (const key of Object.keys(el)) {
         const currValue = el[key]
-        if (typeof currValue === 'object' && currValue !== null) {
+        if (typeof currValue === 'object' && currValue !== null && !currValue.length) {
           const tmp = this.calcKeys(currValue)
           for (const keyDeep of tmp) {
             ret.push({
