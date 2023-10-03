@@ -8,7 +8,7 @@
   >
     <span
       :class="generateFilterClass"
-      @click="!isDesktop ? $refs['tooltip-op'].toggle($event) : undefined"
+      @click="!isDesktop ? $refs['tooltip-ofilter'].toggle($event) : undefined"
       v-tooltip="generateTooltip()"
     >
       <i class="fad fa-info-circle mr-2" v-if="tooltip" />
@@ -16,7 +16,7 @@
         {{ $translate('admin.filter.' + name, label) }}
       </span>
       <span class="ml-2 font-bold" v-if="required">*</span>
-      <OverlayPanel ref="tooltip-op">
+      <OverlayPanel ref="tooltip-ofilter">
         {{ generateTooltip().value }}
       </OverlayPanel>
     </span>
