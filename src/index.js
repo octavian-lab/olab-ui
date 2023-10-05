@@ -7,6 +7,10 @@ import modalplugin from '@/plugins/modalplugin.js'
 import functionmixin from '@/mixins/functionmixin.js'
 import datemixin from '@/mixins/datemixin.js'
 
+// USAGES IN JS FILES
+const useFunctions =() => functionmixin.methods
+const useModal = ()=> modalplugin.modal
+
 // FILTERS IMPORT
 import asDate from './filters/asDate.js'
 import asAmount from './filters/asAmount.js'
@@ -76,5 +80,7 @@ export {
   OFilter,
   OFiltersPanel,
   OPassword,
-  DropdownSmart
+  DropdownSmart,
+  useModal,
+  useFunctions
 }

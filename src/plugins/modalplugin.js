@@ -29,5 +29,6 @@ const modal = reactive({
 export default {
   install(app) {
     app.config.globalProperties.$modal = modal
-  }
+  },
+  modal
 }
