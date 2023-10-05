@@ -1,5 +1,6 @@
 import { useMediaQuery } from '@vueuse/core';
-
+import { useCookies } from "vue3-cookies";
+import moment from "moment";
 export default {
     data() {
         return {
@@ -92,7 +93,21 @@ export default {
                     return 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
             }
         },
-
+        isTimedOut() {
+            const { cookies } = useCookies();
+            let lastCall = cookies.get("lastCall");
+            const defaultTimeout = 20; // -> [20 min. di default]
+            const now = moment();
+            if (!lastCall) lastCall = now;
+            const dateExpire = moment(lastCall).add(defaultTimeout, "minutes");
+            const ret = now.isAfter(dateExpire);
+            if (ret) {
+                console.log("Uscita forzata; timeout superiore a 20 min.");
+                console.log("NOW:", now.toDate());
+                console.log("LASTCALL:", lastCall);
+            }
+            return ret;
+        },
         // TODO
         /*setTranslateKeyAttribute(prefix, name) {
             return this.$translate(prefix + name, '', true)
