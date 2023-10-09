@@ -93,10 +93,10 @@ export default {
                     return 'CurrentPageReport FirstPageLink PrevPageLink PageLinks NextPageLink LastPageLink RowsPerPageDropdown'
             }
         },
-        isTimedOut() {
+        isTimedOut(userTimer) {
             const { cookies } = useCookies();
             let lastCall = cookies.get("lastCall");
-            const defaultTimeout = 20; // -> [20 min. di default]
+            const defaultTimeout = userTimer || 20; // -> [20 min. di default]
             const now = moment();
             if (!lastCall) lastCall = now;
             const dateExpire = moment(lastCall).add(defaultTimeout, "minutes");
