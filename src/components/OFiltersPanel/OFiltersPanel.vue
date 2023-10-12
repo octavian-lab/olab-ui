@@ -93,7 +93,7 @@ export default {
       requiredFilters: [],
       page: this.currentPageName,
       collapsed: false,
-      defaultQuery: { ...this.query },
+      defaultQuery: JSON.parse(JSON.stringify(this.query)),
       teleportFilter: {
         to: '.dynamic-fastfilter-container',
         disabled: true,
@@ -199,7 +199,7 @@ export default {
     doClearFilters() {
       // Reimposto i filtri allo stato iniziale.
       for (let [key, val] of Object.entries(this.defaultQuery)) {
-        this.query[key] = val
+          this.query[key] = typeof val === 'object' ? JSON.parse(JSON.stringify(val)) : val
       }
     },
     filtersContainerClass() {
