@@ -153,4 +153,9 @@ ul li {
   list-style: none;
   line-height: 1.8;
 }
+.p-password  {
+  :deep(.p-icon) {
+    left: 94% !important;
+  }
+}
 </style>
