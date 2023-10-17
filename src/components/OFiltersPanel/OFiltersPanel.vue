@@ -56,9 +56,11 @@
     </div>
     <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
     <ODialogStoredSearches
-      v-if="$store.getters.isAdminRoot && $modal.isVisible('ODialogStoredSearches')"
       @onUseTemplate="doUseTemplate"
       :useApi="useApi"
+      v-if="
+        (showSaveQuery || $store.getters.isAdminRoot) && $modal.isVisible('ODialogStoredSearches')
+      "
     />
   </Panel>
 </template>
@@ -74,7 +76,7 @@ export default {
     useApi: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean, default: () => false },
     col: { type: [Number, String], default: () => 1 },
-    showSaveQuery: { type: Boolean, default: () => true },
+    showSaveQuery: { type: Boolean, default: () => false },
     panelClass: String
   },
   inject: {
@@ -199,7 +201,7 @@ export default {
     doClearFilters() {
       // Reimposto i filtri allo stato iniziale.
       for (let [key, val] of Object.entries(this.defaultQuery)) {
-          this.query[key] = typeof val === 'object' ? JSON.parse(JSON.stringify(val)) : val
+        this.query[key] = typeof val === 'object' ? JSON.parse(JSON.stringify(val)) : val
       }
     },
     filtersContainerClass() {
@@ -274,7 +276,12 @@ $borderColor: rgba(149, 148, 148, 0.19);
       @media screen and (max-width: 1200px) {
         width: 57%;
       }
-      .p-component:first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
+      .p-component:first-child:not(
+          .p-inputgroup,
+          .p-calendar .p-chips-token,
+          .p-checkbox,
+          .p-inputswitch
+        ) {
         width: 100%;
       }
       :first-child#o-calendar .p-calendar {
