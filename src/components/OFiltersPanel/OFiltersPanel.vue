@@ -28,7 +28,7 @@
     </template>
     <template #icons>
       <Button
-        v-if="$store.getters.isAdminRoot"
+        v-if="showSaveQuery || $store.getters.isAdminRoot"
         class="mr-2"
         v-tooltip.left="{ value: $translate('admin.filter.memorize.search') }"
         icon="fad fa-floppy-disk fa-lg"
