@@ -3,7 +3,7 @@
     id="dialog-search"
     :dismissableMask="false"
     modal
-    :style="{ width: useApi ? '900px' : '700px' }"
+    :style="{ width: useApi ? '1000px' : '800px' }"
     :visible="$modal.isVisible($options.name)"
     :breakpoints="{ '960px': '75vw', '640px': '95%' }"
     @update:visible="$modal.close()"
@@ -102,7 +102,7 @@ export default {
     doAddTemplateStore() {
       this.useSettingsStore.saveSearchTemplates({
         page: this.currentPageName,
-        value: this.query
+        value: JSON.parse(JSON.stringify(this.query))
       })
     },
     async doEditTemplateApi({ data, name, mode }) {
