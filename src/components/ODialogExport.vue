@@ -204,19 +204,20 @@ export default {
     }
   },
   watch: {
-    '$modal.id':{
-      handler(modalId){
-          // Modal ID sarà sempre lowercase. + check se ci sono defaultExportKeys
-          if (modalId === this.$options.name.toLowerCase() && this.$modal.data.defaultExportKeys) {
-              this.preValorizeDefaultFilters()
-          }
-      },immediate:true
+    '$modal.id': {
+      handler(modalId) {
+        // Modal ID sarà sempre lowercase. + check se ci sono defaultExportKeys
+        if (modalId === this.$options.name.toLowerCase() && this.$modal.data.defaultExportKeys) {
+          this.preValorizeDefaultFilters()
+        }
+      },
+      immediate: true
     },
     buttonSwitch: {
       handler() {
         if (this.$modal.id) this.showPrevieworExport('preview')
       },
-      immediate:true,
+      immediate: true,
       deep: true
     }
   },
@@ -295,7 +296,7 @@ export default {
     doUseTemplate(template) {
       this.toast('success', 'use.export')
       this.collapsed = false
-      this.selectKeys = template
+      this.selectKeys = JSON.parse(JSON.stringify(template))
       this.showPrevieworExport('preview')
 
       for (const key of Object.keys(this.buttonSwitch)) {
