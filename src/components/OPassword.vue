@@ -10,7 +10,7 @@
     <template #header>
       <div class="p-d-flex p-jc-between">
         <p class="p-text-bold" :class="{ 'p-mb-3': type !== 'new' }">
-          {{ $store.getters.translate(`admin.generic.${type}.password`) }}
+          {{ $translate(`admin.generic.${type}.password`) }}
         </p>
         <div v-if="type === 'new'">
           {{ `${filteredArray.length} / ${level}` }}
@@ -21,10 +21,10 @@
       <div v-if="type === 'new'">
         <hr />
         <p class="mt-2 p-text-bold">
-          {{ $store.getters.translate('admin.generic.check.password.rules') }}
+          {{ $translate('admin.generic.check.password.rules') }}
         </p>
         <p>
-          {{ $store.getters.translate('admin.generic.check.password.length') }}
+          {{ $translate('admin.generic.check.password.length') }}
         </p>
 
         <ul class="p-pl-2 p-ml-2 p-mt-0" v-for="list in listCheckPassword" :key="list">
@@ -37,7 +37,7 @@
       <div v-if="type === 'confirm'">
         <hr />
         <label class="p-text-bold">
-          {{ $store.getters.translate('admin.generic.check.password.compare') }}
+          {{ $translate('admin.generic.check.password.compare') }}
         </label>
       </div>
     </template>
@@ -53,19 +53,19 @@ export default {
       filteredArray: [],
       listCheckPassword: [
         {
-          label: this.$store.getters.translate('admin.generic.check.password.lowercase'),
+          label: this.$translate('admin.generic.check.password.lowercase'),
           condition: 'lowercase'
         },
         {
-          label: this.$store.getters.translate('admin.generic.check.password.uppercase'),
+          label: this.$translate('admin.generic.check.password.uppercase'),
           condition: 'uppercase'
         },
         {
-          label: this.$store.getters.translate('admin.generic.check.password.symbol'),
+          label: this.$translate('admin.generic.check.password.symbol'),
           condition: 'symbol'
         },
         {
-          label: this.$store.getters.translate('admin.generic.check.password.number'),
+          label: this.$translate('admin.generic.check.password.number'),
           condition: 'number'
         }
       ]
@@ -121,7 +121,7 @@ export default {
   methods: {
     handlePlaceholder() {
       if (!this.placeholder === undefined) {
-        return this.$store.getters.translate(`admin.generic.enter.${this.type}.password`)
+        return this.$translate(`admin.generic.enter.${this.type}.password`)
       }
       return this.placeholder
     },
