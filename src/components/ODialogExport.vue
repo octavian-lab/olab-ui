@@ -228,7 +228,16 @@ export default {
     keys() {
       let ret = []
       if (this.$modal.data.processed != null && this.$modal.data.processed.length > 0) {
-        ret = this.calcKeys(this.$modal.data.processed[0])
+          const elaboratedObj = {...this.$modal.data.processed[0]}
+          let maxCounter = this.$modal.data.processed.length > 100 ? 100 : this.$modal.data.processed.length
+          for(let i = 0; i < maxCounter;i++){
+              Object.entries(this.$modal.data.processed[i]).forEach(([key,value])=>{
+                  if(value != null){
+                      elaboratedObj[key] = value
+                  }
+              })
+          }
+        ret = this.calcKeys(elaboratedObj)
       }
       return ret
     },
@@ -525,7 +534,6 @@ export default {
     },
     async showPrevieworExport(type) {
       this.selectColumnsData = []
-
       const dataProcessed =
         type === 'preview'
           ? [...this.$modal.data.processed].splice(0, this.displayedRows)

@@ -43,6 +43,7 @@
             class="hidden md:inline-flex p-button-outlined ml-2"
             icon="fad fa-external-link"
             :label="$translate('admin.generic.action.export')"
+            :loading="$loading.isLoading('open-dialog-export')"
             @click="doExport($event)"
           />
           <Button
@@ -188,6 +189,10 @@ export default {
   },
   methods: {
     doExport() {
+      this.$loading.start('open-dialog-export')
+        setTimeout(()=>{
+            this.$loading.stop('open-dialog-export')
+        },2000)
       const processedData = this.$refs.dt.processedData
       if (!this.$modal.id) {
         this.$modal.open('ODialogExport', {
