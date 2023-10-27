@@ -89,7 +89,7 @@ export default {
     },
     isTimedOut(userTimer) {
       const { cookies } = useCookies()
-      let lastCall = cookies.get('lastCall')
+      let lastCall = cookies.get('lastApiCall')
       const defaultTimeout = userTimer || 20 // -> [20 min. di default]
       const now = moment()
       if (!lastCall) lastCall = now
