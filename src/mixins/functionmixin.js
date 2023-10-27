@@ -101,7 +101,15 @@ export default {
         console.log('LASTCALL:', lastCall)
       }
       return ret
-    }
+    },
+    getRandomColor(){
+      let letters = '0123456789ABCDEF'.split('');
+      let color = '#';
+      for (let i = 0; i < 6; i++ ) {
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      return color;
+    },
     // TODO
     /*setTranslateKeyAttribute(prefix, name) {
             return this.$translate(prefix + name, '', true)
