@@ -7,7 +7,6 @@ import PrimeChart from 'primevue/chart'
 import { Chart, Colors } from 'chart.js'
 
 Chart.register(Colors)
-
 export default {
   name: 'OChart',
   components: { PrimeChart },
@@ -53,12 +52,6 @@ export default {
       return this.options
         ? {
             ...this.options,
-            plugins: {
-              ...this.options.plugins,
-              colors: {
-                forceOverride: true
-              }
-            }
           }
         : {
             plugins: {
