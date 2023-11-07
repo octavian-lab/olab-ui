@@ -51,7 +51,8 @@
         <slot name="filters-join" />
       </div>
       <div class="col-12 flex justify-content-center p-0 my-2 text-center h-fixed">
-        <OFiltersPanelBtnSearch :btnDisable="btnDisabled" :requiredFilters="requiredFilters" />
+        <slot name="loading" v-if="$slots['loading'] && $loading.isLoading('search')"/>
+        <OFiltersPanelBtnSearch v-else :btnDisable="btnDisabled" :requiredFilters="requiredFilters" />
       </div>
     </div>
     <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
