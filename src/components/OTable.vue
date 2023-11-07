@@ -1,5 +1,6 @@
 <template>
   <DataTable
+    :value="value"
     paginator-position="both"
     :rows="50"
     :currentPageReportTemplate="getDtTemplate('currentPageReport')"
@@ -12,7 +13,7 @@
     showGridlines
     removableSort
     autoLayout
-    :paginator="paginator"
+    :paginator="paginator && value.length > 20"
     :loading="loading || $loading.isLoading('search')"
     v-model:expandedRows="expandedRows"
     :rowsPerPageOptions="rowsPerPageOptions"
@@ -133,6 +134,10 @@ export default {
       default: () => null
     },
     // PROPS DI PRIMEVUE
+    value: {
+      type: Array,
+      required: true
+    },
     paginator: {
       type: Boolean,
       default: () => true
