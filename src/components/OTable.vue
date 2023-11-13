@@ -13,7 +13,7 @@
     showGridlines
     removableSort
     autoLayout
-    :paginator="paginator && value.length > 20"
+    :paginator="paginator && value?.length > 20"
     :loading="loading || $loading.isLoading('search')"
     v-model:expandedRows="expandedRows"
     :rowsPerPageOptions="rowsPerPageOptions"
