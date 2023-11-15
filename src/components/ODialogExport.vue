@@ -508,6 +508,7 @@ export default {
         case 'start':
         case 'stop':
         case 'toDate':
+        case 'dateExecution':
           return this.$filters.asDate(value)
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
