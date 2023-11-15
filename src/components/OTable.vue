@@ -194,14 +194,12 @@ export default {
   methods: {
     doExport() {
       const processedData = this.$refs.dt.processedData
-      if (!this.$modal.id) {
-        this.$modal.open('ODialogExport', {
-          processed: processedData,
-          defaultExportKeys: this.defaultExportKeys,
-          key: this.currentPageName,
-          type: 0
-        })
-      }
+      this.$modal.open('ODialogExport', {
+        processed: processedData,
+        defaultExportKeys: this.defaultExportKeys,
+        key: this.currentPageName,
+        type: 0
+      })
     },
     handlerResponsiveLayout(type, value) {
       if (value === 'stack') {
