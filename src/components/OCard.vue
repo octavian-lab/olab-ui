@@ -7,17 +7,19 @@
       </div>
     </template>
     <template #content>
-      <slot name="content">
-        <OList :items="data.items" :striped="striped" />
-      </slot>
-      <i
-        v-if="mode === 'default' && data.icon"
-        ref="OCardIconModeDefaultRef"
-        :class="`fad ${data.icon} icon__mode-default`"
-      />
+      <div class="o-card__content">
+        <slot name="content">
+          <OList :items="data.items" :striped="striped" />
+        </slot>
+        <i
+          v-if="mode === 'default' && data.icon"
+          ref="OCardIconModeDefaultRef"
+          :class="`fad ${data.icon} icon__mode-default`"
+        />
+      </div>
     </template>
     <template v-if="$slots.footer !== undefined" #footer>
-      <div class="'o-card__footer m-5'">
+      <div class="o-card__footer">
         <slot name="footer" />
       </div>
     </template>
@@ -85,6 +87,9 @@ export default {
         right: -1.5rem;
         font-size: 6rem;
       }
+    }
+    .p-card-footer {
+      padding: 1rem;
     }
   }
 }
