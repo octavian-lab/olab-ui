@@ -3,7 +3,11 @@
     <template v-if="data.title" #title>
       <div ref="OCardTitleRef" class="o-card__title">
         <span ref="OCardTitleContainerRef" class="o-card__title-container">
-          <span v-if="styleAdvanced" class="o-card__style-advanced"></span>
+          <span
+            v-if="styleAdvanced"
+            ref="OCardStyleAdvancedRef"
+            class="o-card__style-advanced"
+          ></span>
 
           <i v-if="mode === 'list' && data.icon" :class="`fad ${data.icon} mr-2`" />
           <span>{{ $translate(`${data.title}`) }}</span>
@@ -55,6 +59,7 @@ export default {
         if (this.styleAdvanced) {
           this.$refs.OCardTitleRef.style.background = `linear-gradient(180deg, var(--special-color-${this.titleColor}) 50%, rgba(255, 255, 255, 1) 50%)`
           this.$refs.OCardTitleContainerRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
+          this.$refs.OCardStyleAdvancedRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
         } else {
           this.$refs.OCardTitleRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
         }
@@ -116,7 +121,6 @@ export default {
     .o-card__style-advanced {
       width: calc(100% + 0.75rem + 0.75rem);
       height: calc(0.75rem + 0.75rem);
-      background-color: var(--special-color-1);
       position: absolute;
       top: 50%;
       left: -0.75rem;
