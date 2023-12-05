@@ -63,13 +63,14 @@ export default {
         } else {
           this.$refs.OCardTitleRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
         }
-        this.$refs.OCardIconModeDefaultRef.style.color = `var(--special-color-${this.titleColor})`
+        if (this.data.icon)
+          this.$refs.OCardIconModeDefaultRef.style.color = `var(--special-color-${this.titleColor})`
       }
       if (this.contentColor != null)
         this.$refs.OCardRef.$el.style.backgroundColor = `var(--special-color-${this.contentColor})`
       if (this.textColor != null) {
         this.$refs.OCardRef.$el.style.color = `var(--special-color-${this.textColor}-darken)`
-        this.$refs.OCardIconModeDefaultRef.style.opacity = '0.5'
+        if (this.data.icon) this.$refs.OCardIconModeDefaultRef.style.opacity = '0.5'
       }
     })
   }
