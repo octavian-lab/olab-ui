@@ -1,14 +1,14 @@
 <template>
   <Dialog
-    id="dialog-global-export"
-    :dismissableMask="false"
-    :style="{ width: '95vw' }"
-    :visible="$modal.isVisible($options.name)"
-    :breakpoints="{ '960px': '75vw', '640px': '95%' }"
-    @update:visible="handleUpdateVisible()"
-    position="top"
-    modal
-    :draggable="false"
+      id="dialog-global-export"
+      :dismissableMask="false"
+      :style="{ width: '95vw' }"
+      :visible="$modal.isVisible($options.name)"
+      :breakpoints="{ '960px': '75vw', '640px': '95%' }"
+      @update:visible="handleUpdateVisible()"
+      position="top"
+      modal
+      :draggable="false"
   >
     <template #header>
       <div class="dialog-title">
@@ -19,19 +19,19 @@
     <div class="grid formgrid fluid">
       <div class="field col-12">
         <OPageSettingApi
-          v-if="useApi"
-          :results="globalExportTemplates"
-          @onUseTemplate="doUseTemplate($event)"
-          @onEditTemplate="doEditTemplateApi($event)"
-          @onDeleteTemplate="doDeleteTemplateApi($event)"
+            v-if="useApi"
+            :results="globalExportTemplates"
+            @onUseTemplate="doUseTemplate($event)"
+            @onEditTemplate="doEditTemplateApi($event)"
+            @onDeleteTemplate="doDeleteTemplateApi($event)"
         />
 
         <OPageSettingStore
-          v-if="!useApi"
-          :results="globalExportTemplates"
-          @onUseTemplate="doUseTemplate($event)"
-          @onEditTemplate="doEditTemplateStore($event)"
-          @onDeleteTemplate="doDeleteTemplateStore($event)"
+            v-if="!useApi"
+            :results="globalExportTemplates"
+            @onUseTemplate="doUseTemplate($event)"
+            @onEditTemplate="doEditTemplateStore($event)"
+            @onDeleteTemplate="doDeleteTemplateStore($event)"
         />
       </div>
 
@@ -45,88 +45,88 @@
           </template>
           <template #icons>
             <Button
-              class="mr-3 p-button-info"
-              :label="$translate('admin.generic.select.all.fields')"
-              :icon="checkFilters"
-              :disabled="selectKeys.length === keys.length"
-              @click="selectAllFilters()"
+                class="mr-3 p-button-info"
+                :label="$translate('admin.generic.select.all.fields')"
+                :icon="checkFilters"
+                :disabled="selectKeys.length === keys.length"
+                @click="selectAllFilters()"
             />
 
             <Button
-              v-if="useApi"
-              :disabled="selectKeys.length === 0"
-              class="mr-3 p-button-secondary"
-              @click="doAddTemplateApi([...selectKeys], 0)"
-              v-tooltip.bottom="$translate('admin.filter.store.template.global')"
+                v-if="useApi"
+                :disabled="selectKeys.length === 0"
+                class="mr-3 p-button-secondary"
+                @click="doAddTemplateApi([...selectKeys], 0)"
+                v-tooltip.bottom="$translate('admin.filter.store.template.global')"
             >
               <i class="fad fa-floppy-disk mr-2"></i>
               <i class="fad fa-globe"></i>
             </Button>
             <Button
-              v-if="useApi"
-              :disabled="selectKeys.length === 0"
-              class="mr-3"
-              @click="doAddTemplateApi([...selectKeys], 1)"
-              v-tooltip.bottom="$translate('admin.filter.store.template.personal')"
-              :loading="$loading.isLoading('add')"
+                v-if="useApi"
+                :disabled="selectKeys.length === 0"
+                class="mr-3"
+                @click="doAddTemplateApi([...selectKeys], 1)"
+                v-tooltip.bottom="$translate('admin.filter.store.template.personal')"
+                :loading="$loading.isLoading('add')"
             >
               <i class="fad fa-floppy-disk p-mr-2"></i>
               <i class="fad fa-user"></i>
             </Button>
 
             <Button
-              v-if="!useApi"
-              :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
-              class="mr-3"
-              icon="fad fa-floppy-disk"
-              @click="doAddTemplateStore([...selectKeys])"
-              v-tooltip.bottom="$translate('admin.filter.store.template')"
-              :loading="$loading.isLoading('add')"
+                v-if="!useApi"
+                :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
+                class="mr-3"
+                icon="fad fa-floppy-disk"
+                @click="doAddTemplateStore([...selectKeys])"
+                v-tooltip.bottom="$translate('admin.filter.store.template')"
+                :loading="$loading.isLoading('add')"
             />
             <Button
-              class="p-button-danger mr-3"
-              icon="fad fa-trash"
-              :disabled="selectKeys.length === 0"
-              @click="doDeleteFilters()"
-              v-tooltip.bottom="$translate('admin.generic.remove.selected.fields')"
+                class="p-button-danger mr-3"
+                icon="fad fa-trash"
+                :disabled="selectKeys.length === 0"
+                @click="doDeleteFilters()"
+                v-tooltip.bottom="$translate('admin.generic.remove.selected.fields')"
             />
           </template>
           <ToggleButton
-            v-for="key in keys"
-            :key="key"
-            v-model="buttonSwitch[key.label]"
-            :onLabel="translator === true ? checkTranslate(key.label) : key.label"
-            :offLabel="translator === true ? checkTranslate(key.label) : key.label"
-            onIcon="fad fa-circle-check"
-            offIcon="fad fa-circle-xmark"
-            @change="toggleButtonPush(key.label)"
-            class="m-1"
-            style="width: auto"
+              v-for="key in keys"
+              :key="key"
+              v-model="buttonSwitch[key.label]"
+              :onLabel="translator === true ? checkTranslate(key.label) : key.label"
+              :offLabel="translator === true ? checkTranslate(key.label) : key.label"
+              onIcon="fad fa-circle-check"
+              offIcon="fad fa-circle-xmark"
+              @change="toggleButtonPush(key.label)"
+              class="m-1"
+              style="width: auto"
           />
         </Panel>
       </div>
       <div v-if="previewData.length > 0" class="field col-12">
         <DataTable
-          :value="previewData"
-          responsiveLayout="scroll"
-          :rows="displayedRows"
-          :reorderableColumns="true"
-          @columnReorder="columnReorder($event)"
-          :key="selectKeys.length"
-          stripedRows
+            :value="previewData"
+            responsiveLayout="scroll"
+            :rows="displayedRows"
+            :reorderableColumns="true"
+            @columnReorder="columnReorder($event)"
+            :key="selectKeys.length"
+            stripedRows
         >
           <template #header>
             <div class="font-bold flex align-items-center">
-              <i class="fad fa-magnifying-glass mr-2" />
+              <i class="fad fa-magnifying-glass mr-2"/>
               <span>{{ $translate('admin.generic.preview') }}</span>
             </div>
           </template>
           <Column
-            v-for="key in selectKeys"
-            :field="key"
-            :key="key"
-            :header="translator === true ? checkTranslate(key) : key"
-            bodyClass="cx"
+              v-for="key in selectKeys"
+              :field="key"
+              :key="key"
+              :header="translator === true ? checkTranslate(key) : key"
+              bodyClass="cx"
           >
             <template #body="el">
               {{ el.data[key] !== null && el.data[key] !== '' ? el.data[key] : '-' }}
@@ -135,7 +135,7 @@
         </DataTable>
       </div>
       <div v-if="selectKeys.length === 0" class="field col-12 align-self-center">
-        <OLottie />
+        <OLottie/>
         <div class="col-12 text-center font-bold">
           {{ $translate('admin.generic.no.select.export.column') }}
         </div>
@@ -144,49 +144,49 @@
 
     <template #footer>
       <Button
-        v-if="exportMode === 'all' || exportMode === 'json'"
-        icon="fad fa-brackets-curly"
-        :label="$translate('admin.generic.export.json')"
-        :disabled="disabled"
-        @click="showPrevieworExport('JSON')"
+          v-if="exportMode === 'all' || exportMode === 'json'"
+          icon="fad fa-brackets-curly"
+          :label="$translate('admin.generic.export.json')"
+          :disabled="disabled"
+          @click="showPrevieworExport('JSON')"
       />
       <Button
-        v-if="exportMode === 'all' || exportMode === 'csv'"
-        icon="fad fa-file-csv"
-        :label="$translate('admin.generic.export.csv')"
-        :disabled="disabled"
-        @click="showPrevieworExport('CSV')"
+          v-if="exportMode === 'all' || exportMode === 'csv'"
+          icon="fad fa-file-csv"
+          :label="$translate('admin.generic.export.csv')"
+          :disabled="disabled"
+          @click="showPrevieworExport('CSV')"
       />
       <Button
-        v-if="exportMode === 'all' || exportMode === 'xls'"
-        icon="fad fa-file-spreadsheet"
-        :label="$translate('admin.generic.export.xls')"
-        :disabled="disabled"
-        @click="showPrevieworExport('XLS')"
+          v-if="exportMode === 'all' || exportMode === 'xls'"
+          icon="fad fa-file-spreadsheet"
+          :label="$translate('admin.generic.export.xls')"
+          :disabled="disabled"
+          @click="showPrevieworExport('XLS')"
       />
     </template>
   </Dialog>
 </template>
 <script>
 import common from '@/assets/lottie/common-search.json'
-import { utils, writeFileXLSX } from 'xlsx'
-import { useSettingsStore } from '@/store/settings.js'
+import {utils, writeFileXLSX} from 'xlsx'
+import {useSettingsStore} from '@/store/settings.js'
 import OPageSettingApi from '@/components/OPageSettingApi.vue'
 import OPageSettingStore from '@/components/OPageSettingStore.vue'
 
 export default {
   name: 'ODialogExport',
-  components: { OPageSettingApi, OPageSettingStore },
+  components: {OPageSettingApi, OPageSettingStore},
   provide() {
     return {
       checkTranslate: this.checkTranslate
     }
   },
   props: {
-    useApi: { type: Boolean, default: () => false },
-    exportFilename: { type: String, default: () => 'customers' },
-    exportMode: { type: String, default: () => 'all' },
-    translator: { type: Boolean, default: () => false }
+    useApi: {type: Boolean, default: () => false},
+    exportFilename: {type: String, default: () => 'customers'},
+    exportMode: {type: String, default: () => 'all'},
+    translator: {type: Boolean, default: () => false}
   },
   data() {
     return {
@@ -200,7 +200,7 @@ export default {
       templateEditCheck: null,
       templateEditValue: null,
       collapsed: true,
-      lottie: { common }
+      lottie: {common}
     }
   },
   watch: {
@@ -312,7 +312,7 @@ export default {
     async doSearchTemplateApi() {
       this.$loading.start('search')
       try {
-        const { data } = await this.API.pagesetting.search({
+        const {data} = await this.API.pagesetting.search({
           key: this.$modal.data.key,
           type: this.$modal.data.type
         })
@@ -355,7 +355,7 @@ export default {
         value: template
       })
     },
-    async doEditTemplateApi({ data, name, mode }) {
+    async doEditTemplateApi({data, name, mode}) {
       this.$loading.start('edit')
       const json = {
         name: name,
@@ -375,7 +375,7 @@ export default {
         this.$loading.stop('edit')
       }
     },
-    doEditTemplateStore({ index, name }) {
+    doEditTemplateStore({index, name}) {
       this.useSettingsStore.updateGlobalExportTemplates({
         page: this.currentPageName,
         index,
@@ -448,7 +448,7 @@ export default {
             this.buttonSwitch[setKey] = false
           }
         } else {
-          ret.push({ label: key, value: key })
+          ret.push({label: key, value: key})
           this.buttonSwitch[key] = false
         }
       }
@@ -465,7 +465,7 @@ export default {
         this.selectColumnsData[i] = {}
         for (let j = 0; j < this.selectKeys.length; j++) {
           this.selectColumnsData[i][this.selectKeys[j]] =
-            copySelectColumnsData[i][this.selectKeys[j]]
+              copySelectColumnsData[i][this.selectKeys[j]]
         }
       }
     },
@@ -524,26 +524,29 @@ export default {
           return value
       }
     },
+    calcObj(obj, keysPath) {
+      let ret = {...obj}
+      for (let i = 1; i < keysPath.length; i++) {
+        ret = ret[keysPath[i]]
+      }
+      return {
+        value: ret,
+        key: keysPath[keysPath.length - 1]
+      }
+    },
     async showPrevieworExport(type) {
       this.selectColumnsData = []
-
       const dataProcessed =
-        type === 'preview'
-          ? [...this.$modal.data.processed].splice(0, this.displayedRows)
-          : this.$modal.data.processed
+          type === 'preview'
+              ? [...this.$modal.data.processed].splice(0, this.displayedRows)
+              : this.$modal.data.processed
       await dataProcessed.forEach((processedData) => {
         const b = {}
         for (const [key, value] of Object.entries(processedData)) {
           for (const selectedkey of this.selectKeys) {
             if (typeof value === 'object' && key === selectedkey.split('.')[0]) {
-              const object = { ...value }
-              if (selectedkey.includes('.')) {
-                for (const [key, value] of Object.entries(object)) {
-                  if (key == selectedkey.split('.')[1]) {
-                    b[selectedkey] = this.checkExportType(type, key, value)
-                  }
-                }
-              }
+              const {key:objKey, value:objValue} = this.calcObj({...value}, selectedkey.split('.'))
+              b[selectedkey] = this.checkExportType(type, objKey, objValue)
             }
             if (key == selectedkey) {
               b[key] = this.checkExportType(type, key, value)
@@ -567,7 +570,7 @@ export default {
     },
     doExportJSON() {
       const data = JSON.stringify(this.selectColumnsData)
-      const blob = new Blob([data], { type: 'application/json' })
+      const blob = new Blob([data], {type: 'application/json'})
       const url = window.URL || window.webkitURL
       const link = url.createObjectURL(blob)
       const a = document.createElement('a')
@@ -592,7 +595,7 @@ export default {
         })
         csv += '\n'
       })
-      const blob = new Blob([csv], { type: 'text/csv' })
+      const blob = new Blob([csv], {type: 'text/csv'})
       const url = window.URL || window.webkitURL
       const link = url.createObjectURL(blob)
       const a = document.createElement('a')
@@ -626,14 +629,14 @@ export default {
       const site = localStorage.getItem('site')
       import(`../api/${site}/index.js`).then((module) => {
         this.API = module.default
-        this.doSearchTemplateApi({ key: this.$modal.data.key, type: this.$modal.data.type })
+        this.doSearchTemplateApi({key: this.$modal.data.key, type: this.$modal.data.type})
       })
     }
   },
   mounted() {
     if (!this.useApi) {
       this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
-        this.currentPageName
+          this.currentPageName
       )
     }
   }
