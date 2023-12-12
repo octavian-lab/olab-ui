@@ -139,6 +139,7 @@ export default {
     },
     '$store.getters.getLangCode'() {
       this.selects.calendarOptions = this.generateOptions()
+      this.filterOptions()
     }
   },
   computed: {
@@ -313,16 +314,19 @@ export default {
           }
         }
       ]
-    }
-  },
-  created() {
-    if (this.advanced) {
-      this.selects.calendarOptions = this.generateOptions()
+    },
+    filterOptions() {
       if (this.filteredOptions.length > 0) {
         this.selects.calendarOptions = this.selects.calendarOptions.filter((el) =>
           this.filteredOptions.includes(el.value)
         )
       }
+    }
+  },
+  created() {
+    if (this.advanced) {
+      this.selects.calendarOptions = this.generateOptions()
+      this.filterOptions()
     }
   },
   mounted() {
