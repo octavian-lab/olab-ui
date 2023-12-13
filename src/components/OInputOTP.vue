@@ -22,7 +22,7 @@ const props = defineProps({
   default: String,
   digitCount: {
     type: Number,
-    default: () => 6
+    default: () => 4
   }
 })
 
