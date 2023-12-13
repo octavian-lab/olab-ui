@@ -8,8 +8,8 @@ import functionmixin from '@/mixins/functionmixin.js'
 import datemixin from '@/mixins/datemixin.js'
 
 // USAGES IN JS FILES
-const useFunctions =() => functionmixin.methods
-const useModal = ()=> modalplugin.modal
+const useFunctions = () => functionmixin.methods
+const useModal = () => modalplugin.modal
 
 // FILTERS IMPORT
 import asDate from './filters/asDate.js'
@@ -27,6 +27,7 @@ import OChart from './components/OChart.vue'
 import ODialog from './components/ODialog.vue'
 import ODialogExport from './components/ODialogExport.vue'
 import ODropdown from './components/ODropdown.vue'
+import OInputOTP from './components/OInputOTP.vue'
 import OList from './components/OList.vue'
 import OLottie from './components/OLottie.vue'
 import OTable from './components/OTable.vue'
@@ -66,7 +67,6 @@ export default {
 }
 
 export {
-  OList,
   OCard,
   OCalendar,
   OChart,
@@ -74,8 +74,10 @@ export {
   ODropdown,
   OTable,
   ODialogExport,
+  OInputOTP,
   OField,
   OFieldsContainer,
+  OList,
   OLottie,
   OFilter,
   OFiltersPanel,

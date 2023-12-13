@@ -7,8 +7,7 @@
   "private": false,
   "type": "module",
   "files": [
-    "dist",
-    "src"
+    "dist"
   ],
   "main": "./dist/olab-ui.umd.cjs",
   "module": "./dist/olab-ui.js",
