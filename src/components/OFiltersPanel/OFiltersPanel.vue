@@ -51,8 +51,12 @@
         <slot name="filters-join" />
       </div>
       <div class="col-12 flex justify-content-center p-0 my-2 text-center h-fixed">
-        <slot name="loading" v-if="$slots['loading'] && $loading.isLoading('search')"/>
-        <OFiltersPanelBtnSearch v-else :btnDisable="btnDisabled" :requiredFilters="requiredFilters" />
+        <slot name="loading" v-if="$slots['loading'] && $loading.isLoading('search')" />
+        <OFiltersPanelBtnSearch
+          v-else
+          :btnDisable="btnDisabled"
+          :requiredFilters="requiredFilters"
+        />
       </div>
     </div>
     <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
@@ -178,16 +182,16 @@ export default {
   },
   methods: {
     doUseTemplate(savedQuery) {
-      this.toast('success', 'use.search')
       for (let [key, val] of Object.entries(savedQuery)) {
+        if (this.isDateZulu(val) && this.query[key]) {
+          const date = this.query[key].toISOString()
+          if (val === date) {
+            continue
+          }
+        }
         this.query[key] = val
       }
-      this.$toast.add({
-        severity: 'success',
-        summary: this.$translate('admin.generic.operation.completed'),
-        detail: this.$translate('admin.filter.used.saved.search.successfully'),
-        life: 1000
-      })
+      this.toast('success', 'use.search')
       this.$modal.close()
     },
     // ATTENZIONE non scrivere codice commentato nella slot ( altrimenti showFastFilters diventerà true )
