@@ -100,10 +100,15 @@ export default {
       }
     },
     doAddTemplateStore() {
-      this.useSettingsStore.saveSearchTemplates({
-        page: this.currentPageName,
-        value: JSON.parse(JSON.stringify(this.query))
-      })
+      try {
+        this.useSettingsStore.saveSearchTemplates({
+          page: this.currentPageName,
+          value: JSON.parse(JSON.stringify(this.query))
+        })
+      } catch (e) {
+        this.toast('error', 'add.template.store.limit.reached')
+        console.log(e)
+      }
     },
     async doEditTemplateApi({ data, name, mode }) {
       this.$loading.start('edit')
