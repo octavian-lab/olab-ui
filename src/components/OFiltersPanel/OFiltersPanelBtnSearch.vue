@@ -11,7 +11,7 @@
         :label="$translate('admin.action.search')"
         icon="fad fa-magnifying-glass"
         :disabled="btnDisabled"
-        :loading="$loading.isLoading('search')"
+        :loading="btnLoading || $loading.isLoading('search')"
         @click="doRefreshData()"
       />
     </div>
@@ -46,7 +46,8 @@ export default {
   props: {
     fastfilter: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean },
-    requiredFilters: { type: Array }
+    requiredFilters: { type: Array },
+    btnLoading: Boolean
   }
 }
 </script>

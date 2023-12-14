@@ -22,6 +22,7 @@
         <OFiltersPanelBtnSearch
           :btnDisable="btnDisabled"
           :requiredFilters="requiredFilters"
+          :loading="loading"
           fastfilter
         />
       </div>
@@ -56,6 +57,7 @@
           v-else
           :btnDisable="btnDisabled"
           :requiredFilters="requiredFilters"
+          :btnLoading="btnLoading"
         />
       </div>
     </div>
@@ -82,7 +84,8 @@ export default {
     btnDisabled: { type: Boolean, default: () => false },
     col: { type: [Number, String], default: () => 1 },
     showSaveQuery: { type: Boolean, default: () => false },
-    panelClass: String
+    panelClass: String,
+    btnLoading: Boolean
   },
   inject: {
     query: { default: undefined } // REQUIRED
