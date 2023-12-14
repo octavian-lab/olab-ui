@@ -1,111 +1,145 @@
 <template>
-  <div ref="otpInput">
-    <input
-      type="text"
-      inputmode="numeric"
-      class="digit-box"
-      v-for="(el, i) in digits"
-      :key="el + i"
-      v-model="digits[i]"
-      :autofocus="i === 0"
-      maxlength="1"
-      @keydown="handleKeyDown($event, i)"
-      :class="{ bounce: digits[i] !== null }"
-    />
-  </div>
+    <div ref="otpInput">
+        <input
+            type="text"
+            inputmode="numeric"
+            class="digit-box"
+            v-for="(el, i) in digits"
+            :key="el + i"
+            v-model="digits[i]"
+            :autofocus="i === 0"
+            maxlength="1"
+            @keydown.exact="handleKeyDown($event, i)"
+            :class="{ bounce: digits[i] !== null }"
+            :ref="elem => inputs.push(elem)"
+            @keydown.ctrl.v="onPaste"
+            @keydown.meta.v="onPaste"
+        />
+    </div>
 </template>
 
 <script setup>
-import { ref, reactive, defineEmits, defineProps } from 'vue'
+import { ref, reactive, defineEmits, defineProps, computed, onMounted } from "vue";
 // PROPS
 const props = defineProps({
-  default: String,
-  digitCount: {
-    type: Number,
-    default: () => 4
-  }
-})
+    default: String,
+    error: {
+        type: Boolean,
+        default: () => false,
+    },
+    digitCount: {
+        type: Number,
+        default: () => 4,
+    },
+});
 
-const digits = reactive([])
+const digits = reactive([]);
 
 if (props.default && props.default.length === props.digitCount) {
-  for (let i = 0; i < props.digitCount; i++) {
-    digits[i] = props.default.charAt(i)
-  }
+    for (let i = 0; i < props.digitCount; i++) {
+        digits[i] = props.default.charAt(i);
+    }
 } else {
-  for (let i = 0; i < props.digitCount; i++) {
-    digits[i] = null
-  }
+    for (let i = 0; i < props.digitCount; i++) {
+        digits[i] = null;
+    }
 }
 
-const otpInput = ref(null)
+const otpInput = ref(null);
+const inputs = ref([]);
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(["update:modelValue"]);
+
+const dynamicBorderColor = computed(() => {
+    let ret;
+    if (props.error) ret = "red";
+    else ret = "black";
+    return ret;
+});
 
 const isDigitsFull = () => {
-  for (const elem of digits) {
-    if (elem == null) {
-      return false
+    for (const elem of digits) {
+        if (elem == null) {
+            return false;
+        }
     }
-  }
-  return true
-}
+    return true;
+};
 
 const handleKeyDown = (event, index) => {
-  if (event.key !== 'Tab' && event.key !== 'ArrowRight' && event.key !== 'ArrowLeft') {
-    event.preventDefault()
-  }
-
-  if (event.key === 'Backspace') {
-    digits[index] = null
-
-    if (index != 0) {
-      otpInput.value.children[index - 1].focus()
+    if (event.key !== "Tab" && event.key !== "ArrowRight" && event.key !== "ArrowLeft") {
+        event.preventDefault();
     }
 
-    return
-  }
+    if (event.key === "Backspace") {
+        digits[index] = null;
 
-  if (new RegExp('^([0-9])$').test(event.key)) {
-    digits[index] = event.key
+        if (index != 0) {
+            otpInput.value.children[index - 1].focus();
+        }
 
-    if (index != props.digitCount - 1) {
-      otpInput.value.children[index + 1].focus()
+        return;
     }
 
-    if (isDigitsFull()) {
-      emit('update:modelValue', digits.join(''))
+    if (new RegExp("^([0-9])$").test(event.key)) {
+        digits[index] = event.key;
+
+        if (index != props.digitCount - 1) {
+            otpInput.value.children[index + 1].focus();
+        }
+
+        if (isDigitsFull()) {
+            emit("update:modelValue", digits.join(""));
+        }
     }
-  }
+};
+
+const onPaste = async () => {
+    const text = await navigator.clipboard.readText();
+    if (!text) return;
+
+    text.trim();
+    if (text.length !== digits.length) return;
+
+    const arr = text.split('');
+    digits.forEach((el, i) => {
+        digits[i] = arr[i];
+    })
 }
+
+onMounted(() => {
+    inputs.value.forEach(el => {
+        el.addEventListener('paste', () => onPaste);
+    })
+})
 </script>
 
 <style scoped>
 .digit-box {
-  height: 4rem;
-  width: 4rem;
-  border: 2px solid black;
-  display: inline-block;
-  border-radius: 5px !important;
-  margin: 5px;
-  text-align: center;
-  font-size: 2rem;
+    height: 4rem;
+    width: 4rem;
+    border: 2px solid v-bind(dynamicBorderColor);
+    display: inline-block;
+    border-radius: 5px !important;
+    margin: 5px;
+    text-align: center;
+    font-size: 2rem;
 }
 .digit-box:focus {
-  outline: 3px solid black;
+    outline: 3px solid v-bind(dynamicBorderColor);
 }
 
 .bounce {
-  animation: pulse 0.3s ease-in-out alternate;
+    animation: pulse 0.3s ease-in-out alternate;
 }
 
 @keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
+    0% {
+        transform: scale(1);
+    }
 
-  100% {
-    transform: scale(1.1);
-  }
+    100% {
+        transform: scale(1.1);
+    }
 }
 </style>
