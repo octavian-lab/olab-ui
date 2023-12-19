@@ -19,7 +19,7 @@
     :rowsPerPageOptions="rowsPerPageOptions"
     :responsiveLayout="refResponsiveLayout"
     sortMode="multiple"
-    :dataKey="value.length > 0 && value[0].id ? 'id' : undefined "
+    :dataKey="(value && value.length > 0 && value[0].id) ? 'id' : undefined "
     v-model:filters="filters"
     :key="refResponsiveLayout"
     :editMode="$attrs.editMode"
