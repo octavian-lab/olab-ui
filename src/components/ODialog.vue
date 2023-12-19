@@ -125,3 +125,12 @@ export default {
   }
 }
 </script>
+<style>
+#o-dialog #o-fields-container .o-field .o-field__value {
+  width: 50%;
+}
+#o-dialog .footer-left-content {
+  width: fit-content;
+  text-align: left;
+}
+</style>

@@ -1,6 +1,6 @@
 <template>
   <Dialog
-    id="dialog-search"
+    id="dialog-stored-search"
     :dismissableMask="false"
     modal
     :style="{ width: useApi ? '1000px' : '800px' }"
@@ -176,7 +176,29 @@ export default {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+#dialog-global-export {
+  .p-panel {
+    .p-panel-header {
+      .p-panel-icons {
+        align-items: normal;
+      }
+    }
+  }
+
+  .p-fluid {
+    .p-button {
+      width: auto;
+    }
+
+    .p-selectbutton.p-buttonset {
+      .p-button {
+        display: block;
+      }
+    }
+  }
+}
+
 :deep(.p-datatable) .p-datatable-footer {
   padding: 0.5rem;
 }

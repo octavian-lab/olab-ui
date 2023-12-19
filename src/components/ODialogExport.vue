@@ -651,3 +651,26 @@ export default {
   }
 }
 </script>
+<style lang="scss">
+#dialog-global-export {
+  .p-panel {
+    .p-panel-header {
+      .p-panel-icons {
+        align-items: normal;
+      }
+    }
+  }
+
+  .p-fluid {
+    .p-button {
+      width: auto;
+    }
+
+    .p-selectbutton.p-buttonset {
+      .p-button {
+        display: block;
+      }
+    }
+  }
+}
+</style>
