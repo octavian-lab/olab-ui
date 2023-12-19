@@ -17,6 +17,7 @@ export default {
 }
 </script>
 <style lang="scss">
+$defaultInputHeight: 34px;
 #o-fields-container {
   width: 100%;
   margin-left: 0;
@@ -37,6 +38,15 @@ export default {
   .o-field {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
+
+    .p-dropdown .p-inputtext {
+      display: flex;
+      align-items: center;
+    }
+
+    [class*='p-input']:not([class*='p-inputswitch']) {
+      height: $defaultInputHeight;
+    }
 
     .o-field__label {
       font-size: 0.87rem;
