@@ -243,6 +243,7 @@ export default {
 
 <style lang="scss">
 $borderColor: rgba(149, 148, 148, 0.19);
+$defaultInputHeight: 30px;
 #filters-panel.p-panel {
   // OVERRIDE
   .p-panel-content {
@@ -285,8 +286,16 @@ $borderColor: rgba(149, 148, 148, 0.19);
     }
     .filter-field {
       width: 33.3%;
+      height: $defaultInputHeight;
       @media screen and (max-width: 1200px) {
         width: 57%;
+      }
+      .p-dropdown .p-inputtext {
+        display: flex;
+        align-items: center;
+      }
+      .p-inputnumber-button-group > .p-button {
+        height: 100%;
       }
       .p-component:first-child:not(
           .p-inputgroup,
@@ -295,6 +304,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
           .p-inputswitch
         ) {
         width: 100%;
+        height: 100%;
       }
       :first-child#o-calendar .p-calendar {
         width: 100% !important;
@@ -331,6 +341,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
       }
       .filter-field {
         width: 55%;
+        height: $defaultInputHeight;
         @media screen and (max-width: 1200px) {
           width: 57%;
         }
@@ -346,6 +357,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
     .filter {
       .filter-field {
         width: 55%;
+        height: $defaultInputHeight;
         @media screen and (max-width: 1200px) {
           width: 57%;
         }
@@ -372,6 +384,7 @@ $borderColor: rgba(149, 148, 148, 0.19);
       width: 90%;
       :first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
         width: 100%;
+        height: 100%;
       }
     }
   }
