@@ -244,6 +244,10 @@ export default {
 <style lang="scss">
 $borderColor: rgba(149, 148, 148, 0.19);
 #filters-panel.p-panel {
+  // OVERRIDE
+  .p-panel-content {
+    padding: 0;
+  }
   // FASTFILTER BOX
   .fastfilter-box,
   .dynamic-fastfilter-container {
