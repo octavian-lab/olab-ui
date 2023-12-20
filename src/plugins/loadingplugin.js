@@ -28,5 +28,6 @@ const loading = reactive({
 export default {
   install(app) {
     app.config.globalProperties.$loading = loading
-  }
+  },
+  loading
 }
