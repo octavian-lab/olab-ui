@@ -11,6 +11,8 @@ import datemixin from '@/mixins/datemixin.js'
 const useFunctions = () => functionmixin.methods
 const useModal = () => modalplugin.modal
 
+const useLoading = () => loadingplugin.loading
+
 // FILTERS IMPORT
 import asDate from './filters/asDate.js'
 import asAmount from './filters/asAmount.js'
@@ -83,6 +85,7 @@ export {
   OFiltersPanel,
   OPassword,
   DropdownSmart,
+  useLoading,
   useModal,
   useFunctions
 }
