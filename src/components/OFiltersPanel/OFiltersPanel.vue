@@ -297,11 +297,13 @@ $defaultInputHeight: 30px;
       .p-inputnumber-button-group > .p-button {
         height: 100%;
       }
+      //#filters-panel.p-panel .filter .filter-field .p-component:first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
       .p-component:first-child:not(
           .p-inputgroup,
           .p-calendar .p-chips-token,
           .p-checkbox,
-          .p-inputswitch
+          .p-inputswitch,
+          .p-selectbutton .p-button
         ) {
         width: 100%;
         height: 100%;
