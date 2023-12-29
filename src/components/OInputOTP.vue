@@ -47,7 +47,7 @@ if (props.default && props.default.length === props.digitCount) {
 
 const otpInput = ref(null)
 
-const emit = defineEmits(['update:modelValue'])
+const emit = defineEmits(['update:modelValue', 'onPaste'])
 
 const dynamicBorderColor = computed(() => {
   let ret
@@ -110,6 +110,8 @@ const onPaste = async (event) => {
   digits.forEach((el, i) => {
     digits[i] = arr[i]
   })
+
+  emit('onPaste')
 }
 </script>
 
@@ -124,6 +126,7 @@ const onPaste = async (event) => {
   text-align: center;
   font-size: 2rem;
 }
+
 .digit-box:focus {
   outline: 3px solid v-bind(dynamicBorderColor);
 }

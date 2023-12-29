@@ -28,6 +28,7 @@ import OCalendar from './components/OCalendar.vue'
 import OChart from './components/OChart.vue'
 import ODialog from './components/ODialog.vue'
 import ODialogExport from './components/ODialogExport.vue'
+import ODialogOTP from './components/ODialogOTP.vue'
 import ODropdown from './components/ODropdown.vue'
 import OInputOTP from './components/OInputOTP.vue'
 import OList from './components/OList.vue'
@@ -77,6 +78,7 @@ export {
   OTable,
   ODialogExport,
   OInputOTP,
+  ODialogOTP,
   OField,
   OFieldsContainer,
   OList,

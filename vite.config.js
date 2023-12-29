@@ -14,7 +14,7 @@ export default defineConfig({
       formats: ['es', 'cjs', 'umd', 'iife']
     },
     rollupOptions: {
-      external: ['vue', 'primevue', 'moment', 'axios', 'chart.js'],
+      external: ['vue', 'primevue', 'moment', 'axios', 'chart.js', 'qrcode-vue3'],
       output: {
         exports: 'named',
         globals: {
@@ -25,9 +25,11 @@ export default defineConfig({
           'chart.js': 'Chart',
         }
       },
-      plugins: [resolveRUP({
-        moduleDirectories: ['node_modules']
-      })]
+      plugins: [
+        resolveRUP({
+          moduleDirectories: ['node_modules']
+        })
+      ]
     }
   },
   resolve: {
