@@ -92,10 +92,11 @@
 </template>
 <script>
 import QRCode from 'qrcode-vue3'
+import OInputOTP from '@/components/OInputOTP.vue'
 
 export default {
   name: 'ODialogOTP',
-  components: { QRCode },
+  components: { QRCode, OInputOTP },
   props: {
     logoQR: { type: String, default: () => '' },
     digitCount: { type: Number, default: () => 6 }
