@@ -103,7 +103,10 @@ export default {
   },
   watch: {
     '$modal.data.seedCode'(code) {
-      if (code.length === this.digitCount) this.$emit('doLogin')
+      if (code.length === this.digitCount) {
+        this.$modal.data.seedCode = null
+        this.$emit('doLogin')
+      }
     }
   },
   computed: {
