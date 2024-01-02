@@ -22,7 +22,7 @@
         <OFiltersPanelBtnSearch
           :btnDisable="btnDisabled"
           :requiredFilters="requiredFilters"
-          :loading="loading"
+          :btnLoading="btnLoading"
           fastfilter
         />
       </div>
