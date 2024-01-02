@@ -351,8 +351,11 @@ export default {
 
 <style scoped lang="scss">
 #o-calendar {
+  max-height: 35px;
+  height: 100%;
   .p-inputgroup {
     width: 100%;
+    height: 100%;
     min-height: 2.5rem;
 
     :deep(.p-button) {
