@@ -1,5 +1,6 @@
 <template>
   <DataTable
+    id="o-table"
     :value="value"
     paginator-position="both"
     :rows="50"
@@ -19,7 +20,7 @@
     :rowsPerPageOptions="rowsPerPageOptions"
     :responsiveLayout="refResponsiveLayout"
     sortMode="multiple"
-    :dataKey="(value && value.length > 0 && value[0].id) ? 'id' : undefined "
+    :dataKey="value && value.length > 0 && value[0].id ? 'id' : undefined"
     v-model:filters="filters"
     :key="refResponsiveLayout"
     :editMode="$attrs.editMode"
@@ -63,7 +64,7 @@
       </div>
     </template>
     <template #empty>
-      <div class="grid text-center">
+      <div class="grid grid-nogutter text-center">
         <OLottie :name="lottieName" />
         <div class="col-12 text-center font-bold">
           {{ $translate('admin.generic.empty.results') }}
@@ -241,27 +242,35 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
-.header-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  column-gap: 0.5rem;
-}
+<style lang="scss">
+#o-table {
+  &.p-datatable.p-datatable-gridlines:has(.p-datatable-thead):has(.p-datatable-tbody)
+    .p-datatable-tbody
+    > tr
+    > td {
+    border-width: 1px;
+  }
+  .header-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    column-gap: 0.5rem;
+  }
 
-.button-container {
-  display: flex;
-  align-items: center;
-  justify-content: end;
-  flex-wrap: wrap;
-  row-gap: 0.5rem;
-}
+  .button-container {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    flex-wrap: wrap;
+    row-gap: 0.5rem;
+  }
 
-.table-title {
-  display: flex;
-  align-items: center;
-  font-weight: bolder;
-  font-size: 1.3rem;
+  .table-title {
+    display: flex;
+    align-items: center;
+    font-weight: bolder;
+    font-size: 1.3rem;
+  }
 }
 
 //TODO: INSERIRE QUANDO ABBIAMO MERGE COMPLETO CON NUOVI PANEL

@@ -23,6 +23,7 @@ export default defineConfig({
           axios: 'axios',
           primevue: '$primevue',
           'chart.js': 'Chart',
+          "qrcode-vue3": 'QRCode'
         }
       },
       plugins: [
