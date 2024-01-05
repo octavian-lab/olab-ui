@@ -7,7 +7,8 @@ export const useSettingsStore = defineStore('settings', {
     fastfilters: {},
     responsiveTables: {},
     globalExportTemplates: {},
-    searchTemplates: {}
+    searchTemplates: {},
+    draggableTemplates: {}
   }),
   getters: {
     getFastfilters: (state) => {
@@ -52,7 +53,18 @@ export const useSettingsStore = defineStore('settings', {
       const tmp = state.panels[`panel-collapsed-${page}`]
       if (tmp) return tmp
       return false
-    }
+    },
+    getDraggableTemplates: (state) => (page) => {
+      if (!page) {
+        console.warn('ALERT! -- page -- parameter is required')
+        return
+      }
+      const templates = state.draggableTemplates[`draggable-templates-${page}`]
+      if (!templates) {
+        state.draggableTemplates[`draggable-templates-${page}`] = []
+      }
+      return state.draggableTemplates[`draggable-templates-${page}`]
+    },
   },
   actions: {
     updateFastfilters({ page, value }) {
@@ -132,7 +144,10 @@ export const useSettingsStore = defineStore('settings', {
       if (typeof value === 'boolean') {
         this.panels[`panel-collapsed-${page}`] = value
       }
-    }
+    },
+    updateDraggableTemplates({ page, value }) {
+      this.draggableTemplates[`draggable-templates-${page}`] = value
+    },
   },
   persist: {
     enabled: true,

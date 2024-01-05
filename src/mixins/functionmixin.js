@@ -8,7 +8,7 @@ export default {
       isMobile: useMediaQuery('(max-width: 640px)'),
       isTablet: useMediaQuery('(min-width: 641px) and (max-width: 991px)'),
       isDesktop: useMediaQuery('(min-width: 992px)'),
-      currentPageName: this.$route.path.replaceAll('/', ''),
+      currentPageName: this.$route.path.replaceAll('/', '') || 'dashboard',
       currentPath: this.$route.path
     }
   },
