@@ -60,5 +60,8 @@
   "repository": {
     "type": "git",
     "url": "https://github.com/octavian-lab/olab-ui"
+  },
+  "dependencies": {
+    "sortablejs": "^1.15.1"
   }
 }
