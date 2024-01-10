@@ -1,5 +1,5 @@
 import axios from 'axios'
-let store = localStorage.getItem('octavianlab-admin')
+let store = localStorage.getItem('octavianlab-agp-admin')
 if (store) store = JSON.parse(store)
 
 const endpoints = {
