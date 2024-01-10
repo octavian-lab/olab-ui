@@ -10,7 +10,7 @@
       <div
         v-for="(el, i) in elements"
         :key="el"
-        :class="['o-draggable-container__item', isGridActive ? colClass : '']"
+        :class="['o-draggable-container__item', isGridActive ? colClassMap[el] : '']"
       >
         <div
           :class="{
@@ -33,10 +33,10 @@ import { useSettingsStore } from '@/store/settings.js'
 export default {
   name: 'ODraggable',
   props: {
-    numberElements: { type: Number, required: true },
+    elementsNumber: { type: Number, required: true },
     isDragAlwaysActive: { type: Boolean, default: () => false },
     isGridActive: { type: Boolean, default: () => false },
-    colClass: { type: String, default: () => '' },
+    colClassMap: { type: Object, default: () => {} },
     useApi: { type: Boolean, default: () => false }
   },
   data() {
@@ -63,7 +63,7 @@ export default {
   methods: {
     createElements() {
       const arr = []
-      for (let i = 0; i < this.numberElements; i++) {
+      for (let i = 0; i < this.elementsNumber; i++) {
         arr.push(i)
       }
       return arr
