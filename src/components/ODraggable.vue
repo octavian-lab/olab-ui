@@ -4,6 +4,7 @@
       v-if="!isDragAlwaysActiveComp"
       @click="dragEnabledToggle()"
       :class="['fas fa-up-down-left-right text-xl pointer absolute', { active: isDragEnabled }]"
+      v-tooltip.right="$translate('admin.draggable.function.info')"
     ></i>
 
     <div id="o-draggable-container" :class="{ grid: isGridActive }">
@@ -163,10 +164,13 @@ export default {
           this.elements = arr
         }
       }
+
+      return
     }
 
     if (this.useApi) {
       const site = localStorage.getItem('site')
+
       const module = await import(`../api/${site}/index.js`)
       this.API = module.default
       await this.doSearchPageSettings()
@@ -198,6 +202,8 @@ export default {
 
 <style lang="scss">
 #o-draggable {
+  padding: 1rem 1rem 0 1rem;
+
   .sortable-ghost {
     position: relative;
 
@@ -214,8 +220,8 @@ export default {
   }
 
   .fa-up-down-left-right {
-    top: -1rem;
-    left: -1rem;
+    top: 0;
+    left: 0;
     z-index: 99;
 
     width: 2rem;
