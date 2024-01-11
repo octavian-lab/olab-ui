@@ -1,5 +1,11 @@
 <template>
   <div id="o-draggable" class="relative">
+    <Skeleton
+      v-if="useApi && $loading.isLoading('pagesetting-draggable')"
+      id="o-draggable-skeleton"
+      class="relative w-full h-full"
+    />
+
     <i
       v-if="!isDragAlwaysActiveComp"
       @click="dragEnabledToggle()"
@@ -7,7 +13,11 @@
       v-tooltip.right="$translate('admin.draggable.function.info')"
     ></i>
 
-    <div id="o-draggable-container" :class="{ grid: isGridActive }">
+    <div
+      id="o-draggable-container"
+      :class="['lg:px-3 lg:pt-3', { grid: isGridActive }]"
+      :style="{ 'opacity: 0;': useApi && $loading.isLoading('pagesetting-draggable') }"
+    >
       <div
         v-for="(el, i) in elements"
         :key="el"
@@ -99,6 +109,7 @@ export default {
       }
     },
     async doSearchPageSettings() {
+      this.$loading.start('pagesetting-draggable')
       try {
         const { data } = await this.API.pagesetting.search({ key: this.currentPageName })
 
@@ -112,6 +123,8 @@ export default {
         } else this.isFirstTime = true
       } catch (e) {
         console.log(e)
+      } finally {
+        this.$loading.stop('pagesetting-draggable')
       }
     },
     async doAddPageSettings() {
@@ -202,7 +215,11 @@ export default {
 
 <style lang="scss">
 #o-draggable {
-  padding: 1rem 1rem 0 1rem;
+  #o-draggable-skeleton {
+    z-index: 100;
+    top: 0;
+    left: 0;
+  }
 
   .sortable-ghost {
     position: relative;
@@ -220,8 +237,8 @@ export default {
   }
 
   .fa-up-down-left-right {
-    top: 0;
-    left: 0;
+    top: -0.5rem;
+    left: -0.5rem;
     z-index: 99;
 
     width: 2rem;
@@ -231,6 +248,11 @@ export default {
     border-radius: 50%;
     background-color: var(--surface-200);
     transition: background-color 0.2s ease-in-out;
+
+    @media (min-width: 992px) {
+      top: 0;
+      left: 0;
+    }
 
     &:hover {
       background-color: var(--surface-300);

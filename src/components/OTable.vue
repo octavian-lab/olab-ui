@@ -50,7 +50,7 @@
           />
           <Button
             v-if="!isDesktop && showHandleResponsiveLayout"
-            class="ml-2"
+            class="p-button-sm p-button-secondary ml-2"
             :label="$translate('admin.generic.view')"
             :icon="`fad ${handlerResponsiveLayout('icon', refResponsiveLayout)}`"
             @click="handlerResponsiveLayout('handle', refResponsiveLayout)"
