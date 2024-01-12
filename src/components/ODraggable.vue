@@ -135,7 +135,6 @@ export default {
       }
     },
     async doSearchPageSettings() {
-      this.isLoading = true
       try {
         const { data } = await this.API.pagesetting.search({ key: this.currentPageName })
 
@@ -149,8 +148,6 @@ export default {
         } else this.isFirstTime = true
       } catch (e) {
         console.log(e)
-      } finally {
-        this.isLoading = false
       }
     },
     async doAddPageSettings() {
@@ -214,6 +211,7 @@ export default {
       const module = await import(`../api/${site}/index.js`)
       this.API = module.default
       await this.doSearchPageSettings()
+      this.isLoading = false // skeleton handler on first loading
     }
   },
   mounted() {
