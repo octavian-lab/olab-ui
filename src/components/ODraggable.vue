@@ -26,9 +26,12 @@
         :class="['o-draggable-container__item', isGridActive ? colClassMap[el] : '']"
       >
         <div
-          :class="{
-            'shake-animation pointer': !isDragAlwaysActiveComp && isDragEnabled && !isDragActive
-          }"
+          :class="[
+            {
+              'shake-animation pointer': !isDragAlwaysActiveComp && isDragEnabled && !isDragActive
+            },
+            { 'pointer-events-none': isDragActive }
+          ]"
           :style="animationDelay(i)"
         >
           <slot :name="`draggable-${el}`" />
@@ -220,7 +223,7 @@ export default {
       if (layout) {
         const rect = layout.getBoundingClientRect()
         const width = rect.width + 'px'
-        this.skeletonRect.width = `calc(${width} - 2rem)`
+        this.skeletonRect.width = `calc(${width} - 4rem)`
       }
 
       this.createDraggable()
@@ -240,7 +243,7 @@ export default {
   .sortable-ghost {
     position: relative;
 
-    &::after {
+    &::before {
       content: '';
       width: calc(100% - 5px - 5px);
       height: calc(100% - 5px - 5px);
@@ -249,12 +252,13 @@ export default {
       position: absolute;
       top: 0;
       left: 0;
+      z-index: 10;
     }
   }
 
   .fa-up-down-left-right {
-    top: -0.5rem;
-    left: -0.5rem;
+    top: -0.75rem;
+    left: -1.75rem;
     z-index: 99;
 
     width: 2rem;
@@ -267,7 +271,7 @@ export default {
 
     @media (min-width: 992px) {
       top: 0;
-      left: 0;
+      left: -1rem;
     }
 
     &:hover {
