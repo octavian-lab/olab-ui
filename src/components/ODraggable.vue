@@ -23,7 +23,10 @@
       <div
         v-for="(el, i) in elements"
         :key="el"
-        :class="['o-draggable-container__item', isGridActive ? colClassMap[el] : '']"
+        :class="[
+          'o-draggable-container__item',
+          isGridActive && colClassMap[el] ? colClassMap[el] : ''
+        ]"
       >
         <div
           :class="[
@@ -49,7 +52,7 @@ import { useSettingsStore } from '@/store/settings.js'
 export default {
   name: 'ODraggable',
   props: {
-    elementsNumber: { type: Number, required: true },
+    elementsNumber: { type: Number, required: true, default: () => 0 },
     isDragAlwaysActive: { type: Boolean, default: () => false },
     isGridActive: { type: Boolean, default: () => false },
     colClassMap: { type: Object, default: () => {} },
