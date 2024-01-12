@@ -1,13 +1,25 @@
 <template>
   <div id="o-draggable" class="relative">
+    <Skeleton
+      v-if="useApi && isLoading"
+      id="o-draggable-skeleton"
+      class="absolute"
+      :width="skeletonRect.width"
+      :height="skeletonRect.height"
+    />
+
     <i
-      v-if="!isDragAlwaysActiveComp"
+      v-if="!isDragAlwaysActiveComp && !isLoading"
       @click="dragEnabledToggle()"
       :class="['fas fa-up-down-left-right text-xl pointer absolute', { active: isDragEnabled }]"
       v-tooltip.right="$translate('admin.draggable.function.info')"
     ></i>
 
-    <div id="o-draggable-container" :class="{ grid: isGridActive }">
+    <div
+      v-show="!isLoading"
+      id="o-draggable-container"
+      :class="['lg:px-3 lg:pt-3', { grid: isGridActive }]"
+    >
       <div
         v-for="(el, i) in elements"
         :key="el"
@@ -49,7 +61,12 @@ export default {
       isFirstTime: false,
       pageSettingId: null,
       isDragActive: false,
-      isDragEnabled: false
+      isDragEnabled: false,
+      isLoading: true, // No Lazy render ($loading...)
+      skeletonRect: {
+        width: '75vw',
+        height: '75vh'
+      }
     }
   },
   computed: {
@@ -68,6 +85,25 @@ export default {
         arr.push(i)
       }
       return arr
+    },
+    createDraggable() {
+      const container = document.getElementById('o-draggable-container')
+      this.draggable = Sortable.create(container, {
+        draggable: '.o-draggable-container__item',
+        animation: 150,
+        easing: 'cubic-bezier(1, 0, 0, 1)',
+        ghostClass: 'sortable-ghost',
+
+        onStart: () => {
+          this.dragActiveToggle()
+        },
+        onEnd: (event) => {
+          this.dragActiveToggle()
+          this.onDrop(event)
+        }
+      })
+
+      if (!this.isDragAlwaysActiveComp) this.draggable.options.disabled = true
     },
     dragActiveToggle() {
       this.isDragActive = !this.isDragActive
@@ -99,6 +135,7 @@ export default {
       }
     },
     async doSearchPageSettings() {
+      this.isLoading = true
       try {
         const { data } = await this.API.pagesetting.search({ key: this.currentPageName })
 
@@ -112,6 +149,8 @@ export default {
         } else this.isFirstTime = true
       } catch (e) {
         console.log(e)
+      } finally {
+        this.isLoading = false
       }
     },
     async doAddPageSettings() {
@@ -157,6 +196,7 @@ export default {
     this.isDragEnabled = this.isDragAlwaysActiveComp
 
     if (!this.useApi) {
+      this.isLoading = false
       const arr = this.useSettingsStore.getDraggableTemplates(this.currentPageName)
 
       if (arr.length) {
@@ -178,23 +218,14 @@ export default {
   },
   mounted() {
     nextTick(() => {
-      const container = document.getElementById('o-draggable-container')
-      this.draggable = Sortable.create(container, {
-        draggable: '.o-draggable-container__item',
-        animation: 150,
-        easing: 'cubic-bezier(1, 0, 0, 1)',
-        ghostClass: 'sortable-ghost',
+      const layout = document.querySelector('.layout-content')
+      if (layout) {
+        const rect = layout.getBoundingClientRect()
+        const width = rect.width + 'px'
+        this.skeletonRect.width = `calc(${width} - 2rem)`
+      }
 
-        onStart: () => {
-          this.dragActiveToggle()
-        },
-        onEnd: (event) => {
-          this.dragActiveToggle()
-          this.onDrop(event)
-        }
-      })
-
-      if (!this.isDragAlwaysActiveComp) this.draggable.options.disabled = true
+      this.createDraggable()
     })
   }
 }
@@ -202,7 +233,11 @@ export default {
 
 <style lang="scss">
 #o-draggable {
-  padding: 1rem 1rem 0 1rem;
+  #o-draggable-skeleton {
+    z-index: 100;
+    top: 0;
+    left: 0;
+  }
 
   .sortable-ghost {
     position: relative;
@@ -220,8 +255,8 @@ export default {
   }
 
   .fa-up-down-left-right {
-    top: 0;
-    left: 0;
+    top: -0.5rem;
+    left: -0.5rem;
     z-index: 99;
 
     width: 2rem;
@@ -231,6 +266,11 @@ export default {
     border-radius: 50%;
     background-color: var(--surface-200);
     transition: background-color 0.2s ease-in-out;
+
+    @media (min-width: 992px) {
+      top: 0;
+      left: 0;
+    }
 
     &:hover {
       background-color: var(--surface-300);

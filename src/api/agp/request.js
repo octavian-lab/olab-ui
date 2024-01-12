@@ -1,8 +1,6 @@
 import axios from 'axios'
-let store = localStorage.getItem('octavianlab-agp-admin')
-if (store) store = JSON.parse(store)
 
-const endpoints = {
+const ENDPOINTS = {
   stage: {
     v2: 'https://stage.octavianlab.com/accounting-service/admin/v2/',
     base: 'https://stage.octavianlab.com/accounting-service/v3/admin/api'
@@ -12,16 +10,20 @@ const endpoints = {
     base: 'https://live.octavianlab.com/accounting-service/v3/admin/api'
   }
 }
-const baseURL = endpoints[store.site.currentEnvironment].base
 
-const axiosRequest = axios.create({
-  baseURL,
-  timeout: 15000,
-  headers: {
-    'Content-Type': 'application/json',
-    Authorization: store.auth.ssoToken ? `token ${store.auth.ssoToken}` : '',
-    'X-Lab-Language': store.language.id
+const getUtils = () => {
+  return JSON.parse(localStorage.getItem('olab-ui-agp:utils'))
+}
+const baseURL = ENDPOINTS[getUtils().env].base
+const axiosConfig = () => {
+  return {
+    baseURL,
+    timeout: 15000,
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: getUtils().token ? `token ${getUtils().token}` : ''
+    }
   }
-})
+}
 
-export default axiosRequest
+export const useAxiosRequest = () => axios.create(axiosConfig())
