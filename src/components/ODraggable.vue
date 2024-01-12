@@ -1,22 +1,24 @@
 <template>
   <div id="o-draggable" class="relative">
     <Skeleton
-      v-if="useApi && $loading.isLoading('pagesetting-draggable')"
+      v-if="useApi && isLoading"
       id="o-draggable-skeleton"
-      class="relative w-full h-full"
+      class="absolute"
+      :width="skeletonRect.width"
+      :height="skeletonRect.height"
     />
 
     <i
-      v-if="!isDragAlwaysActiveComp"
+      v-if="!isDragAlwaysActiveComp && !isLoading"
       @click="dragEnabledToggle()"
       :class="['fas fa-up-down-left-right text-xl pointer absolute', { active: isDragEnabled }]"
       v-tooltip.right="$translate('admin.draggable.function.info')"
     ></i>
 
     <div
+      v-show="!isLoading"
       id="o-draggable-container"
       :class="['lg:px-3 lg:pt-3', { grid: isGridActive }]"
-      :style="{ 'opacity: 0;': useApi && $loading.isLoading('pagesetting-draggable') }"
     >
       <div
         v-for="(el, i) in elements"
@@ -59,7 +61,12 @@ export default {
       isFirstTime: false,
       pageSettingId: null,
       isDragActive: false,
-      isDragEnabled: false
+      isDragEnabled: false,
+      isLoading: true, // No Lazy render ($loading...)
+      skeletonRect: {
+        width: '75vw',
+        height: '75vh'
+      }
     }
   },
   computed: {
@@ -78,6 +85,25 @@ export default {
         arr.push(i)
       }
       return arr
+    },
+    createDraggable() {
+      const container = document.getElementById('o-draggable-container')
+      this.draggable = Sortable.create(container, {
+        draggable: '.o-draggable-container__item',
+        animation: 150,
+        easing: 'cubic-bezier(1, 0, 0, 1)',
+        ghostClass: 'sortable-ghost',
+
+        onStart: () => {
+          this.dragActiveToggle()
+        },
+        onEnd: (event) => {
+          this.dragActiveToggle()
+          this.onDrop(event)
+        }
+      })
+
+      if (!this.isDragAlwaysActiveComp) this.draggable.options.disabled = true
     },
     dragActiveToggle() {
       this.isDragActive = !this.isDragActive
@@ -109,7 +135,7 @@ export default {
       }
     },
     async doSearchPageSettings() {
-      this.$loading.start('pagesetting-draggable')
+      this.isLoading = true
       try {
         const { data } = await this.API.pagesetting.search({ key: this.currentPageName })
 
@@ -124,7 +150,7 @@ export default {
       } catch (e) {
         console.log(e)
       } finally {
-        this.$loading.stop('pagesetting-draggable')
+        this.isLoading = false
       }
     },
     async doAddPageSettings() {
@@ -170,6 +196,7 @@ export default {
     this.isDragEnabled = this.isDragAlwaysActiveComp
 
     if (!this.useApi) {
+      this.isLoading = false
       const arr = this.useSettingsStore.getDraggableTemplates(this.currentPageName)
 
       if (arr.length) {
@@ -191,23 +218,14 @@ export default {
   },
   mounted() {
     nextTick(() => {
-      const container = document.getElementById('o-draggable-container')
-      this.draggable = Sortable.create(container, {
-        draggable: '.o-draggable-container__item',
-        animation: 150,
-        easing: 'cubic-bezier(1, 0, 0, 1)',
-        ghostClass: 'sortable-ghost',
+      const layout = document.querySelector('.layout-content')
+      if (layout) {
+        const rect = layout.getBoundingClientRect()
+        const width = rect.width + 'px'
+        this.skeletonRect.width = `calc(${width} - 2rem)`
+      }
 
-        onStart: () => {
-          this.dragActiveToggle()
-        },
-        onEnd: (event) => {
-          this.dragActiveToggle()
-          this.onDrop(event)
-        }
-      })
-
-      if (!this.isDragAlwaysActiveComp) this.draggable.options.disabled = true
+      this.createDraggable()
     })
   }
 }
