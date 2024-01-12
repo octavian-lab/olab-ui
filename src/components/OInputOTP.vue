@@ -117,14 +117,19 @@ const onPaste = async (event) => {
 
 <style scoped>
 .digit-box {
-  height: 4rem;
-  width: 4rem;
+  width: 2.75rem;
+  aspect-ratio: 1;
   border: 2px solid v-bind(dynamicBorderColor);
   display: inline-block;
   border-radius: 5px !important;
   margin: 5px;
   text-align: center;
-  font-size: 2rem;
+  font-size: 1.5rem;
+
+  @media (min-width: 576px) {
+    width: 4rem;
+    font-size: 2rem;
+  }
 }
 
 .digit-box:focus {
