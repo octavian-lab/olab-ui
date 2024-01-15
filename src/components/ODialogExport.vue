@@ -515,6 +515,8 @@ export default {
         case 'stop':
         case 'toDate':
         case 'dateExecution':
+        case 'dateReserve':
+        case 'dateConfirm':
           return this.$filters.asDate(value)
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
