@@ -37,15 +37,15 @@ export default {
         life: duration
       })
     },
-    generateSelects(data, optionValue, optionLabel) {
-      let ret = []
+    generateSelects(data, optionValue, optionLabel, translate = false) {
+      const ret = []
       if (!Array.isArray(data)) {
         console.warn('Generazione select impossibile non è un array o è un array vuoto: ', data)
         return ret
       }
       for (let el of data) {
         ret.push({
-          label: el[optionLabel],
+          label: translate === true ? this.$translate(el[optionLabel]) : el[optionLabel],
           value: el[optionValue]
         })
       }
