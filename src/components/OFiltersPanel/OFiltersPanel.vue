@@ -242,7 +242,7 @@ export default {
 </script>
 
 <style lang="scss">
-$borderColor: rgba(149, 148, 148, 0.19);
+$borderColor: rgba(104, 104, 104, 0.2);
 $defaultInputHeight: 30px;
 #filters-panel.p-panel {
   // OVERRIDE
@@ -327,9 +327,14 @@ $defaultInputHeight: 30px;
       &:nth-child(4n + 3) {
         background: var(--bluegray-100) !important;
       }
+      &:nth-child(odd) {
+        border-right: 2px solid $borderColor;
+        @media screen and (max-width: 1200px) {
+          border-right: 0;
+        }
+      }
       &:nth-child(even) {
         background: transparent;
-        border-right: 2px solid $borderColor;
         .filter-name {
           @media screen and (max-width: 1200px) {
             padding-left: 5px;
@@ -340,6 +345,12 @@ $defaultInputHeight: 30px;
         width: 100%;
         border-left: none !important;
         padding-right: 0 !important;
+        &:nth-child(odd) {
+          background: var(--bluegray-100) !important;
+        }
+        &:nth-child(even) {
+          background: transparent !important;
+        }
       }
       .filter-field {
         width: 55%;
@@ -351,10 +362,16 @@ $defaultInputHeight: 30px;
     }
   }
   // STYLE CON PANNELLO JOIN FILTERS
+  .joins-divided > .filter,
+  .filters-join > .filter {
+    @media screen and (min-width: 768px) {
+      border-bottom: 2px solid $borderColor;
+    }
+  }
   .joins-divided {
     border-right: 2px solid $borderColor;
-    @media screen and (max-width: 1200px) {
-      border-right: none !important;
+    @media screen and (max-width: 768px) {
+      border-right: 0 !important;
     }
     .filter {
       .filter-field {

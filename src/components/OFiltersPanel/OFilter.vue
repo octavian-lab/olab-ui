@@ -113,13 +113,17 @@ export default {
 </script>
 
 <style lang="scss">
+$borderColor: rgba(104, 104, 104, 0.2);
 .filter {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0.8rem 0;
-  border-bottom: 2px solid rgba(149, 148, 148, 0.19);
+  border-bottom: 2px solid $borderColor;
   height: 3.7rem;
+  @media screen and (max-width: 1200px) {
+    border-bottom: 0;
+  }
   .filter-name {
     padding-left: 10px;
     @media screen and (max-width: 768px) {
