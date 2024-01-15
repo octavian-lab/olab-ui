@@ -44,7 +44,7 @@ $defaultInputHeight: 34px;
       align-items: center;
     }
 
-    [class*='p-input']:not(.p-chips,[class*='p-inputswitch']) {
+    [class*='p-input']:not(.p-chips-multiple-container,[class*='p-inputswitch']) {
       height: $defaultInputHeight;
     }
 
