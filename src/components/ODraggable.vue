@@ -25,15 +25,16 @@
         :key="el"
         :class="[
           'o-draggable-container__item',
-          isGridActive && colClassMap[el] ? colClassMap[el] : ''
+          isGridActive && colClassMap[el] ? colClassMap[el] : '',
+          { 'pointer-grab': !isDragAlwaysActiveComp && isDragEnabled }
         ]"
       >
         <div
           :class="[
             {
-              'shake-animation pointer': !isDragAlwaysActiveComp && isDragEnabled && !isDragActive
+              'shake-animation': !isDragAlwaysActiveComp && isDragEnabled && !isDragActive
             },
-            { 'pointer-events-none': isDragActive }
+            { 'pointer-events-none': isDragActive || isDragEnabled }
           ]"
           :style="animationDelay(i)"
         >
@@ -45,7 +46,7 @@
 </template>
 
 <script>
-import Sortable from 'sortablejs'
+import Sortable, { AutoScroll } from 'sortablejs/modular/sortable.core.esm.js'
 import { nextTick } from 'vue'
 import { useSettingsStore } from '@/store/settings.js'
 
@@ -94,6 +95,7 @@ export default {
     },
     createDraggable() {
       const container = document.getElementById('o-draggable-container')
+      Sortable.mount(new AutoScroll())
       this.draggable = Sortable.create(container, {
         draggable: '.o-draggable-container__item',
         animation: 150,
@@ -283,6 +285,10 @@ export default {
     &.active {
       background-color: var(--primary-color);
     }
+  }
+
+  .pointer-grab {
+    cursor: move;
   }
 
   .shake-animation {

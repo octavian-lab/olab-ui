@@ -28,6 +28,14 @@
       </div>
     </template>
     <template #icons>
+      <Checkbox
+        v-if="joinSelectAll"
+        v-model="joinSelectAllToggle"
+        @change="joinSelectAllHandler()"
+        binary
+        class="mr-2"
+      />
+
       <Button
         v-if="showSaveQuery || $store.getters.isAdminRoot"
         class="mr-2"
@@ -85,7 +93,8 @@ export default {
     col: { type: [Number, String], default: () => 1 },
     showSaveQuery: { type: Boolean, default: () => false },
     panelClass: String,
-    btnLoading: Boolean
+    btnLoading: Boolean,
+    joinSelectAll: { type: Boolean, default: () => true }
   },
   inject: {
     query: { default: undefined } // REQUIRED
@@ -109,7 +118,8 @@ export default {
         disabled: true,
         isMounted: false,
         name: null
-      }
+      },
+      joinSelectAllToggle: false
     }
   },
   watch: {
@@ -208,6 +218,7 @@ export default {
     },
     doClearFilters() {
       // Reimposto i filtri allo stato iniziale.
+      this.joinSelectAllToggle = false
       for (let [key, val] of Object.entries(this.defaultQuery)) {
         this.query[key] = typeof val === 'object' ? JSON.parse(JSON.stringify(val)) : val
       }
@@ -225,6 +236,33 @@ export default {
         page: this.currentPageName,
         value: e.value
       })
+    },
+    joinSelectAllHandler() {
+      const joinKeys = new Set()
+      let hasProjKey = false
+      let hasJoinKey = false
+
+      for (const key of Object.keys(this.query)) {
+        if (key.includes('proj')) {
+          hasProjKey = true
+          joinKeys.add(key)
+        }
+        if (key === 'join') {
+          hasJoinKey = true
+          Object.keys(this.query.join).forEach((el) => joinKeys.add(el))
+        }
+      }
+
+      if (hasProjKey) {
+        joinKeys.forEach((key) => {
+          this.query[key] = this.joinSelectAllToggle
+        })
+      }
+      if (hasJoinKey) {
+        joinKeys.forEach((key) => {
+          this.query.join[key] = this.joinSelectAllToggle
+        })
+      }
     }
   },
   created() {
