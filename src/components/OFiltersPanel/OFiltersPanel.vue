@@ -29,11 +29,12 @@
     </template>
     <template #icons>
       <Checkbox
-        v-if="joinSelectAll"
+        v-if="$slots['filters-join'] && joinSelectAll"
         v-model="joinSelectAllToggle"
         @change="joinSelectAllHandler()"
         binary
         class="mr-2"
+        v-tooltip.left="$translate('admin.generic.join.filters.select.all')"
       />
 
       <Button
