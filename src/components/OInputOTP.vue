@@ -115,7 +115,7 @@ const onPaste = async (event) => {
 }
 </script>
 
-<style scoped>
+<style scoped lang="scss">
 .digit-box {
   width: 2.75rem;
   aspect-ratio: 1;

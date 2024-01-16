@@ -28,6 +28,14 @@
       </div>
     </template>
     <template #icons>
+      <Checkbox
+        v-if="joinSelectAll"
+        v-model="joinSelectAllToggle"
+        @change="joinSelectAllHandler()"
+        binary
+        class="mr-2"
+      />
+
       <Button
         v-if="showSaveQuery || $store.getters.isAdminRoot"
         class="mr-2"
@@ -85,7 +93,8 @@ export default {
     col: { type: [Number, String], default: () => 1 },
     showSaveQuery: { type: Boolean, default: () => false },
     panelClass: String,
-    btnLoading: Boolean
+    btnLoading: Boolean,
+    joinSelectAll: { type: Boolean, default: () => true }
   },
   inject: {
     query: { default: undefined } // REQUIRED
@@ -109,7 +118,8 @@ export default {
         disabled: true,
         isMounted: false,
         name: null
-      }
+      },
+      joinSelectAllToggle: false
     }
   },
   watch: {
@@ -208,6 +218,7 @@ export default {
     },
     doClearFilters() {
       // Reimposto i filtri allo stato iniziale.
+      this.joinSelectAllToggle = false
       for (let [key, val] of Object.entries(this.defaultQuery)) {
         this.query[key] = typeof val === 'object' ? JSON.parse(JSON.stringify(val)) : val
       }
@@ -225,6 +236,33 @@ export default {
         page: this.currentPageName,
         value: e.value
       })
+    },
+    joinSelectAllHandler() {
+      const joinKeys = new Set()
+      let hasProjKey = false
+      let hasJoinKey = false
+
+      for (const key of Object.keys(this.query)) {
+        if (key.includes('proj')) {
+          hasProjKey = true
+          joinKeys.add(key)
+        }
+        if (key === 'join') {
+          hasJoinKey = true
+          Object.keys(this.query.join).forEach((el) => joinKeys.add(el))
+        }
+      }
+
+      if (hasProjKey) {
+        joinKeys.forEach((key) => {
+          this.query[key] = this.joinSelectAllToggle
+        })
+      }
+      if (hasJoinKey) {
+        joinKeys.forEach((key) => {
+          this.query.join[key] = this.joinSelectAllToggle
+        })
+      }
     }
   },
   created() {
@@ -242,7 +280,7 @@ export default {
 </script>
 
 <style lang="scss">
-$borderColor: rgba(149, 148, 148, 0.19);
+$borderColor: rgba(104, 104, 104, 0.2);
 $defaultInputHeight: 30px;
 #filters-panel.p-panel {
   // OVERRIDE
@@ -327,9 +365,14 @@ $defaultInputHeight: 30px;
       &:nth-child(4n + 3) {
         background: var(--bluegray-100) !important;
       }
+      &:nth-child(odd) {
+        border-right: 2px solid $borderColor;
+        @media screen and (max-width: 1200px) {
+          border-right: 0;
+        }
+      }
       &:nth-child(even) {
         background: transparent;
-        border-right: 2px solid $borderColor;
         .filter-name {
           @media screen and (max-width: 1200px) {
             padding-left: 5px;
@@ -340,6 +383,12 @@ $defaultInputHeight: 30px;
         width: 100%;
         border-left: none !important;
         padding-right: 0 !important;
+        &:nth-child(odd) {
+          background: var(--bluegray-100) !important;
+        }
+        &:nth-child(even) {
+          background: transparent !important;
+        }
       }
       .filter-field {
         width: 55%;
@@ -351,10 +400,16 @@ $defaultInputHeight: 30px;
     }
   }
   // STYLE CON PANNELLO JOIN FILTERS
+  .joins-divided > .filter,
+  .filters-join > .filter {
+    @media screen and (min-width: 768px) {
+      border-bottom: 2px solid $borderColor;
+    }
+  }
   .joins-divided {
     border-right: 2px solid $borderColor;
-    @media screen and (max-width: 1200px) {
-      border-right: none !important;
+    @media screen and (max-width: 768px) {
+      border-right: 0 !important;
     }
     .filter {
       .filter-field {
