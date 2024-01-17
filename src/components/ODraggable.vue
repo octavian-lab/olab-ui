@@ -95,7 +95,6 @@ export default {
     },
     createDraggable() {
       const container = document.getElementById('o-draggable-container')
-      Sortable.mount(new AutoScroll())
       this.draggable = Sortable.create(container, {
         draggable: '.o-draggable-container__item',
         animation: 150,
@@ -108,7 +107,9 @@ export default {
         onEnd: (event) => {
           this.dragActiveToggle()
           this.onDrop(event)
-        }
+        },
+
+        plugins: [AutoScroll]
       })
 
       if (!this.isDragAlwaysActiveComp) this.draggable.options.disabled = true
