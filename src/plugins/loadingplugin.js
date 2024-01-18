@@ -2,9 +2,9 @@ import { reactive } from 'vue'
 
 const loading = reactive({
   arr: [],
-  start(label) {
-    if (!label) return
+  start(label = new Date().getTime()) {
     this.arr.push(label)
+    return label
   },
   stopAll() {
     this.arr = []
