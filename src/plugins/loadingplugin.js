@@ -2,16 +2,16 @@ import { reactive } from 'vue'
 
 const loading = reactive({
   arr: [],
-  start(label = new Date().getTime()) {
+  start(label) {
+    if (!label) return
     this.arr.push(label)
-    return label
   },
   stopAll() {
     this.arr = []
   },
   stop(label) {
     if (!label) {
-      this.arr.pop()
+      this.arr = []
       return
     }
     this.arr = this.arr.filter((el) => el !== label)
