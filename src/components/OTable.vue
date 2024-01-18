@@ -47,6 +47,7 @@
             icon="fad fa-external-link"
             :label="$translate('admin.generic.action.export')"
             @click="doExport($event)"
+            :disabled="!value?.length"
           />
           <Button
             v-if="!isDesktop && showHandleResponsiveLayout"
@@ -198,10 +199,24 @@ export default {
       const processedData = this.$refs.dt.processedData
       this.$modal.open('ODialogExport', {
         processed: processedData,
-        defaultExportKeys: this.defaultExportKeys,
+        defaultExportKeys: this.defaultExportKeys.length
+          ? this.defaultExportKeys
+          : this.$refs.dt.columns.map((el) => el.props.field),
         key: this.currentPageName,
-        type: 0
+        type: 0,
+        translatedLabel: this.getTranslatedLabel()
       })
+    },
+    getTranslatedLabel() {
+      // missing expansion labels...
+      return this.$refs.dt.columns
+        .filter((el) => el.props.field)
+        .map((el) => {
+          return {
+            key: el.props.field,
+            value: el.props.header
+          }
+        })
     },
     handlerResponsiveLayout(type, value) {
       if (value === 'stack') {
