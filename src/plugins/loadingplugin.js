@@ -11,7 +11,7 @@ const loading = reactive({
   },
   stop(label) {
     if (!label) {
-      this.arr.pop()
+      this.arr = []
       return
     }
     this.arr = this.arr.filter((el) => el !== label)
