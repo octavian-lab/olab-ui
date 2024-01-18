@@ -208,6 +208,7 @@ export default {
       })
     },
     getTranslatedLabel() {
+      // missing expansion labels...
       return this.$refs.dt.columns
         .filter((el) => el.props.field)
         .map((el) => {
