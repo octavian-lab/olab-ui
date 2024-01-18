@@ -184,9 +184,12 @@ export default {
   },
   props: {
     useApi: { type: Boolean, default: () => false },
-    exportFilename: { type: String, default: () => 'customers' },
+    exportFilename: {
+      type: String,
+      default: () => ''
+    },
     exportMode: { type: String, default: () => 'all' },
-    translator: { type: Boolean, default: () => false }
+    translator: { type: Boolean, default: () => true }
   },
   data() {
     return {
@@ -225,6 +228,10 @@ export default {
     disabled() {
       return this.selectColumnsData.length <= 0
     },
+    exportFilenameComp() {
+      if (!this.exportFilename) return `${this.currentPageName}-export`
+      return this.exportFilename
+    },
     keys() {
       let ret = []
       if (this.$modal.data.processed != null && this.$modal.data.processed.length > 0) {
@@ -253,11 +260,15 @@ export default {
       this.$modal.close()
     },
     checkTranslate(key) {
-      if (`${this.$translate(`decode.field.${key}`)}`.includes('--')) {
-        return key
-      } else {
-        return `${this.$translate(`decode.field.${key}`)}`
+      const label = this.$modal.data.translatedLabel.find((el) => el.key === key)
+      if (label) {
+        return label.value
       }
+      const translated = this.$translate(`decode.field.${key}`)
+      if (translated.includes('--') || translated.includes('decode')) {
+        return key
+      }
+      return translated
     },
     selectAllFilters() {
       this.collapsed = false
@@ -521,6 +532,7 @@ export default {
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
         case 'idSkin':
+        case 'idSite':
           return this.$store.getters.getSkinDescription(value)
         case 'status':
           return this.$translate(`decode.limit.status.${value}`)
@@ -585,7 +597,7 @@ export default {
       const url = window.URL || window.webkitURL
       const link = url.createObjectURL(blob)
       const a = document.createElement('a')
-      a.download = this.exportFilename + '.json'
+      a.download = this.exportFilenameComp + '.json'
       a.href = link
       document.body.appendChild(a)
       a.click()
@@ -610,7 +622,7 @@ export default {
       const url = window.URL || window.webkitURL
       const link = url.createObjectURL(blob)
       const a = document.createElement('a')
-      a.download = this.exportFilename + '.csv'
+      a.download = this.exportFilenameComp + '.csv'
       a.href = link
       document.body.appendChild(a)
       a.click()
@@ -631,7 +643,7 @@ export default {
       const ws = utils.json_to_sheet(array)
       const wb = utils.book_new()
       utils.book_append_sheet(wb, ws, 'Data')
-      writeFileXLSX(wb, this.exportFilename + '.xlsx')
+      writeFileXLSX(wb, this.exportFilenameComp + '.xlsx')
       this.toast('success', 'export.completed')
     }
   },
