@@ -264,8 +264,8 @@ export default {
       if (label) {
         return label.value
       }
-      const translated = this.$translate(`decode.field.${key}`)
-      if (translated.includes('--') || translated.includes('decode')) {
+      const translated = this.$translate(`admin.generic.${key}`)
+      if (translated.includes('--') || translated.includes('admin')) {
         return key
       }
       return translated
