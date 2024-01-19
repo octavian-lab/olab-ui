@@ -264,6 +264,10 @@ export default {
           this.query.join[key] = this.joinSelectAllToggle
         })
       }
+
+      if (!this.joinSelectAllToggle) {
+        this.doClearFilters()
+      }
     }
   },
   created() {
@@ -432,7 +436,9 @@ $defaultInputHeight: 30px;
       }
     }
     .filter-field {
-      text-align: right;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
     }
   }
 

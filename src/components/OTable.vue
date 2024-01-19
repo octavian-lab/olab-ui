@@ -208,7 +208,7 @@ export default {
       })
     },
     getTranslatedLabel() {
-      // missing expansion labels...
+      // missing expansion labels and columns without field props, but we use the translator before export
       return this.$refs.dt.columns
         .filter((el) => el.props.field)
         .map((el) => {
