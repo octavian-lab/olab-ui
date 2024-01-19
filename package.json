@@ -55,6 +55,7 @@
     "vue": "^3.3.13",
     "vue3-cookies": "^1.0.6",
     "vue3-lottie": "^3.0.0",
+    "qrcode-vue3": "^1.6.8",
     "xlsx": "^0.18.5"
   },
   "repository": {
