@@ -1,4 +1,19 @@
 <template>
+  <div v-if="dynamicColumns" class="flex justify-content-between mb-2">
+    <MultiSelect
+      @change="onToggle($event)"
+      v-model="selectedColumns"
+      class="w-100 dx"
+      display="chip"
+      :options="dynamicColumns"
+      optionLabel="header"
+      :placeholder="$translate('select.columns.to.show')"
+    >
+      <template #chip="el">{{ $translate(el.value.header) }}</template>
+      <template #option="el"> {{ $translate(el.option.header) }}</template>
+    </MultiSelect>
+  </div>
+
   <DataTable
     id="o-table"
     :value="value"
@@ -167,6 +182,10 @@ export default {
     selectionMode: {
       type: [String, Boolean],
       default: () => false
+    },
+    dynamicColumns: {
+      type: Array,
+      default: () => null
     }
   },
   data() {
@@ -176,7 +195,8 @@ export default {
       table: { resultsLimit: 20 },
       expandedRows: [],
       lottie: null,
-      filters: this.filtersModel ? { ...this.filtersModel } : null
+      filters: this.filtersModel ? { ...this.filtersModel } : null,
+      selectedColumns: []
     }
   },
   computed: {
@@ -195,6 +215,14 @@ export default {
     }
   },
   methods: {
+    onToggle({ value }) {
+      this.selectedColumns = this.dynamicColumns.filter((col) => value.includes(col))
+      this.$emit('onColumnSelect', { value: this.selectedColumns })
+      this.useSettingsStore.updateDynamicColumns({
+        page: this.currentPageName,
+        value: this.selectedColumns.map((el) => ({ header: el.header }))
+      })
+    },
     doExport() {
       const processedData = this.$refs.dt.processedData
       this.$modal.open('ODialogExport', {
@@ -244,7 +272,24 @@ export default {
             return 'fa-arrows-left-right-to-line'
         }
       }
+    },
+    handlerDymanicColumns() {
+      const tmp = this.useSettingsStore.getDynamicColumns(this.currentPageName)
+      if (tmp) {
+        this.selectedColumns = tmp.map((el) =>
+          this.dynamicColumns.find((it) => it.header === el.header)
+        )
+      } else {
+        this.selectedColumns = this.dynamicColumns.filter((el) => el.selected === true)
+      }
+
+      this.$emit('onColumnSelect', { value: this.selectedColumns })
     }
+  },
+  created() {
+    if (!this.dynamicColumns) return
+
+    this.handlerDymanicColumns()
   },
   mounted() {
     if (!this.isDesktop && this.showHandleResponsiveLayout) {

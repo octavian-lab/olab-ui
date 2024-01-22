@@ -8,7 +8,8 @@ export const useSettingsStore = defineStore('settings', {
     responsiveTables: {},
     globalExportTemplates: {},
     searchTemplates: {},
-    draggableTemplates: {}
+    draggableTemplates: {},
+    dynamicColumns: {}
   }),
   getters: {
     getFastfilters: (state) => {
@@ -65,6 +66,15 @@ export const useSettingsStore = defineStore('settings', {
       }
       return state.draggableTemplates[`draggable-templates-${page}`]
     },
+    getDynamicColumns: (state) => (page) => {
+      if (!page) {
+        console.warn('ALERT! -- page -- parameter is required')
+        return
+      }
+      const tmp = state.dynamicColumns[`dynamic-columns-${page}`]
+      if (tmp) return tmp
+      return undefined
+    }
   },
   actions: {
     updateFastfilters({ page, value }) {
@@ -148,6 +158,9 @@ export const useSettingsStore = defineStore('settings', {
     updateDraggableTemplates({ page, value }) {
       this.draggableTemplates[`draggable-templates-${page}`] = value
     },
+    updateDynamicColumns({ page, value }) {
+      this.dynamicColumns[`dynamic-columns-${page}`] = value
+    }
   },
   persist: {
     enabled: true,
