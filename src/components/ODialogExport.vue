@@ -189,7 +189,7 @@ export default {
       default: () => ''
     },
     exportMode: { type: String, default: () => 'all' },
-    translator: { type: Boolean, default: () => true }
+    translator: { type: Boolean, default: () => false }
   },
   data() {
     return {
@@ -260,7 +260,13 @@ export default {
       this.$modal.close()
     },
     checkTranslate(key) {
-      const label = this.$modal.data.translatedLabel.find((el) => el.key === key)
+      if (`${this.$translate(`decode.field.${key}`)}`.includes('--')) {
+        return key
+      } else {
+        return `${this.$translate(`decode.field.${key}`)}`
+      }
+
+      /*const label = this.$modal.data.translatedLabel.find((el) => el.key === key)
       if (label) {
         return label.value
       }
@@ -268,7 +274,7 @@ export default {
       if (translated.includes('--') || translated.includes('admin')) {
         return key
       }
-      return translated
+      return translated*/
     },
     selectAllFilters() {
       this.collapsed = false
