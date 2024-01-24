@@ -17,7 +17,7 @@
         'o-draggable__btn o-draggable__btn-custom absolute',
         { active: isDragEnabled, 'opacity-0': isLoading }
       ]"
-      v-tooltip.left="$translate('admin.draggable.function.info')"
+      v-tooltip.left="isTooltipActive ? $translate('admin.draggable.function.info') : undefined"
     />
 
     <div
@@ -62,7 +62,8 @@ export default {
     isDragAlwaysActive: { type: Boolean, default: () => false },
     isGridActive: { type: Boolean, default: () => false },
     colClassMap: { type: Object, default: () => {} },
-    useApi: { type: Boolean, default: () => false }
+    useApi: { type: Boolean, default: () => false },
+    isTooltipActive: { type: Boolean, default: () => true }
   },
   data() {
     return {
