@@ -260,12 +260,6 @@ export default {
       this.$modal.close()
     },
     checkTranslate(key) {
-      /*if (`${this.$translate(`decode.field.${key}`)}`.includes('--')) {
-        return key
-      } else {
-        return `${this.$translate(`decode.field.${key}`)}`
-      }*/
-
       const label = this.$modal.data.translatedLabel.find((el) => el.key === key)
       if (label) {
         if (label.value) return label.value

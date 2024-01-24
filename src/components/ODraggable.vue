@@ -8,12 +8,17 @@
       :height="skeletonRect.height"
     />
 
-    <i
-      v-if="!isDragAlwaysActiveComp && !isLoading"
+    <Button
+      v-if="!isDragAlwaysActiveComp"
+      icon="fas fa-up-down-left-right"
       @click="dragEnabledToggle()"
-      :class="['fas fa-up-down-left-right text-xl pointer absolute', { active: isDragEnabled }]"
-      v-tooltip.right="$translate('admin.draggable.function.info')"
-    ></i>
+      id="o-draggable__btn"
+      :class="[
+        'o-draggable__btn o-draggable__btn-custom absolute',
+        { active: isDragEnabled, 'opacity-0': isLoading }
+      ]"
+      v-tooltip.left="isTooltipActive ? $translate('admin.draggable.function.info') : undefined"
+    />
 
     <div
       v-show="!isLoading"
@@ -57,7 +62,8 @@ export default {
     isDragAlwaysActive: { type: Boolean, default: () => false },
     isGridActive: { type: Boolean, default: () => false },
     colClassMap: { type: Object, default: () => {} },
-    useApi: { type: Boolean, default: () => false }
+    useApi: { type: Boolean, default: () => false },
+    isTooltipActive: { type: Boolean, default: () => true }
   },
   data() {
     return {
@@ -220,7 +226,7 @@ export default {
       const module = await import(`../api/${site}/index.js`)
       this.API = module.default
       await this.doSearchPageSettings()
-      this.isLoading = false // skeleton handler on first loading
+      this.isLoading = false
     }
   },
   mounted() {
@@ -262,27 +268,36 @@ export default {
     }
   }
 
-  .fa-up-down-left-right {
-    top: -0.75rem;
-    left: -1.75rem;
-    z-index: 99;
+  .o-draggable__btn {
+    border: none;
+    &.o-draggable__btn-custom {
+      top: -0.75rem;
+      right: -1.75rem;
+      z-index: 99;
 
-    width: 2rem;
-    aspect-ratio: 1;
-    line-height: 2rem;
-    text-align: center;
-    border-radius: 50%;
-    background-color: var(--surface-200);
-    transition: background-color 0.2s ease-in-out;
+      background-color: var(--surface-ground);
+      color: var(--text-color);
 
-    @media (min-width: 992px) {
-      top: 0;
-      left: -1rem;
+      border-radius: 50%;
+      width: 1.75rem;
+      aspect-ratio: 1;
+      font-size: 1.125rem;
+      line-height: 1.75rem;
+      text-align: center;
+
+      @media (min-width: 992px) {
+        top: 0;
+        right: -1rem;
+        font-size: 1.25rem;
+        width: 2rem;
+        line-height: 2rem;
+      }
+
+      &:hover:not(.active) {
+        background-color: var(--surface-hover);
+      }
     }
 
-    &:hover {
-      background-color: var(--surface-300);
-    }
     &.active {
       background-color: var(--primary-color);
     }
