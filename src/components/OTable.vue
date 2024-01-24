@@ -94,7 +94,7 @@
       v-if="selectionMode"
     ></Column>
     <Column :expander="expander" v-if="expander" class="w-3 text-center" />
-    <template #expansion="el">
+    <template v-if="$slots['table-expansion']" #expansion="el">
       <slot name="table-expansion" :data="el.data" :index="el.index" />
     </template>
     <ColumnGroup type="header" v-if="$slots['column-group']">
@@ -106,6 +106,7 @@
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
+      translator
     />
   </DataTable>
 </template>
@@ -187,6 +188,10 @@ export default {
     dynamicColumns: {
       type: Array,
       default: () => null
+    },
+    translator: {
+      type: Boolean,
+      default: () => true
     }
   },
   data() {
@@ -225,18 +230,17 @@ export default {
       })
     },
     doExport() {
-      const processedData = this.$refs.dt.processedData
       this.$modal.open('ODialogExport', {
-        processed: processedData,
+        processed: this.$refs.dt.processedData,
         defaultExportKeys: this.defaultExportKeys.length
           ? this.defaultExportKeys
           : this.$refs.dt.columns.map((el) => el.props.field),
         key: this.currentPageName,
-        type: 0
-        //translatedLabel: this.getTranslatedLabel()
+        type: 0,
+        translatedLabel: this.getTranslatedLabel()
       })
     },
-    /*getTranslatedLabel() {
+    getTranslatedLabel() {
       // missing expansion labels and columns without field props, but we use the translator before export
       return this.$refs.dt.columns
         .filter((el) => el.props.field)
@@ -246,7 +250,7 @@ export default {
             value: el.props.header
           }
         })
-    },*/
+    },
     handlerResponsiveLayout(type, value) {
       if (value === 'stack') {
         switch (type) {
@@ -277,9 +281,11 @@ export default {
     handlerDymanicColumns() {
       const tmp = this.useSettingsStore.getDynamicColumns(this.currentPageName)
       if (tmp) {
-        this.selectedColumns = tmp.map((el) =>
-          this.dynamicColumns.find((it) => it.header === el.header)
-        )
+        this.selectedColumns = tmp
+          .map((el) => {
+            return this.dynamicColumns.find((it) => it.header === el.header)
+          })
+          .filter((el) => el)
       } else {
         this.selectedColumns = this.dynamicColumns.filter((el) => el.selected === true)
       }

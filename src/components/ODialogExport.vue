@@ -189,7 +189,7 @@ export default {
       default: () => ''
     },
     exportMode: { type: String, default: () => 'all' },
-    translator: { type: Boolean, default: () => false }
+    translator: { type: Boolean, default: () => true }
   },
   data() {
     return {
@@ -260,21 +260,21 @@ export default {
       this.$modal.close()
     },
     checkTranslate(key) {
-      if (`${this.$translate(`decode.field.${key}`)}`.includes('--')) {
+      /*if (`${this.$translate(`decode.field.${key}`)}`.includes('--')) {
         return key
       } else {
         return `${this.$translate(`decode.field.${key}`)}`
-      }
+      }*/
 
-      /*const label = this.$modal.data.translatedLabel.find((el) => el.key === key)
+      const label = this.$modal.data.translatedLabel.find((el) => el.key === key)
       if (label) {
-        return label.value
+        if (label.value) return label.value
       }
       const translated = this.$translate(`admin.generic.${key}`)
       if (translated.includes('--') || translated.includes('admin')) {
         return key
       }
-      return translated*/
+      return translated
     },
     selectAllFilters() {
       this.collapsed = false
@@ -534,6 +534,18 @@ export default {
         case 'dateExecution':
         case 'dateReserve':
         case 'dateConfirm':
+        case 'expire':
+        case 'lastUpdate':
+        case 'dateUpdate':
+        case 'dateTicket':
+        case 'dateCompetence':
+        case 'dateProfit':
+        case 'dateInvoice':
+        case 'fromPeriod':
+        case 'toPeriod':
+        case 'dateStartRelationship':
+        case 'lastInvoice':
+        case 'nextInvoice':
           return this.$filters.asDate(value)
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
@@ -541,10 +553,20 @@ export default {
         case 'idSite':
           return this.$store.getters.getSkinDescription(value)
         case 'status':
+          if (typeof value === 'boolean') return value
           return this.$translate(`decode.limit.status.${value}`)
         case 'value':
           return this.$translate(`decode.self.exclusion.period.${value}`)
         case 'amount':
+        case 'real':
+        case 'total':
+        case 'deposit':
+        case 'withdrawable':
+        case 'bonus':
+        case 'balanceReal':
+        case 'balanceWithdrawable':
+        case 'balanceBonus':
+        case 'amountTotal':
           return this.$filters.asAmount(value)
         default:
           return value
