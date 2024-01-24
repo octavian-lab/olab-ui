@@ -35,6 +35,7 @@
     :rowsPerPageOptions="rowsPerPageOptions"
     :responsiveLayout="refResponsiveLayout"
     sortMode="multiple"
+    v-bind="$attrs"
     :dataKey="value && value.length > 0 && value[0].id ? 'id' : undefined"
     v-model:filters="filters"
     :key="refResponsiveLayout"
