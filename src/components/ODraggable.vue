@@ -17,7 +17,6 @@
         'o-draggable__btn o-draggable__btn-custom absolute',
         { active: isDragEnabled, 'opacity-0': isLoading }
       ]"
-      ref="oDraggableBtn"
       v-tooltip.left="$translate('admin.draggable.function.info')"
     />
 
