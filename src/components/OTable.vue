@@ -17,6 +17,8 @@
   <DataTable
     id="o-table"
     :value="value"
+    v-model:expandedRows="expandedRows"
+    v-model:filters="filters"
     paginator-position="both"
     :rows="50"
     :currentPageReportTemplate="getDtTemplate('currentPageReport')"
@@ -31,13 +33,11 @@
     autoLayout
     :paginator="paginator && value?.length > 0"
     :loading="loading || $loading.isLoading('search')"
-    v-model:expandedRows="expandedRows"
     :rowsPerPageOptions="rowsPerPageOptions"
     :responsiveLayout="refResponsiveLayout"
     sortMode="multiple"
     v-bind="$attrs"
     :dataKey="value && value.length > 0 && value[0].id ? 'id' : undefined"
-    v-model:filters="filters"
     :key="refResponsiveLayout"
     :editMode="$attrs.editMode"
   >
@@ -316,6 +316,11 @@ export default {
     > tr
     > td {
     border-width: 1px;
+    &:has(.p-column-title) {
+      @media screen and (max-width: 991px) {
+        width: 100% !important;
+      }
+    }
   }
   .header-container {
     position: relative;
@@ -339,30 +344,4 @@ export default {
     font-size: 1.3rem;
   }
 }
-
-//TODO: INSERIRE QUANDO ABBIAMO MERGE COMPLETO CON NUOVI PANEL
-////  Border Color Override per tabelle
-//.p-datatable .p-datatable-header,
-//.p-datatable .p-datatable-thead > tr > th,
-//.p-datatable .p-datatable-tbody > tr > td,
-//.p-datatable .p-datatable-tfoot > tr > td{
-//    border-color: #cbcbcb !important;
-//}
-//.p-datatable .p-datatable-thead > tr:last-child,
-//.p-datatable .p-datatable-tbody > tr:last-child,
-//.p-datatable .p-datatable-tfoot > tr:last-child,{
-//    border-right-width: 0
-//}
-//.p-datatable > .p-paginator-top > .p-paginator{
-//    border-radius: 0;
-//    border: 1px solid #cbcbcb;
-//    border-bottom-width: 0;
-//    border-top-width: 0;
-//}
-//.p-datatable > .p-datatable-header ~ .p-paginator-top > .p-paginator{
-//    border-top: 1px solid #cbcbcb;
-//}
-//.p-datatable > .p-datatable-header ~ .p-paginator-top > .p-paginator{
-//    border-top: 1px solid #cbcbcb;
-//}
 </style>
