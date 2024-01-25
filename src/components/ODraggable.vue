@@ -13,11 +13,9 @@
       icon="fas fa-up-down-left-right"
       @click="dragEnabledToggle()"
       id="o-draggable__btn"
-      :class="[
-        'o-draggable__btn o-draggable__btn-custom absolute',
-        { active: isDragEnabled, 'opacity-0': isLoading }
-      ]"
-      :label="isLabelActive ? $translate('admin.draggable.function.info') : undefined"
+      ref="oDraggableBtn"
+      class="o-draggable__btn o-draggable__btn-custom absolute"
+      :label="isLabelActive ? $translate('admin.draggable.function.label') : undefined"
       v-tooltip.left="isTooltipActive ? $translate('admin.draggable.function.info') : undefined"
     />
 
@@ -129,6 +127,15 @@ export default {
       if (this.isDragAlwaysActiveComp) return
 
       this.isDragEnabled = !this.isDragEnabled
+      // Custom style per p-button-secondary
+      if (this.isDragEnabled) {
+        this.$refs.oDraggableBtn.$el.style.backgroundColor = '#607D8B'
+        this.$refs.oDraggableBtn.$el.style.color = 'var(--surface-a)'
+      } else {
+        this.$refs.oDraggableBtn.$el.style.backgroundColor = 'transparent'
+        this.$refs.oDraggableBtn.$el.style.border = '1px solid #607D8B'
+        this.$refs.oDraggableBtn.$el.style.color = '#607D8B'
+      }
       this.draggable.options.disabled = !this.draggable.options.disabled
     },
     onDrop({ oldIndex, newIndex }) {
@@ -241,6 +248,8 @@ export default {
       }
 
       this.createDraggable()
+
+      if (this.$refs.oDraggableBtn != null) this.$refs.oDraggableBtn.$el.style.opacity = '1'
     })
   }
 }
@@ -298,10 +307,6 @@ export default {
       &:hover:not(.active) {
         background-color: var(--surface-hover);
       }
-    }
-
-    &.active {
-      background-color: var(--primary-color);
     }
   }
 
