@@ -32,7 +32,7 @@
         :options="selects.calendarOptions"
         v-model="modelValue"
         optionLabel="value"
-        :unselectable="unselectable === true ? undefined : false"
+        :allowempty="unselectable === true ? undefined : false"
       >
         <template #option="{ option }">
           <div class="font-xs">{{ option.label }}</div>
