@@ -17,6 +17,7 @@
         'o-draggable__btn o-draggable__btn-custom absolute',
         { active: isDragEnabled, 'opacity-0': isLoading }
       ]"
+      :label="isLabelActive ? $translate('admin.draggable.function.info') : undefined"
       v-tooltip.left="isTooltipActive ? $translate('admin.draggable.function.info') : undefined"
     />
 
@@ -63,7 +64,8 @@ export default {
     isGridActive: { type: Boolean, default: () => false },
     colClassMap: { type: Object, default: () => {} },
     useApi: { type: Boolean, default: () => false },
-    isTooltipActive: { type: Boolean, default: () => true }
+    isTooltipActive: { type: Boolean, default: () => true },
+    isLabelActive: { type: Boolean, default: () => false }
   },
   data() {
     return {
