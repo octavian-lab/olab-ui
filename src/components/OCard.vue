@@ -61,7 +61,8 @@ export default {
           this.$refs.OCardTitleContainerRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
           this.$refs.OCardStyleAdvancedRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
         } else {
-          this.$refs.OCardTitleRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
+          if (this.data.title)
+            this.$refs.OCardTitleRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
         }
         if (this.data.icon)
           this.$refs.OCardIconModeDefaultRef.style.color = `var(--special-color-${this.titleColor})`
