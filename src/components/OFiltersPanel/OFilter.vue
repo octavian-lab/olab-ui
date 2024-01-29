@@ -133,6 +133,9 @@ $borderColor: rgba(104, 104, 104, 0.2);
   .filter-field,
   .filer-field-join {
     padding-right: 10px;
+    .p-inputgroup {
+      height: 100%;
+    }
     @media screen and (max-width: 768px) {
       padding-left: 5px;
     }
