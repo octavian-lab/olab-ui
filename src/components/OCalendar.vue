@@ -83,7 +83,7 @@
             hide-on-date-time-select
             :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons @onAddDay="doAddDay($event,'to')"/>
+        <OCalendarButtons :borderRightRounded="false" @onAddDay="doAddDay($event,'to')"/>
       </div>
       <span
           v-if="mode === 'range' || mode === 'more-months' || mode === 'periods'"
@@ -164,7 +164,6 @@ export default {
     modelValue: {
       deep: true,
       handler(vmodel, oldVal) {
-        console.log(vmodel)
         if (!vmodel) {
           this.$emit('update:from', null)
           this.$emit('update:to', null)
