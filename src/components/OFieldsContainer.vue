@@ -30,8 +30,21 @@ $defaultInputHeight: 34px;
   }
 
   &.striped {
-    .o-field:nth-child(even) {
-      background: var(--bluegray-100);
+    .o-field.col-6:nth-child(4n + 2),
+    .o-field.col-6:nth-child(4n + 3) {
+      @media screen and (min-width: 768px) {
+        background: var(--bluegray-100);
+      }
+    }
+    .o-field.col-12:nth-child(odd) {
+      @media screen and (min-width: 768px) {
+        background: var(--bluegray-100);
+      }
+    }
+    .o-field:nth-child(odd) {
+      @media screen and (max-width: 768px) {
+        background: var(--bluegray-100);
+      }
     }
   }
 
@@ -44,7 +57,7 @@ $defaultInputHeight: 34px;
       align-items: center;
     }
 
-    [class*='p-input']:not([class*='p-chips'],[class*='p-inputswitch']) {
+    [class*='p-input']:not([class*='p-chips'], [class*='p-inputswitch']) {
       height: $defaultInputHeight;
     }
 
