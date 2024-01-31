@@ -20,7 +20,7 @@
           class="dynamic-fastfilter-container animate__animated animate__fadeInUp animate__faster"
         />
         <OFiltersPanelBtnSearch
-          :btnDisable="btnDisabled"
+          :btnDisabled="btnDisabled"
           :requiredFilters="requiredFilters"
           :btnLoading="btnLoading"
           fastfilter
@@ -64,7 +64,7 @@
         <slot name="loading" v-if="$slots['loading'] && $loading.isLoading('search')" />
         <OFiltersPanelBtnSearch
           v-else
-          :btnDisable="btnDisabled"
+          :btnDisabled="btnDisabled"
           :requiredFilters="requiredFilters"
           :btnLoading="btnLoading"
         />
