@@ -31,6 +31,10 @@
         :data-name="name"
       >
         <slot />
+
+        <Message v-if="isErrorActive && !collapsed" severity="warn">{{
+          $translate('admin.generic.input.error')
+        }}</Message>
       </div>
     </Teleport>
   </div>
@@ -46,7 +50,8 @@ export default {
     tooltip: { type: Boolean, default: () => false },
     label: { type: String, default: () => '' },
     disabled: { type: Boolean, default: () => false },
-    required: { type: Boolean, default: () => false }
+    required: { type: Boolean, default: () => false },
+    isErrorActive: { type: Boolean, default: () => false }
   },
   inject: ['doToggleCtxMenu', 'teleportFilter', 'collapsed'],
   data() {
@@ -115,6 +120,7 @@ export default {
 <style lang="scss">
 $borderColor: rgba(104, 104, 104, 0.2);
 .filter {
+  position: relative;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -145,6 +151,22 @@ $borderColor: rgba(104, 104, 104, 0.2);
   }
   .p-multiselect-token {
     width: auto !important;
+  }
+
+  .filter-field {
+    .p-message-warn {
+      position: absolute;
+      top: -3.8rem;
+      right: 10px;
+      z-index: 10;
+      height: 3rem;
+      display: flex;
+
+      .p-message-wrapper {
+        width: 100%;
+        justify-content: space-between;
+      }
+    }
   }
 }
 </style>
