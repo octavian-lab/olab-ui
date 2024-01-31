@@ -561,6 +561,9 @@ export default {
         case 'balanceWithdrawable':
         case 'balanceBonus':
         case 'amountTotal':
+        case 'totalBets':
+        case 'totalWins':
+        case 'profit':
           return this.$filters.asAmount(value)
         default:
           return value
