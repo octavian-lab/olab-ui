@@ -327,6 +327,12 @@ $defaultInputHeight: 30px;
     &:nth-child(even) {
       background: var(--bluegray-100);
     }
+    .filter-name {
+      padding-right: 5px;
+      @media screen and (max-width: 1200px) {
+        width: 43%;
+      }
+    }
     .filter-field {
       width: 33.3%;
       height: $defaultInputHeight;
@@ -395,6 +401,12 @@ $defaultInputHeight: 30px;
           background: transparent !important;
         }
       }
+      .filter-name {
+        padding-right: 5px;
+        @media screen and (max-width: 1200px) {
+          width: 43%;
+        }
+      }
       .filter-field {
         width: 55%;
         height: $defaultInputHeight;
@@ -417,6 +429,12 @@ $defaultInputHeight: 30px;
       border-right: 0 !important;
     }
     .filter {
+      .filter-name {
+        padding-right: 5px;
+        @media screen and (max-width: 1200px) {
+          width: 43%;
+        }
+      }
       .filter-field {
         width: 55%;
         height: $defaultInputHeight;
