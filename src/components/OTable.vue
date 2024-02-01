@@ -192,6 +192,9 @@ export default {
     translator: {
       type: Boolean,
       default: () => true
+    },
+    currencyKey: {
+      type: String
     }
   },
   data() {
@@ -230,6 +233,8 @@ export default {
       })
     },
     doExport() {
+      const currencyKey = this.currencyKey ? this.currencyKey.split('.') : undefined
+
       this.$modal.open('ODialogExport', {
         processed: this.$refs.dt.processedData,
         defaultExportKeys: this.defaultExportKeys.length
@@ -237,7 +242,8 @@ export default {
           : this.$refs.dt.columns.map((el) => el.props.field),
         key: this.currentPageName,
         type: 0,
-        translatedLabel: this.getTranslatedLabel()
+        translatedLabel: this.getTranslatedLabel(),
+        amountCurrencyMap: !this.currencyKey ? undefined : this.getAmountCurrencyMap(currencyKey)
       })
     },
     getTranslatedLabel() {
@@ -250,6 +256,14 @@ export default {
             value: el.props.header
           }
         })
+    },
+    getAmountCurrencyMap(currencyKey) {
+      return this.$refs.dt.processedData.map((el) => {
+        let currency
+        if (currencyKey.length === 1) currency = el[currencyKey[0]]
+        if (currencyKey.length === 2) currency = el[currencyKey[0]][currencyKey[1]]
+        return currency
+      })
     },
     handlerResponsiveLayout(type, value) {
       if (value === 'stack') {
