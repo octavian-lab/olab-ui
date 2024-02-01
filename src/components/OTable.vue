@@ -243,14 +243,7 @@ export default {
         key: this.currentPageName,
         type: 0,
         translatedLabel: this.getTranslatedLabel(),
-        amountCurrencyMap: !this.currencyKey
-          ? undefined
-          : this.$refs.dt.processedData.map((el) => {
-              let currency
-              if (currencyKey.length === 1) currency = el[currencyKey[0]]
-              if (currencyKey.length === 2) currency = el[currencyKey[0]][currencyKey[1]]
-              return currency
-            })
+        amountCurrencyMap: !this.currencyKey ? undefined : this.getAmountCurrencyMap(currencyKey)
       })
     },
     getTranslatedLabel() {
@@ -263,6 +256,14 @@ export default {
             value: el.props.header
           }
         })
+    },
+    getAmountCurrencyMap(currencyKey) {
+      return this.$refs.dt.processedData.map((el) => {
+        let currency
+        if (currencyKey.length === 1) currency = el[currencyKey[0]]
+        if (currencyKey.length === 2) currency = el[currencyKey[0]][currencyKey[1]]
+        return currency
+      })
     },
     handlerResponsiveLayout(type, value) {
       if (value === 'stack') {
