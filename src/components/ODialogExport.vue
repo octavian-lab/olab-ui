@@ -203,7 +203,8 @@ export default {
       templateEditCheck: null,
       templateEditValue: null,
       collapsed: true,
-      lottie: { common }
+      lottie: { common },
+      currencyKeyCounter: 0
     }
   },
   watch: {
@@ -564,7 +565,16 @@ export default {
         case 'totalBets':
         case 'totalWins':
         case 'profit':
-          return this.$filters.asAmount(value)
+        case 'bets':
+        case 'wins':
+          let amount = ''
+          amount = this.$modal.data.amountCurrencyMap
+            ? this.$filters.asAmount(
+                value,
+                this.$modal.data.amountCurrencyMap[this.currencyKeyCounter]
+              )
+            : this.$filters.asAmount(value)
+          return amount
         default:
           return value
       }
@@ -580,6 +590,7 @@ export default {
       }
     },
     async showPrevieworExport(type) {
+      this.currencyKeyCounter = 0
       this.selectColumnsData = []
       const dataProcessed =
         type === 'preview'
@@ -602,6 +613,7 @@ export default {
           }
         }
         this.selectColumnsData.push(b)
+        this.currencyKeyCounter++
       })
 
       switch (type) {
