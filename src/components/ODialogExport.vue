@@ -541,6 +541,7 @@ export default {
         case 'dateStartRelationship':
         case 'lastInvoice':
         case 'nextInvoice':
+        case 'dateClose':
           return this.$filters.asDate(value)
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
@@ -554,7 +555,6 @@ export default {
           return this.$translate(`decode.self.exclusion.period.${value}`)
         case 'amount':
         case 'real':
-        case 'total':
         case 'deposit':
         case 'withdrawable':
         case 'bonus':
