@@ -567,6 +567,7 @@ export default {
         case 'profit':
         case 'bets':
         case 'wins':
+        case 'ggr':
           let amount = ''
           amount = this.$modal.data.amountCurrencyMap
             ? this.$filters.asAmount(
@@ -575,6 +576,8 @@ export default {
               )
             : this.$filters.asAmount(value)
           return amount
+        case 'payout':
+          return `${value.toFixed(2)} %`
         default:
           return value
       }
