@@ -23,10 +23,10 @@ export default {
   data() {
     return {
       results: Array.isArray(this.options) ? this.options : [],
-      type: null,
       languages: null,
+      licensee: null,
       skins: null,
-      licensee: null
+      type: null
     }
   },
   props: {
@@ -41,28 +41,34 @@ export default {
     autoUpdateSkins: {
       immediate: true,
       handler(idLicensee) {
-        this.licensee = idLicensee
-        this.results = this.getOptionsList(this.type, this.prependValueOnLabel)
-        // this.results = this.$store.getters.getSkinsByLicensee(idLicensee)
-        this.handleZeroVisibilityInList()
-        //
-        if (this.results.length === 1) this.$emit('autoUpdate', this.results[0].value)
+        this.setSkins(idLicensee)
       }
     },
     options: {
       immediate: true,
       handler(val) {
-        if (Array.isArray(val)) {
-          this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
-        } else {
-          this.type = val
-          this.results = this.getOptionsList(this.type, this.prependValueOnLabel)
-          this.handleZeroVisibilityInList()
-        }
+        this.setResults(val)
       }
     }
   },
   methods: {
+    // x watchers
+    setSkins(idLicensee) {
+      this.licensee = idLicensee
+      this.results = this.getOptionsList(this.type, this.prependValueOnLabel)
+      this.handleZeroVisibilityInList()
+      if (this.results.length === 1) this.$emit('autoUpdate', this.results[0].value)
+    },
+    setResults(val) {
+      if (Array.isArray(val)) {
+        this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
+      } else {
+        this.type = val
+        this.results = this.getOptionsList(this.type, this.prependValueOnLabel)
+        this.handleZeroVisibilityInList()
+      }
+    },
+    //
     handleZeroVisibilityInList() {
       if (this.$store.getters.info.idSkin || !this.addZeroVal) {
         return
@@ -125,7 +131,9 @@ export default {
         : this.$t('admin.language.worldwide')
     },
 
-    handleSelects(arr, value = 0, label = '0 - Default') {
+    handleSelects(arr, value = 0) {
+      let label = this.prependValueOnLabel ? 'Default' : '0 - Default'
+
       if (this.type === 'languages') {
         label = this.getWorldwideLabel()
       }
@@ -194,7 +202,10 @@ export default {
           return []
       }
     }
+  },
+  showClear() {
+    if (this.$store.getters.isAdminRoot) return true
+    return this.results.length > 1
   }
 }
 </script>
-~~
