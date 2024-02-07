@@ -1,7 +1,6 @@
 <template>
   <Dropdown
     :filter="results.length > 2"
-    :show-clear="showClear"
     option-value="value"
     option-label="label"
     :options="results"
@@ -34,14 +33,13 @@ export default {
     autoUpdateSkins: { type: Number, required: false },
     options: { type: [Array, String], required: true },
     prependValueOnLabel: { type: Boolean, default: () => false },
-    showClear: { type: Boolean, default: () => true },
     translator: { type: String, default: () => null }
   },
   watch: {
     autoUpdateSkins: {
       immediate: true,
       handler(idLicensee) {
-        this.setSkins(idLicensee)
+        if (this.site === 'agp') this.setSkins(idLicensee)
       }
     },
     options: {
@@ -69,28 +67,26 @@ export default {
       }
     },
     //
+
     handleZeroVisibilityInList() {
       if (this.$store.getters.info.idSkin || !this.addZeroVal) {
         return
       }
       switch (this.type) {
-        case 'skins':
-          this.results = this.handleSelects(this.results)
-          break
-        case 'sites':
-          this.results = this.handleSelects(this.results)
+        case 'platforms':
           break
         case 'licensees':
-          if (this.$store.getters.isAdminRoot) this.results = this.handleSelects(this.results)
-          break
+          if (!this.$store.getters.isAdminRoot) break
+        case 'skins':
+        case 'sites':
         case 'languages':
-          this.results = this.handleSelects(this.results, 'WW')
-          break
-        case 'platforms':
+          this.results = this.handleSelects(
+            this.results,
+            this.type === 'languages' ? 'WW' : undefined
+          )
           break
       }
     },
-
     elaborate(data, translatePrefix, prependValueOnLabel = true) {
       let ret = []
       if (data.length === 0) return ret
@@ -202,10 +198,6 @@ export default {
           return []
       }
     }
-  },
-  showClear() {
-    if (this.$store.getters.isAdminRoot) return true
-    return this.results.length > 1
   }
 }
 </script>
