@@ -1,5 +1,6 @@
 <template>
   <Dropdown
+    :show-clear="handleShowClear()"
     :filter="results.length > 2"
     option-value="value"
     option-label="label"
@@ -7,11 +8,11 @@
     :placeholder="$translate('admin.generic.dropdown.placeholder')"
   >
     <template #value="el" v-if="options === 'languages'">
-      <span v-html="valuesCalc(el)" v-if="el.value != null"></span>
+      <span v-html="valuesCalcLanguages(el)" v-if="el.value != null"></span>
       <span v-else> {{ el.placeholder }} </span>
     </template>
-    <template #option="el" v-if="options === 'languages'">
-      <span v-html="optionCalc(el)"></span>
+    <template #option="{ option }" v-if="options === 'languages'">
+      <span v-html="optionCalcLanguages(option)"></span>
     </template>
   </Dropdown>
 </template>
@@ -21,70 +22,70 @@ export default {
   name: 'ODropdown',
   data() {
     return {
-      results: Array.isArray(this.options) ? this.options : [],
-      languages: null,
-      licensee: null,
-      skins: null,
-      type: null
+      results: Array.isArray(this.options) ? this.options : []
     }
   },
   props: {
     addZeroVal: { type: Boolean, required: false, default: false },
     autoUpdateSkins: { type: Number, required: false },
     options: { type: [Array, String], required: true },
-    prependValueOnLabel: { type: Boolean, default: () => false },
+    showClear: { type: Boolean, default: () => true },
+    prependValueOnLabel: { type: Boolean, default: () => true },
     translator: { type: String, default: () => null }
   },
   watch: {
-    autoUpdateSkins: {
-      immediate: true,
-      handler(idLicensee) {
-        if (this.site === 'agp') this.setSkins(idLicensee)
-      }
-    },
     options: {
       immediate: true,
       handler(val) {
-        this.setResults(val)
+        this.elaborate(val, this.translator, this.prependValueOnLabel)
+      }
+    },
+    autoUpdateSkins: {
+      immediate: true,
+      handler(idLicensee) {
+        this.results = this.elaborate(
+          this.generateSelects(
+            this.$store.getters.getSkinsByLicensee(idLicensee),
+            'id',
+            'description'
+          )
+        )
+        this.handleZeroVisibilityInList()
       }
     }
   },
   methods: {
-    // x watchers
-    setSkins(idLicensee) {
-      this.licensee = idLicensee
-      this.results = this.getOptionsList(this.type, this.prependValueOnLabel)
-      this.handleZeroVisibilityInList()
-      if (this.results.length === 1) this.$emit('autoUpdate', this.results[0].value)
-    },
-    setResults(val) {
-      if (Array.isArray(val)) {
-        this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
+    handleShowClear() {
+      if (Array.isArray(this.options)) {
+        // caso in cui le opzioni è un array
+        return this.showClear
       } else {
-        this.type = val
-        this.results = this.getOptionsList(this.type, this.prependValueOnLabel)
-        this.handleZeroVisibilityInList()
+        // caso in cui hai le opzioni sono generate dai getters
+        if (this.$store.getters.isAdminRoot) return true
+        return this.results.length > 1
       }
     },
-    //
-
     handleZeroVisibilityInList() {
       if (this.$store.getters.info.idSkin || !this.addZeroVal) {
         return
       }
-      switch (this.type) {
-        case 'platforms':
-          break
+      switch (this.options) {
         case 'licensees':
-          if (!this.$store.getters.isAdminRoot) break
+          if (!this.$store.getters.isAdminRoot) {
+            return
+          } else {
+            this.addOptionsZeroVal()
+          }
+          break
         case 'skins':
         case 'sites':
-        case 'languages':
-          this.results = this.handleSelects(
-            this.results,
-            this.type === 'languages' ? 'WW' : undefined
-          )
+          this.addOptionsZeroVal()
           break
+        case 'languages':
+          this.addOptionsZeroVal('WW')
+          break
+        default:
+          return
       }
     },
     elaborate(data, translatePrefix, prependValueOnLabel = true) {
@@ -112,91 +113,80 @@ export default {
       }
       return ret
     },
-    getOptionsList(data, prependValueOnLabel = true) {
-      const type = this.chooseDropdownType(data)
-      const arr = this.generateSelects(type, 'id', 'description')
-      const ret = arr.map((el) => ({
-        label: prependValueOnLabel || data === 'languages' ? el.label : `${el.value} - ${el.label}`,
-        value: el.value
-      }))
-      return ret
-    },
-    getWorldwideLabel() {
-      return this.site === 'agp'
-        ? this.$store.getters.translate('admin.language.worldwide')
-        : this.$t('admin.language.worldwide')
-    },
-
-    handleSelects(arr, value = 0) {
-      let label = this.prependValueOnLabel ? 'Default' : '0 - Default'
-
-      if (this.type === 'languages') {
-        label = this.getWorldwideLabel()
+    addOptionsZeroVal(value = 0) {
+      const OBJ = {
+        value,
+        label: 'Default'
       }
-      const arrCopy = arr.slice()
-      const adminOption = { value: value, label: label }
-      const index = arrCopy.findIndex((el) => el.value === adminOption.value)
-      if (index === -1) arrCopy.unshift(adminOption)
-      return arrCopy
+      if (this.options === 'languages') {
+        OBJ.label = this.$t('admin.language.worldwide')
+      }
+      const index = this.results.findIndex((el) => el.value === OBJ.value)
+      if (index === -1) this.results.unshift(OBJ)
     },
-
-    valuesCalc(obj) {
-      let value = obj.value
+    valuesCalcLanguages({ value }) {
       let flag
       let description
+      console.log('reusltas:', this.results)
       switch (value) {
         case 'WW':
           flag = "<i class='fad fa-globe fa-xl mr-2'></i>"
+          description = this.$t('admin.language.worldwide')
           break
         default:
           flag = `<img class="flag flag-${value?.toLowerCase()} mr-2" />`
+          description = this.results.find((it) => it.value === value)?.label
           break
       }
-      description =
-        value === 'WW'
-          ? this.getWorldwideLabel()
-          : this.languages.find((it) => it.id === value)?.description
+
       return `${flag}${description}`
     },
-
-    optionCalc(obj) {
-      let option
-      switch (obj.option.value) {
+    optionCalcLanguages(option) {
+      let img
+      switch (option.value) {
         case 'WW':
-          const icon = "<i class='fad fa-globe fa-xl mr-2'></i>"
-          option = `${icon}${obj.option.label}`
+          img = "<i class='fad fa-globe fa-xl mr-2'></i>"
           break
         default:
-          const img = `<img class="flag flag-${obj.option.value.toLowerCase()} mr-2" />`
-          option = `${img}${obj.option.label}`
+          img = `<img class="flag flag-${option.value.toLowerCase()} mr-2" />`
           break
       }
-      return option
+      return `${img}${option.label}`
     },
-    chooseDropdownType(data) {
-      switch (data) {
-        case 'skins':
-          this.skins = [...this.$store.getters.skins]
-          if (this.licensee) this.skins = this.$store.getters.getSkinsByLicensee(this.licensee)
-          return this.skins
-        case 'sites':
-          this.skins = [...this.$store.getters.sites]
-          if (this.licensee) this.skins = this.$store.getters.getSkinsByLicensee(this.licensee)
-          return this.skins
-        case 'licensees':
-          return [...this.$store.getters.licensees]
-        case 'platforms':
-          if (this.$store.getters.info.idLicensee) {
-            return [...this.$store.getters.platformsByLicensee]
-          } else {
-            return [...this.$store.getters.platforms]
-          }
+    generateOptionsByType() {
+      let ret = []
+      switch (this.options) {
         case 'languages':
-          this.languages = [...this.$store.getters.languages]
-          return this.languages
+          this.results = this.elaborate(
+            this.generateSelects([...this.$store.getters[this.options]], 'id', 'description'),
+            this.translator,
+            false
+          )
+          return
+        case 'skins':
+        case 'sites':
+        case 'licensees':
+          ret = [...this.$store.getters[this.options]]
+          break
+        case 'platforms':
+          ret = this.$store.getters.info.idLicensee
+            ? [...this.$store.getters.platformsByLicensee]
+            : [...this.$store.getters.platforms]
+          break
         default:
-          return []
+          this.results = ret
+          return
       }
+      this.results = this.elaborate(
+        this.generateSelects(ret, 'id', 'description'),
+        this.translator,
+        this.prependValueOnLabel
+      )
+    }
+  },
+  mounted() {
+    if (typeof this.options === 'string') {
+      this.generateOptionsByType()
     }
   }
 }
