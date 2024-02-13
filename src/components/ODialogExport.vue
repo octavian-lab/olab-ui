@@ -577,7 +577,8 @@ export default {
             : this.$filters.asAmount(value)
           return amount
         case 'payout':
-          return `${value.toFixed(2)} %`
+          if (typeof value === 'number') return `${value.toFixed(2)} %`
+          else return value
         default:
           return value
       }
