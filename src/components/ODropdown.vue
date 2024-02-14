@@ -43,14 +43,16 @@ export default {
     autoUpdateSkins: {
       immediate: true,
       handler(idLicensee) {
-        this.results = this.elaborate(
-          this.generateSelects(
-            this.$store.getters.getSkinsByLicensee(idLicensee),
-            'id',
-            'description'
+        if (idLicensee) {
+          this.results = this.elaborate(
+            this.generateSelects(
+              this.$store.getters.getSkinsByLicensee(idLicensee),
+              'id',
+              'description'
+            )
           )
-        )
-        this.handleZeroVisibilityInList()
+          this.handleZeroVisibilityInList()
+        }
       }
     }
   },
