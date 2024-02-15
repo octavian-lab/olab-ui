@@ -92,7 +92,11 @@ export default {
     },
     elaborate(data, translatePrefix, prependValueOnLabel = true) {
       let ret = []
-      if (typeof data === 'string' || data.length === 0) return ret
+      if (!Array.isArray(data)) {
+        console.warn('Traduzione impossibile non è un array o è un array vuoto: ', ret)
+        return ret
+      }
+      if (data.length === 0) return ret
       let behaviourSimple = true
       if (typeof data[0] === 'object') {
         behaviourSimple = false
