@@ -91,7 +91,6 @@ export default {
       }
     },
     elaborate(data, translatePrefix, prependValueOnLabel = true) {
-      console.log('prependValueOnLabel::', prependValueOnLabel)
       let ret = []
       if (typeof data === 'string' || data.length === 0) return ret
       let behaviourSimple = true
@@ -176,7 +175,6 @@ export default {
             : [...this.$store.getters.platforms]
           break
       }
-      let test = this.generateSelects(ret, 'id', 'description')
       this.results = this.elaborate(
         this.generateSelects(ret, 'id', 'description'),
         this.translator,
