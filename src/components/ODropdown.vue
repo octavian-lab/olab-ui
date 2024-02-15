@@ -37,7 +37,7 @@ export default {
     options: {
       immediate: true,
       handler(val) {
-        this.elaborate(val, this.translator, this.prependValueOnLabel)
+        this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
       }
     },
     autoUpdateSkins: {
@@ -91,8 +91,9 @@ export default {
       }
     },
     elaborate(data, translatePrefix, prependValueOnLabel = true) {
+      console.log('prependValueOnLabel::', prependValueOnLabel)
       let ret = []
-      if (data.length === 0) return ret
+      if (typeof data === 'string' || data.length === 0) return ret
       let behaviourSimple = true
       if (typeof data[0] === 'object') {
         behaviourSimple = false
@@ -105,20 +106,23 @@ export default {
         } else {
           value = el.value
         }
+
         if (translatePrefix) {
           label = this.$translate(translatePrefix + '.' + value)
         }
+
         if (prependValueOnLabel) {
           label = `${value} - ${label}`
         }
+
         ret.push({ label, value })
       }
       return ret
     },
     addOptionsZeroVal(value = 0) {
       const OBJ = {
-        value,
-        label: '0 - Default'
+        label: this.prependValueOnLabel ? '0 - Default' : 'Default',
+        value
       }
       if (this.options === 'languages') {
         OBJ.label = this.$translate('admin.language.worldwide')
@@ -153,14 +157,14 @@ export default {
       }
       return `${img}${option.label}`
     },
-      generateOptionsByType() {
+    generateOptionsByType() {
       let ret = []
-      let prependValue = true
+      let prependValue = this.prependValueOnLabel
       switch (this.options) {
         case 'languages':
-            ret = [...this.$store.getters[this.options]]
-            prependValue = false
-            break
+          ret = [...this.$store.getters[this.options]]
+          prependValue = false
+          break
         case 'licensees':
         case 'skins':
         case 'sites':
@@ -172,13 +176,14 @@ export default {
             : [...this.$store.getters.platforms]
           break
       }
+      let test = this.generateSelects(ret, 'id', 'description')
       this.results = this.elaborate(
         this.generateSelects(ret, 'id', 'description'),
         this.translator,
         prependValue
       )
       this.handleZeroVisibilityInList()
-    },
+    }
   },
   mounted() {
     if (typeof this.options === 'string') {
