@@ -37,7 +37,6 @@ import OTable from './components/OTable.vue'
 import OFilter from './components/OFiltersPanel/OFilter.vue'
 import OFiltersPanel from './components/OFiltersPanel/OFiltersPanel.vue'
 import OPassword from './components/OPassword.vue'
-import DropdownSmart from './components/ToRemove/DropdownSmart.vue'
 import ODraggable from '@/components/ODraggable.vue'
 
 export default {
@@ -87,7 +86,6 @@ export {
   OFilter,
   OFiltersPanel,
   OPassword,
-  DropdownSmart,
   ODraggable,
   useLoading,
   useModal,
