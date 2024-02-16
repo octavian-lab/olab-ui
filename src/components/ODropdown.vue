@@ -22,7 +22,7 @@ export default {
   name: 'ODropdown',
   data() {
     return {
-      results: Array.isArray(this.options) ? this.options : []
+      results: this.options
     }
   },
   props: {
@@ -37,7 +37,11 @@ export default {
     options: {
       immediate: true,
       handler(val) {
-        this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
+        if (typeof this.options === 'string') {
+          this.generateOptionsByType()
+        } else {
+          this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
+        }
       }
     },
     autoUpdateSkins: {
@@ -117,14 +121,13 @@ export default {
         if (prependValueOnLabel) {
           label = `${value} - ${label}`
         }
-
         ret.push({ label, value })
       }
       return ret
     },
     addOptionsZeroVal(value = 0) {
       const OBJ = {
-        label: this.prependValueOnLabel ? '0 - Default' : 'Default',
+        label: '0 - Default',
         value
       }
       if (this.options === 'languages') {
@@ -162,7 +165,7 @@ export default {
     },
     generateOptionsByType() {
       let ret = []
-      let prependValue = this.prependValueOnLabel
+      let prependValue = true
       switch (this.options) {
         case 'languages':
           ret = [...this.$store.getters[this.options]]
@@ -185,11 +188,6 @@ export default {
         prependValue
       )
       this.handleZeroVisibilityInList()
-    }
-  },
-  mounted() {
-    if (typeof this.options === 'string') {
-      this.generateOptionsByType()
     }
   }
 }
