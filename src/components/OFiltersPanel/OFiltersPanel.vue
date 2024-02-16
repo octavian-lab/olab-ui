@@ -7,7 +7,7 @@
   >
     <template #header>
       <div class="font-bold">
-        <i class="fad fa-filters mr-2" />
+        <i :class="[icon, 'mr-2']" />
         <span class="panel-title">{{ filtersTitle }}</span>
         <i
           class="fad fa-circle-info animate__animated animate__bounceIn ml-2"
@@ -19,12 +19,14 @@
         <div
           class="dynamic-fastfilter-container animate__animated animate__fadeInUp animate__faster"
         />
-        <OFiltersPanelBtnSearch
-          :btnDisabled="btnDisabled"
-          :requiredFilters="requiredFilters"
-          :btnLoading="btnLoading"
-          fastfilter
-        />
+        <slot name="action">
+          <OFiltersPanelBtnSearch
+            :btnDisabled="btnDisabled"
+            :requiredFilters="requiredFilters"
+            :btnLoading="btnLoading"
+            fastfilter
+          />
+        </slot>
       </div>
     </template>
     <template #icons>
@@ -62,12 +64,13 @@
       </div>
       <div class="col-12 flex justify-content-center p-0 my-2 text-center h-fixed">
         <slot name="loading" v-if="$slots['loading'] && $loading.isLoading('search')" />
-        <OFiltersPanelBtnSearch
-          v-else
-          :btnDisabled="btnDisabled"
-          :requiredFilters="requiredFilters"
-          :btnLoading="btnLoading"
-        />
+        <slot name="action" v-else>
+          <OFiltersPanelBtnSearch
+            :btnDisabled="btnDisabled"
+            :requiredFilters="requiredFilters"
+            :btnLoading="btnLoading"
+          />
+        </slot>
       </div>
     </div>
     <ContextMenu ref="ctxmenu" :model="ctxMenuItems" />
@@ -93,7 +96,10 @@ export default {
     btnDisabled: { type: Boolean, default: () => false },
     col: { type: [Number, String], default: () => 1 },
     showSaveQuery: { type: Boolean, default: () => false },
+    icon: { type: String, default: () => 'fad fa-filters' },
     panelClass: String,
+    title: String,
+    titleTranslated: String,
     btnLoading: Boolean,
     joinSelectAll: { type: Boolean, default: () => true }
   },
@@ -178,10 +184,21 @@ export default {
       return icon
     },
     filtersTitle() {
-      let translation = 'admin.generic.filters'
-      if (this.collapsed && this.showFastFilters && !this.isTablet && !this.isMobile)
+      let translation
+      if (this.title) translation = this.title
+      else translation = 'admin.generic.filters'
+
+      if (
+        this.collapsed &&
+        this.showFastFilters &&
+        !this.isTablet &&
+        !this.isMobile &&
+        !this.title
+      ) {
         translation = 'admin.generic.fastfilters'
-      return this.$translate(translation)
+      }
+
+      return this.$translate(translation, this.titleTranslated)
     },
     colWidth() {
       const column = typeof this.col === 'string' ? +this.col : this.col
@@ -346,9 +363,9 @@ $defaultInputHeight: 30px;
       .p-inputnumber-button-group > .p-button {
         height: 100%;
       }
-      //#filters-panel.p-panel .filter .filter-field .p-component:first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
       .p-component:first-child:not(
           .p-inputgroup,
+          .p-slider,
           .p-calendar .p-chips-token,
           .p-checkbox,
           .p-inputswitch,
@@ -464,7 +481,13 @@ $defaultInputHeight: 30px;
   .filter.fastfilter {
     .filter-field {
       width: 90%;
-      :first-child:not(.p-inputgroup, .p-calendar .p-chips-token, .p-checkbox, .p-inputswitch) {
+      :first-child:not(
+          .p-inputgroup,
+          .p-calendar .p-chips-token,
+          .p-checkbox,
+          .p-inputswitch,
+          .p-slider
+        ) {
         width: 100%;
         height: 100%;
       }

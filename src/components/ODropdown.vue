@@ -43,21 +43,23 @@ export default {
     autoUpdateSkins: {
       immediate: true,
       handler(idLicensee) {
-        this.results = this.elaborate(
-          this.generateSelects(
-            this.$store.getters.getSkinsByLicensee(idLicensee),
-            'id',
-            'description'
+        if (idLicensee) {
+          this.results = this.elaborate(
+            this.generateSelects(
+              this.$store.getters.getSkinsByLicensee(idLicensee),
+              'id',
+              'description'
+            )
           )
-        )
-        this.handleZeroVisibilityInList()
+          this.handleZeroVisibilityInList()
+        }
       }
     }
   },
   methods: {
     handleShowClear() {
       if (Array.isArray(this.options)) {
-        // caso in cui le opzioni è un array
+        // caso in cui le opzioni sono un array
         return this.showClear
       } else {
         // caso in cui hai le opzioni sono generate dai getters
@@ -116,10 +118,10 @@ export default {
     addOptionsZeroVal(value = 0) {
       const OBJ = {
         value,
-        label: 'Default'
+        label: '0 - Default'
       }
       if (this.options === 'languages') {
-        OBJ.label = this.$t('admin.language.worldwide')
+        OBJ.label = this.$translate('admin.language.worldwide')
       }
       const index = this.results.findIndex((el) => el.value === OBJ.value)
       if (index === -1) this.results.unshift(OBJ)
@@ -127,18 +129,16 @@ export default {
     valuesCalcLanguages({ value }) {
       let flag
       let description
-      console.log('reusltas:', this.results)
       switch (value) {
         case 'WW':
-          flag = "<i class='fad fa-globe fa-xl mr-2'></i>"
-          description = this.$t('admin.language.worldwide')
+          flag = "<i class='fad fa-globe fa-xl mx-2'></i>"
+          description = this.$translate('admin.language.worldwide')
           break
         default:
           flag = `<img class="flag flag-${value?.toLowerCase()} mr-2" />`
           description = this.results.find((it) => it.value === value)?.label
           break
       }
-
       return `${flag}${description}`
     },
     optionCalcLanguages(option) {
@@ -153,19 +153,17 @@ export default {
       }
       return `${img}${option.label}`
     },
-    generateOptionsByType() {
+      generateOptionsByType() {
       let ret = []
+      let prependValue = true
       switch (this.options) {
         case 'languages':
-          this.results = this.elaborate(
-            this.generateSelects([...this.$store.getters[this.options]], 'id', 'description'),
-            this.translator,
-            false
-          )
-          return
+            ret = [...this.$store.getters[this.options]]
+            prependValue = false
+            break
+        case 'licensees':
         case 'skins':
         case 'sites':
-        case 'licensees':
           ret = [...this.$store.getters[this.options]]
           break
         case 'platforms':
@@ -173,16 +171,14 @@ export default {
             ? [...this.$store.getters.platformsByLicensee]
             : [...this.$store.getters.platforms]
           break
-        default:
-          this.results = ret
-          return
       }
       this.results = this.elaborate(
         this.generateSelects(ret, 'id', 'description'),
         this.translator,
-        this.prependValueOnLabel
+        prependValue
       )
-    }
+      this.handleZeroVisibilityInList()
+    },
   },
   mounted() {
     if (typeof this.options === 'string') {
