@@ -8,8 +8,8 @@
   >
     <template #header>
       <div class="font-bold flex align-items-center">
-        <span :class="text.exists ? 'mr-2' : 'mr-0'">
-          <i :class="`${icon} mr-2`"></i>
+        <span class="mr-2">
+          <i :class="`${icon} mr-2`" />
           {{ $translate(`admin.generic.${title}`) }}
         </span>
         <span v-if="text.exists">
@@ -47,13 +47,8 @@ export default {
     checkBadgeTag() {
       if (this.badge || this.tag) {
         this.text.exists = true
-        if (this.badge) {
-          this.text.message = this.badge
-          this.text.type = 'Badge'
-        } else {
-          this.text.message = this.tag
-          this.text.type = 'Tag'
-        }
+        this.text.message = this.badge ? this.badge : this.tag
+        this.text.type = this.badge ? 'Badge' : 'Tag'
       } else {
         this.text.exists = false
       }
