@@ -22,7 +22,7 @@ export default {
   name: 'ODropdown',
   data() {
     return {
-      results: Array.isArray(this.options) ? this.options : []
+      results: this.options
     }
   },
   props: {
@@ -37,7 +37,11 @@ export default {
     options: {
       immediate: true,
       handler(val) {
-        this.elaborate(val, this.translator, this.prependValueOnLabel)
+        if (typeof this.options === 'string') {
+          this.generateOptionsByType()
+        } else {
+          this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
+        }
       }
     },
     autoUpdateSkins: {
@@ -92,6 +96,10 @@ export default {
     },
     elaborate(data, translatePrefix, prependValueOnLabel = true) {
       let ret = []
+      if (!Array.isArray(data)) {
+        console.warn('Traduzione impossibile non è un array o è un array vuoto: ', ret)
+        return ret
+      }
       if (data.length === 0) return ret
       let behaviourSimple = true
       if (typeof data[0] === 'object') {
@@ -105,9 +113,11 @@ export default {
         } else {
           value = el.value
         }
+
         if (translatePrefix) {
           label = this.$translate(translatePrefix + '.' + value)
         }
+
         if (prependValueOnLabel) {
           label = `${value} - ${label}`
         }
@@ -117,8 +127,8 @@ export default {
     },
     addOptionsZeroVal(value = 0) {
       const OBJ = {
-        value,
-        label: '0 - Default'
+        label: '0 - Default',
+        value
       }
       if (this.options === 'languages') {
         OBJ.label = this.$translate('admin.language.worldwide')
@@ -153,14 +163,14 @@ export default {
       }
       return `${img}${option.label}`
     },
-      generateOptionsByType() {
+    generateOptionsByType() {
       let ret = []
       let prependValue = true
       switch (this.options) {
         case 'languages':
-            ret = [...this.$store.getters[this.options]]
-            prependValue = false
-            break
+          ret = [...this.$store.getters[this.options]]
+          prependValue = false
+          break
         case 'licensees':
         case 'skins':
         case 'sites':
@@ -178,11 +188,6 @@ export default {
         prependValue
       )
       this.handleZeroVisibilityInList()
-    },
-  },
-  mounted() {
-    if (typeof this.options === 'string') {
-      this.generateOptionsByType()
     }
   }
 }
