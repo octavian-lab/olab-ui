@@ -47,6 +47,7 @@ export default {
     checkBadgeTag() {
       if (this.badge || this.tag) {
         this.text.exists = true
+
         this.text.message = this.badge ? this.badge : this.tag
         this.text.type = this.badge ? 'Badge' : 'Tag'
       } else {
