@@ -5,6 +5,7 @@
     :collapsed="collapsed"
     :badge="badge"
     :tag="tag"
+    class="mt-5"
   >
     <template #header>
       <div class="font-bold flex align-items-center">
