@@ -419,8 +419,7 @@ export default {
 
   .p-inputgroup {
     width: 100%;
-    height: 100%;
-    min-height: 2.5rem;
+    height: 2.5rem;
 
     :deep(.p-button):not(.p-datepicker-trigger) {
       padding: 0.2rem;
