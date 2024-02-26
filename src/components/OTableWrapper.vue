@@ -1,12 +1,5 @@
 <template>
-  <Panel
-    @toggle="$emit('toggle')"
-    :toggleable="toggleable"
-    :collapsed="collapsed"
-    :badge="badge"
-    :tag="tag"
-    class="mt-5"
-  >
+  <Panel class="mt-5">
     <template #header>
       <div class="font-bold flex align-items-center">
         <span class="mr-2">
