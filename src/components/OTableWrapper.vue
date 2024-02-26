@@ -31,8 +31,6 @@ export default {
   props: {
     icon: { type: String, required: false, default: 'fad fa-square-poll-horizontal' },
     title: { type: String, required: false, default: 'results' },
-    toggleable: { type: Boolean, required: false, default: true },
-    collapsed: { type: Boolean, required: false, default: false },
     badge: { type: [String, Number], required: false, default: undefined },
     tag: { type: [String, Number], required: false, default: undefined },
     severity: { type: String, required: false, default: undefined }
