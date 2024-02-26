@@ -107,7 +107,8 @@ export default {
     to: { type: [Date, Object, String], default: () => null },
     advanced: { type: Boolean, default: () => true },
     empty: { type: Boolean, default: () => false },
-    filteredOptions: { type: Array, default: () => [] }
+    filteredOptions: { type: Array, default: () => [] },
+    excludePeriodsOptions: { type: Array, default: () => [] }
   },
   data() {
     return {
@@ -118,6 +119,7 @@ export default {
         previousMonths: [],
         periods: [
           {
+            id: 'currWeek',
             label: this.$translate('admin.generic.calendar.this.week'),
             value: {
               date: {
@@ -127,6 +129,7 @@ export default {
             }
           },
           {
+            id: 'lastWeek',
             label: this.$translate('admin.generic.calendar.last.week'),
             value: {
               date: {
@@ -207,6 +210,9 @@ export default {
           break
         case 'periods':
           ret = this.selects.periods
+          if (this.excludePeriodsOptions.length > 0) {
+            ret = ret.filter((el) => !this.excludePeriodsOptions.includes(el.id))
+          }
           break
       }
       return ret
@@ -300,6 +306,7 @@ export default {
       let ret = []
       arr.forEach((el) => {
         ret.push({
+          id: `last${el}`,
           label: this.$translate('admin.generic.last.days.' + el),
           value: {
             date: {
