@@ -6,11 +6,7 @@
           <i :class="`${icon} mr-2`" />
           {{ $translate(`admin.generic.${title}`) }}
         </span>
-        <span v-if="text.exists">
-          <component :is="text.type" :severity="severity">
-            {{ text.message }}
-          </component>
-        </span>
+        <slot name="badge-tag" />
       </div>
     </template>
     <slot />
@@ -19,36 +15,12 @@
 <script>
 export default {
   name: 'OTableWrapper',
-  data() {
-    return {
-      text: {
-        exists: false,
-        message: null,
-        type: 'Badge'
-      }
-    }
-  },
   props: {
     icon: { type: String, required: false, default: 'fad fa-square-poll-horizontal' },
     title: { type: String, required: false, default: 'results' },
     badge: { type: [String, Number], required: false, default: undefined },
     tag: { type: [String, Number], required: false, default: undefined },
     severity: { type: String, required: false, default: undefined }
-  },
-  methods: {
-    checkBadgeTag() {
-      if (this.badge || this.tag) {
-        this.text.exists = true
-
-        this.text.message = this.badge ? this.badge : this.tag
-        this.text.type = this.badge ? 'Badge' : 'Tag'
-      } else {
-        this.text.exists = false
-      }
-    }
-  },
-  mounted() {
-    this.checkBadgeTag()
   }
 }
 </script>
