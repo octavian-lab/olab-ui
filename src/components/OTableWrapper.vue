@@ -17,10 +17,7 @@ export default {
   name: 'OTableWrapper',
   props: {
     icon: { type: String, required: false, default: 'fad fa-square-poll-horizontal' },
-    title: { type: String, required: false, default: 'results' },
-    badge: { type: [String, Number], required: false, default: undefined },
-    tag: { type: [String, Number], required: false, default: undefined },
-    severity: { type: String, required: false, default: undefined }
+    title: { type: String, required: false, default: 'results' }
   }
 }
 </script>
