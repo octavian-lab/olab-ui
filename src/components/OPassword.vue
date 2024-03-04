@@ -128,11 +128,11 @@ export default {
     },
     levelToCheck() {
       if (!this.configKey) return this.level
-      return this.getConfig('groups')
+      return +this.getConfig('groups')
     },
     lengthToCheck() {
       if (!this.configKey) return 8
-        return this.getConfig('length')
+        return +this.getConfig('length')
     },
     handlePlaceholder() {
       if (!this.placeholder === undefined) {
