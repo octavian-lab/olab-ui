@@ -77,11 +77,7 @@ export default {
     },
     generateFilterClass() {
       const uppercaseCondition = this.$translate('admin.filter.' + this.name).startsWith('--')
-      return [
-        'filter-name',
-        'md:flex align-items-center',
-        { 'text-uppercase': !uppercaseCondition }
-      ]
+      return ['filter-name', 'flex align-items-center', { 'text-uppercase': !uppercaseCondition }]
     }
   },
   methods: {
