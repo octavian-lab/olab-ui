@@ -127,11 +127,11 @@ export default {
         : this.$store.getters.getConfigByKey(`password.policy.${this.configKey}.min.${key}`)
     },
     levelToCheck() {
-      if (!this.configKey) return this.level
+      if (!this.configKey || !this.getConfig('groups')) return this.level
       return +this.getConfig('groups')
     },
     lengthToCheck() {
-      if (!this.configKey) return 8
+      if (!this.configKey || !this.getConfig('length')) return 8
         return +this.getConfig('length')
     },
     handlePlaceholder() {
