@@ -189,7 +189,10 @@ export default {
       default: () => ''
     },
     exportMode: { type: String, default: () => 'all' },
-    translator: { type: Boolean, default: () => true }
+    translator: { type: Boolean, default: () => true },
+    currencyInExport: {
+      type: Boolean
+    }
   },
   data() {
     return {
@@ -568,6 +571,7 @@ export default {
         case 'bets':
         case 'wins':
         case 'ggr':
+          if (!this.currencyInExport) return value
           let amount = ''
           amount = this.$modal.data.amountCurrencyMap
             ? this.$filters.asAmount(

@@ -13,7 +13,7 @@
           {{ $translate(`admin.generic.${type}.password`) }}
         </p>
         <div v-if="type === 'new'">
-          {{ `${filteredArray.length} / ${level}` }}
+          {{ `${filteredArray.length} / ${levelToCheck()}` }}
         </div>
       </div>
     </template>
@@ -24,7 +24,7 @@
           {{ $translate('admin.generic.check.password.rules') }}
         </p>
         <p>
-          {{ $translate('admin.generic.check.password.length') }}
+          {{ $translate('admin.generic.check.password.length') }}: {{lengthToCheck()}}
         </p>
 
         <ul class="p-pl-2 p-ml-2 p-mt-0" v-for="list in listCheckPassword" :key="list">
@@ -81,7 +81,8 @@ export default {
       default: 'old'
     },
     componentClass: { type: String, default: () => 'w-100' },
-    placeholder: String
+    placeholder: String,
+    configKey: { type: String, default: () => null }
   },
   watch: {
     value(val) {
@@ -119,6 +120,20 @@ export default {
     }
   },
   methods: {
+    getConfig(key) {
+      // SE È PLAYER VIENE DAL PORTALE DI GIOCO CHE UTILIZZA UN GETTERS DIVERSO DA QUELLO DE BO
+      return this.configKey === 'player'
+        ? this.$store.getters.configByKey(`password.policy.${this.configKey}.min.${key}`)
+        : this.$store.getters.getConfigByKey(`password.policy.${this.configKey}.min.${key}`)
+    },
+    levelToCheck() {
+      if (!this.configKey || !this.getConfig('groups')) return this.level
+      return +this.getConfig('groups')
+    },
+    lengthToCheck() {
+      if (!this.configKey || !this.getConfig('length')) return 8
+        return +this.getConfig('length')
+    },
     handlePlaceholder() {
       if (!this.placeholder === undefined) {
         return this.$translate(`admin.generic.enter.${this.type}.password`)
@@ -132,7 +147,7 @@ export default {
     },
     // Check su true manda emit che deve abilitare il button.
     checkPassword() {
-      if (this.value.length >= 8 && this.filteredArray.length === this.level) {
+      if (this.value.length >= this.lengthToCheck() && this.filteredArray.length === this.levelToCheck()) {
         this.$emit('check', true)
       } else {
         this.$emit('check', false)
