@@ -11,15 +11,15 @@
 
 <script>
 import { ref, onMounted, nextTick, watch } from 'vue'
-import { imgUrl } from '@/js/GlobalFunctions'
+import functionmixin from '@/mixins/functionmixin.js'
 
 export default {
   name: 'OProgressBar',
   props: {
     value: { type: Number, default: () => 0, required: true },
     showValue: { type: Boolean, default: () => false },
-    imgType: { type: String, default: () => 'common' },
-    imgName: { type: String, required: true },
+    imgFormat: { type: String, default: () => 'png' },
+    imgPath: { type: String, required: true },
     imgStyle: { type: Object },
     borderRadius: { type: Boolean, default: () => true },
     customColor: { type: Boolean, default: () => false },
@@ -35,7 +35,7 @@ export default {
     const appendProgressBarImg = () => {
       const progressBarValue = progressbarRef.value.$el.querySelector('.p-progressbar-value')
       const progressBarImg = document.createElement('img')
-      progressBarImg.src = imgUrl(props.imgName, props.imgType)
+      progressBarImg.src = functionmixin.methods.imgUrl(props.imgPath, props.imgFormat)
       progressBarImg.classList.add('o-progressbar__image')
 
       const style = props.imgStyle || {
