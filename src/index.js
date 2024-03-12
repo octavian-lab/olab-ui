@@ -39,6 +39,7 @@ import OFilter from './components/OFiltersPanel/OFilter.vue'
 import OFiltersPanel from './components/OFiltersPanel/OFiltersPanel.vue'
 import OPassword from './components/OPassword.vue'
 import ODraggable from '@/components/ODraggable.vue'
+import OProgressBar from '@/components/OProgressBar.vue'
 
 export default {
   install: (app, options = {}) => {
@@ -89,6 +90,7 @@ export {
   OFiltersPanel,
   OPassword,
   ODraggable,
+  OProgressBar,
   useLoading,
   useModal,
   useFunctions
