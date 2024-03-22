@@ -63,7 +63,8 @@ export default {
     colClassMap: { type: Object, default: () => {} },
     useApi: { type: Boolean, default: () => false },
     isTooltipActive: { type: Boolean, default: () => true },
-    isLabelActive: { type: Boolean, default: () => false }
+    isLabelActive: { type: Boolean, default: () => false },
+    isEditMode: {type:Boolean, default:() => false}
   },
   data() {
     return {
@@ -127,6 +128,7 @@ export default {
       if (this.isDragAlwaysActiveComp) return
 
       this.isDragEnabled = !this.isDragEnabled
+      this.$emit('update:isEditMode', this.isDragEnabled)
       // Custom style per p-button-secondary
       if (this.isDragEnabled) {
         this.$refs.oDraggableBtn.$el.style.backgroundColor = '#607D8B'
