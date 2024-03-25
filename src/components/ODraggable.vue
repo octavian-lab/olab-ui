@@ -92,6 +92,11 @@ export default {
       }
     }
   },
+  watch:{
+    elementsNumber(val){
+      if(val) this.elements = this.createElements()
+    }
+  },
   methods: {
     createElements() {
       const arr = []
