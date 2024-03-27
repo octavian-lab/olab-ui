@@ -30,7 +30,7 @@ import ODialog from './components/ODialog.vue'
 import ODialogExport from './components/ODialogExport.vue'
 import ODialogOTP from './components/ODialogOTP.vue'
 import ODropdown from './components/ODropdown.vue'
-import OTableWrapper from './components/OTableWrapper.vue'
+import OPanelWrapper from './components/OPanelWrapper.vue'
 import OInputOTP from './components/OInputOTP.vue'
 import OList from './components/OList.vue'
 import OLottie from './components/OLottie.vue'
@@ -77,7 +77,7 @@ export {
   OChart,
   ODialog,
   ODropdown,
-  OTableWrapper,
+  OPanelWrapper,
   OTable,
   ODialogExport,
   OInputOTP,
