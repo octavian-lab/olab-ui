@@ -5,7 +5,7 @@
     leave-active-class="fadeOutDown-custom"
     mode="out-in"
   >
-    <div v-if="requiredFilters.length === 0">
+    <div v-if="requiredFilters.length === 0 && doRefreshData != null">
       <Button
         :class="['search-btn', { 'fadeInUp-custom': fastfilter }]"
         :label="$translate('admin.action.search')"
@@ -16,7 +16,7 @@
       />
     </div>
 
-    <div class="flex align-items-center justify-content-center" v-else>
+    <div class="flex align-items-center justify-content-center" v-else-if="requiredFilters.length !== 0 && doRefreshData != null">
       <i
         v-tooltip="
           fastfilter

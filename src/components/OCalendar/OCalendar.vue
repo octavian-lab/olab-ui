@@ -20,21 +20,21 @@
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
       <Dropdown
-        v-model="modelValue"
-        v-if="!isDesktop && mode === 'default'"
-        :options="selects.calendarOptions"
-        :showClear="unselectable"
-        dataKey="value"
-        option-label="label"
-        :placeholder="$translate('admin.generic.select.date.type')"
+          v-model="modelValue"
+          v-if="!isDesktop && mode === 'default'"
+          :options="selects.calendarOptions"
+          :showClear="unselectable"
+          dataKey="value"
+          option-label="label"
+          :placeholder="$translate('admin.generic.select.date.type')"
       />
       <!--  CALENDAR DEFAULT: VISIBILE DA DESKTOP  -->
       <SelectButton
-        v-else-if="isDesktop && mode === 'default'"
-        :options="selects.calendarOptions"
-        v-model="modelValue"
-        optionLabel="value"
-        :allowempty="unselectable === true ? undefined : false"
+          v-else-if="isDesktop && mode === 'default'"
+          :options="selects.calendarOptions"
+          v-model="modelValue"
+          optionLabel="value"
+          :allowempty="unselectable === true ? undefined : false"
       >
         <template #option="{ option }">
           <div class="font-xs">{{ option.label }}</div>
@@ -43,46 +43,52 @@
 
       <!-- CALENDAR DEFAULT: @CLICK MORE MONHTS -->
       <Dropdown
-        v-else-if="mode === 'more-months' || mode === 'periods'"
-        v-model="modelValue"
-        :options="defaultDropdownOptions"
-        optionLabel="label"
-        option-value="value"
-        :placeholder="$translate('admin.generic.select.period')"
+          v-else-if="mode === 'more-months' || mode === 'periods'"
+          v-model="modelValue"
+          :options="defaultDropdownOptions"
+          optionLabel="label"
+          option-value="value"
+          :placeholder="$translate('admin.generic.select.period')"
       />
       <!-- CALENDAR DEFAULT: @CLICK RANGE -->
-      <div v-if="mode === 'range'" class="p-inputgroup mr-2">
+      <div
+          v-if="mode === 'range'"
+          class="p-inputgroup mr-2"
+      >
         <Calendar
-          v-model="modelValue.date.from"
-          class="animate__animated animate__fadeIn"
-          showTime
-          :placeholder="$translate('admin.generic.from')"
-          dateFormat="dd/mm/yy"
-          icon="fad fa-calendar"
-          hide-on-date-time-select
-          :touch-u-i="!isDesktop"
+            v-model="modelValue.date.from"
+            class="animate__animated animate__fadeIn"
+            showTime
+            :placeholder="$translate('admin.generic.from')"
+            dateFormat="dd/mm/yy"
+            icon="fad fa-calendar"
+            hide-on-date-time-select
+            :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons @onAddDay="doAddDay($event, 'from')" />
+        <OCalendarButtons @onAddDay="doAddDay($event,'from')"/>
       </div>
-      <div v-if="mode === 'range'" class="p-inputgroup">
+      <div
+          v-if="mode === 'range'"
+          class="p-inputgroup"
+      >
         <Calendar
-          class="animate__animated animate__fadeIn"
-          v-model="modelValue.date.to"
-          showTime
-          :placeholder="$translate('admin.generic.to')"
-          dateFormat="dd/mm/yy"
-          icon="fad fa-calendar"
-          hide-on-date-time-select
-          :touch-u-i="!isDesktop"
+            class="animate__animated animate__fadeIn"
+            v-model="modelValue.date.to"
+            showTime
+            :placeholder="$translate('admin.generic.to')"
+            dateFormat="dd/mm/yy"
+            icon="fad fa-calendar"
+            hide-on-date-time-select
+            :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons :borderRightRounded="false" @onAddDay="doAddDay($event, 'to')" />
+        <OCalendarButtons :borderRightRounded="false" @onAddDay="doAddDay($event,'to')"/>
       </div>
       <span
-        v-if="mode === 'range' || mode === 'more-months' || mode === 'periods'"
-        @click="doReset"
-        class="p-inputgroup-addon text-center pointer"
+          v-if="mode === 'range' || mode === 'more-months' || mode === 'periods'"
+          @click="doReset"
+          class="p-inputgroup-addon text-center pointer"
       >
-        <i class="fad fa-trash text-danger w-fit" />
+        <i class="fad fa-trash text-danger w-fit"/>
       </span>
     </div>
   </div>
@@ -91,22 +97,20 @@
 <script>
 import moment from 'moment'
 import Datemixin from '@/mixins/datemixin.js'
-import OCalendarButtons from '@/components/OCalendar/OCalendarButtons.vue'
-import OCalendarButtonPlus from '@/components/OCalendar/OCalendarButtonPlus.vue'
-import OCalendarButtonMinus from '@/components/OCalendar/OCalendarButtonMinus.vue'
+import OCalendarButtons from "@/components/OCalendar/OCalendarButtons.vue";
 
 export default {
   name: 'OCalendar',
-  components: { OCalendarButtons, OCalendarButtonPlus, OCalendarButtonMinus },
+  components: {OCalendarButtons},
   emits: ['update:from', 'update:to', 'update:modelValue'],
   props: {
-    placeholder: { type: String, default: () => 'dd / mm / yy hh:mm' },
-    unselectable: { type: Boolean, default: () => true },
-    from: { type: [Date, Object, String], default: () => null },
-    to: { type: [Date, Object, String], default: () => null },
-    advanced: { type: Boolean, default: () => true },
-    empty: { type: Boolean, default: () => false },
-    filteredOptions: { type: Array, default: () => [] }
+    placeholder: {type: String, default: () => 'dd / mm / yy hh:mm'},
+    unselectable: {type: Boolean, default: () => true},
+    from: {type: [Date, Object, String], default: () => null},
+    to: {type: [Date, Object, String], default: () => null},
+    advanced: {type: Boolean, default: () => true},
+    empty: {type: Boolean, default: () => false},
+    filteredOptions: {type: Array, default: () => []}
   },
   data() {
     return {
@@ -130,10 +134,10 @@ export default {
             value: {
               date: {
                 from: this.getMidNight(
-                  this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+                    this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
                 ).toISOString(),
                 to: this.getMidNight(
-                  this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+                    this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
                 ).toISOString()
               }
             }
@@ -168,7 +172,7 @@ export default {
         }
         if (!this.advanced && !this.compareDate(oldVal, vmodel, 'equal')) {
           const valueToEmit =
-            vmodel != null ? moment(vmodel).set({ seconds: 0, milliseconds: 0 }).toDate() : null
+              vmodel != null ? moment(vmodel).set({seconds: 0, milliseconds: 0}).toDate() : null
           this.$emit('update:modelValue', valueToEmit)
         }
       }
@@ -180,7 +184,7 @@ export default {
   },
   computed: {
     extQuery() {
-      if (this.advanced) return { from: this.from, to: this.to }
+      if (this.advanced) return {from: this.from, to: this.to}
       return this.$attrs.modelValue
     },
     mode() {
@@ -203,10 +207,10 @@ export default {
       switch (this.mode) {
         case 'more-months':
           ret = this.selects.previousMonths
-          break
+          break;
         case 'periods':
           ret = this.selects.periods
-          break
+          break;
       }
       return ret
     }
@@ -215,25 +219,21 @@ export default {
     setMidnight() {
       if (this.modelValue == null) this.modelValue = this.getMidNight(moment()).toDate()
     },
-    doAddDay(amount, dataToChange) {
-      if (!dataToChange) {
-        if (!this.modelValue) {
+    doAddDay(amount,dataToChange){
+      if(!dataToChange){
+        if(!this.modelValue){
           this.modelValue = this.getMidNight(moment()).toDate()
         }
         this.modelValue = this.addPeriod(moment(this.modelValue), amount, 'days')
         return
       }
-      this.modelValue.date[dataToChange] = this.addPeriod(
-        moment(this.modelValue.date[dataToChange]),
-        amount,
-        'days'
-      ).toDate()
+      this.modelValue.date[dataToChange] = this.addPeriod(moment(this.modelValue.date[dataToChange]), amount, 'days').toDate()
     },
     getCalendarOption(value) {
       if (value) {
         if (typeof value === 'object') {
           const option = this.selects.calendarOptions.find(
-            (el) => el.date?.from === value.from && el.date?.to === value.to
+              (el) => el.date?.from === value.from && el.date?.to === value.to
           )
           if (option) return option
         }
@@ -243,7 +243,7 @@ export default {
     getNumberFromDate() {
       let ret
       let tmp
-      let date = JSON.stringify({ from: this.from, to: this.to })
+      let date = JSON.stringify({from: this.from, to: this.to})
 
       if (JSON.parse(date).from == null && JSON.parse(date).to == null) {
         ret = null
@@ -297,15 +297,15 @@ export default {
     generatePeriods() {
       const arr = [3, 7, 15, 30, 60, 90]
       let ret = []
-      arr.forEach((el) => {
+      arr.forEach(el => {
         ret.push({
           label: this.$translate('admin.generic.last.days.' + el),
           value: {
             date: {
               from: this.getMidNight(
-                this.getStartOf(this.addPeriod(moment(), -el, 'days'), 'day')
+                  this.getStartOf(this.addPeriod(moment(), -el, 'days'), 'day')
               ).toISOString(),
-              to: this.getEndOf(moment(), 'day').toISOString()
+              to: this.getEndOf(moment(), 'day').toISOString(),
             }
           }
         })
@@ -336,7 +336,7 @@ export default {
           date: {
             from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toDate(),
             to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toDate()
-          }
+          },
         },
         {
           value: 4,
@@ -358,11 +358,11 @@ export default {
               ...this,
               date: {
                 from: Datemixin.methods
-                  .getStartOf(Datemixin.methods.addPeriod(moment(), -value, 'months'), 'month')
-                  .toDate(),
+                    .getStartOf(Datemixin.methods.addPeriod(moment(), -value, 'months'), 'month')
+                    .toDate(),
                 to: Datemixin.methods
-                  .getEndOf(Datemixin.methods.addPeriod(moment(), -value, 'months'), 'month')
-                  .toDate()
+                    .getEndOf(Datemixin.methods.addPeriod(moment(), -value, 'months'), 'month')
+                    .toDate()
               }
             }
           }
@@ -374,13 +374,13 @@ export default {
             from: this.getMidNight(moment()).toDate(),
             to: this.getEndOf(moment(), 'day').toDate()
           }
-        }
+        },
       ]
     },
     filterOptions() {
       if (this.filteredOptions.length > 0) {
         this.selects.calendarOptions = this.selects.calendarOptions.filter((el) =>
-          this.filteredOptions.includes(el.value)
+            this.filteredOptions.includes(el.value)
         )
       }
     }
@@ -398,13 +398,13 @@ export default {
     } else {
       if (!this.empty) {
         this.modelValue = this.$attrs.modelValue
-          ? moment(this.$attrs.modelValue)
-              .set({
-                seconds: 0,
-                milliseconds: 0
-              })
-              .toDate()
-          : this.getMidNight(moment()).toDate()
+            ? moment(this.$attrs.modelValue)
+                .set({
+                  seconds: 0,
+                  milliseconds: 0
+                })
+                .toDate()
+            : this.getMidNight(moment()).toDate()
       }
     }
   }

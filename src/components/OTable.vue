@@ -106,6 +106,7 @@
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
+      :currencyInExport="currencyInExport"
       translator
     />
   </DataTable>
@@ -153,6 +154,21 @@ export default {
       type: String,
       default: () => null
     },
+    dynamicColumns: {
+      type: Array,
+      default: () => null
+    },
+    translator: {
+      type: Boolean,
+      default: () => true
+    },
+    currencyKey: {
+      type: String
+    },
+    currencyInExport: {
+      type: Boolean,
+      default: () => true
+    },
     // PROPS DI PRIMEVUE
     value: {
       type: Array,
@@ -184,17 +200,6 @@ export default {
     selectionMode: {
       type: [String, Boolean],
       default: () => false
-    },
-    dynamicColumns: {
-      type: Array,
-      default: () => null
-    },
-    translator: {
-      type: Boolean,
-      default: () => true
-    },
-    currencyKey: {
-      type: String
     }
   },
   data() {

@@ -30,6 +30,7 @@ import ODialog from './components/ODialog.vue'
 import ODialogExport from './components/ODialogExport.vue'
 import ODialogOTP from './components/ODialogOTP.vue'
 import ODropdown from './components/ODropdown.vue'
+import OPanelWrapper from './components/OPanelWrapper.vue'
 import OInputOTP from './components/OInputOTP.vue'
 import OList from './components/OList.vue'
 import OLottie from './components/OLottie.vue'
@@ -37,8 +38,8 @@ import OTable from './components/OTable.vue'
 import OFilter from './components/OFiltersPanel/OFilter.vue'
 import OFiltersPanel from './components/OFiltersPanel/OFiltersPanel.vue'
 import OPassword from './components/OPassword.vue'
-import DropdownSmart from './components/ToRemove/DropdownSmart.vue'
 import ODraggable from '@/components/ODraggable.vue'
+import OProgressBar from '@/components/OProgressBar.vue'
 
 export default {
   install: (app, options = {}) => {
@@ -76,6 +77,7 @@ export {
   OChart,
   ODialog,
   ODropdown,
+  OPanelWrapper,
   OTable,
   ODialogExport,
   OInputOTP,
@@ -87,8 +89,8 @@ export {
   OFilter,
   OFiltersPanel,
   OPassword,
-  DropdownSmart,
   ODraggable,
+  OProgressBar,
   useLoading,
   useModal,
   useFunctions
