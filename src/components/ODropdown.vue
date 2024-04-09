@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     handleShowClear() {
-      if (Array.isArray(this.options)) {
+      if (Array.isArray(this.options) || typeof this.options === 'string') {
         // caso in cui le opzioni sono un array
         return this.showClear
       } else {
