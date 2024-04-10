@@ -24,13 +24,13 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #o-calendar-button-minus {
   .border-top-left-rounded {
-    border-top-right-radius: var(--border-radius) !important;
+    border-top-left-radius: var(--border-radius) !important;
   }
   .border-bottom-left-rounded {
-    border-top-right-radius: var(--border-radius) !important;
+    border-bottom-left-radius: var(--border-radius) !important;
   }
 }
 </style>
