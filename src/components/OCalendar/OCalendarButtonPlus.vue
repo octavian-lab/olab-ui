@@ -24,7 +24,7 @@ export default {
 }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 #o-calendar-button-plus {
   .border-top-right-rounded {
     border-top-right-radius: var(--border-radius) !important;

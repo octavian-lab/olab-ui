@@ -415,6 +415,7 @@ export default {
 #o-calendar {
   max-height: 35px;
   height: 100%;
+  width: 100%;
 
   .p-inputgroup {
     width: 100%;
@@ -424,6 +425,7 @@ export default {
     :deep(.p-button):not(.p-datepicker-trigger) {
       padding: 0.2rem;
       width: 100%;
+      height: 100%;
       display: flex;
       justify-content: center;
     }
