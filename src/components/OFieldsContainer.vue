@@ -18,6 +18,30 @@ export default {
 </script>
 <style lang="scss">
 $defaultInputHeight: 34px;
+.p-accordion-content {
+  #o-fields-container {
+    &.striped {
+      .o-field.col-6:nth-child(4n + 2),
+      .o-field.col-6:nth-child(4n + 3) {
+        @media screen and (min-width: 768px) {
+          background: var(--surface-a);
+        }
+      }
+      .o-field.col-12:nth-child(odd) {
+        @media screen and (min-width: 768px) {
+          background: var(--surface-a);
+        }
+      }
+      .o-field:nth-child(odd) {
+        @media screen and (max-width: 768px) {
+          background: var(--surface-a);
+        }
+      }
+    }
+
+  }
+}
+
 #o-fields-container {
   width: 100%;
   margin-left: 0;
@@ -33,17 +57,17 @@ $defaultInputHeight: 34px;
     .o-field.col-6:nth-child(4n + 2),
     .o-field.col-6:nth-child(4n + 3) {
       @media screen and (min-width: 768px) {
-        background: var(--bluegray-100);
+        background: var(--surface-d);
       }
     }
     .o-field.col-12:nth-child(odd) {
       @media screen and (min-width: 768px) {
-        background: var(--bluegray-100);
+        background: var(--surface-d);
       }
     }
     .o-field:nth-child(odd) {
       @media screen and (max-width: 768px) {
-        background: var(--bluegray-100);
+        background: var(--surface-d);
       }
     }
   }

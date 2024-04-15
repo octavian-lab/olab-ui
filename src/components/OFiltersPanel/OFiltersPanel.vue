@@ -342,7 +342,7 @@ $defaultInputHeight: 30px;
   // FILTER FIELD DEFAULT STYLE
   .filter {
     &:nth-child(even) {
-      background: var(--bluegray-100);
+      background: var(--surface-ground);
     }
     .filter-name {
       padding-right: 5px;
@@ -391,7 +391,7 @@ $defaultInputHeight: 30px;
       width: v-bind(colWidth);
       &:nth-child(4n + 2),
       &:nth-child(4n + 3) {
-        background: var(--bluegray-100) !important;
+        background: var(--surface-ground) !important;
       }
       &:nth-child(odd) {
         border-right: 2px solid $borderColor;
@@ -412,7 +412,7 @@ $defaultInputHeight: 30px;
         border-left: none !important;
         padding-right: 0 !important;
         &:nth-child(odd) {
-          background: var(--bluegray-100) !important;
+          background: var(--surface-ground) !important;
         }
         &:nth-child(even) {
           background: transparent !important;
@@ -464,7 +464,7 @@ $defaultInputHeight: 30px;
   .filters-join {
     .filter {
       &:nth-child(odd) {
-        background: var(--bluegray-100) !important;
+        background: var(--surface-ground) !important;
       }
       &:nth-child(even) {
         background: transparent !important;

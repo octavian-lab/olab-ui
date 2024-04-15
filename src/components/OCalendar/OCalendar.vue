@@ -37,7 +37,7 @@
         :allowempty="unselectable === true ? undefined : false"
       >
         <template #option="{ option }">
-          <div class="font-xs">{{ option.label }}</div>
+          <span class="font-sm">{{ option.label }}</span>
         </template>
       </SelectButton>
 

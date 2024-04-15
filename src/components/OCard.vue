@@ -10,7 +10,9 @@
           ></span>
 
           <i v-if="mode === 'list' && data.icon" :class="`fad ${data.icon} mr-2`" />
-          <span ref="OCardStyleAdvancedTitleRef">{{ $translate(`${data.title}`).includes('--') ? data.title : $translate(`${data.title}`) }}</span>
+          <span ref="OCardStyleAdvancedTitleRef">{{
+            $translate(`${data.title}`).includes('--') ? data.title : $translate(`${data.title}`)
+          }}</span>
         </span>
       </div>
     </template>
@@ -51,13 +53,18 @@ export default {
     contentColor: { Type: Number },
     textColor: { Type: Number }
   },
+  data() {
+    return {
+      cardBg: getComputedStyle(document.documentElement).getPropertyValue('--surface-c')
+    }
+  },
   mounted() {
     nextTick(() => {
       if (this.borderColor != null)
         this.$refs.OCardRef.$el.style.borderLeft = `0.375rem solid var(--special-color-${this.borderColor})`
       if (this.titleColor != null) {
         if (this.styleAdvanced) {
-          this.$refs.OCardTitleRef.style.background = `linear-gradient(180deg, var(--special-color-${this.titleColor}) 50%, rgba(255, 255, 255, 1) 50%)`
+          this.$refs.OCardTitleRef.style.background = `linear-gradient(180deg, var(--special-color-${this.titleColor}) 50%, var(--surface-50) 50%)`
           this.$refs.OCardTitleContainerRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
           this.$refs.OCardStyleAdvancedRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
           this.$refs.OCardStyleAdvancedTitleRef.style.color = `var(--special-color-${this.titleColor}-darken)`
@@ -134,7 +141,7 @@ export default {
       content: '';
       width: calc(0.75rem + 0.75rem);
       aspect-ratio: 1;
-      background-color: #ffffff;
+      background-color: var(--surface-50);
       border-radius: 0 50% 0 0;
       position: absolute;
       top: 0.75rem;
@@ -145,7 +152,7 @@ export default {
       content: '';
       width: calc(0.75rem + 0.75rem);
       aspect-ratio: 1;
-      background-color: #ffffff;
+      background-color: var(--surface-50);
       border-radius: 50% 0 0 0;
       position: absolute;
       top: 0.75rem;
