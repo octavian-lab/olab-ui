@@ -6,6 +6,7 @@
     option-label="label"
     :options="results"
     :placeholder="$translate('admin.generic.dropdown.placeholder')"
+    :autoFilterFocus="true"
   >
     <template #value="el" v-if="options === 'languages'">
       <span v-html="valuesCalcLanguages(el)" v-if="el.value != null"></span>
