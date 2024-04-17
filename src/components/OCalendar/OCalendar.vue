@@ -216,17 +216,18 @@ export default {
       if (this.modelValue == null) this.modelValue = this.getMidNight(moment()).toDate()
     },
     doAddDay(amount, dataToChange) {
+      const period = this.$attrs.dateFormat === 'mm/yy' ? 'months' : 'days'
       if (!dataToChange) {
         if (!this.modelValue) {
           this.modelValue = this.getMidNight(moment()).toDate()
         }
-        this.modelValue = this.addPeriod(moment(this.modelValue), amount, 'days')
+        this.modelValue = this.addPeriod(moment(this.modelValue), amount, period)
         return
       }
       this.modelValue.date[dataToChange] = this.addPeriod(
         moment(this.modelValue.date[dataToChange]),
         amount,
-        'days'
+        period
       ).toDate()
     },
     getCalendarOption(value) {
