@@ -1,29 +1,19 @@
 <template>
   <div id="banner-browser-support">
     <div
-      v-if="isSupported"
-      class="banner p-3 font-bold bg-warning absolute top-0 left-0 right-0 flex flex-row justify-content-between"
+      v-if="!isSupported"
+      class="banner p-3 font-bold bg-warning absolute top-0 left-0 right-0 flex flex-row justify-content-between align-items-center"
     >
-      <div>
-        <p>
-          Al momento ti trovi su un browser non supportato. Ti invitiamo a scaricare uno dei
+      <div class="flex align-items-center">
+        <div>
+          Al momento ti trovi su un browser NON supportato. Ti invitiamo a scaricare uno dei
           seguenti Browser:
-        </p>
-        <ul>
-          <li>
-            <a :href="link.chrome" target="_blank">
-              <i :class="icon.chrome"><span class="ml-1">Download Chrome</span></i></a
-            >
-          </li>
-          <li class="mt-2">
-            <a :href="link.firefox" target="_blank">
-              <i :class="icon.firefox"><span class="ml-1">Download Firefox</span></i></a
-            >
-          </li>
-        </ul>
+        </div>
+        <Button class="ml-2" :icon="icon.chrome" label="Chrome" @click="openLink(link.chrome)" />
+        <Button class="ml-2" :icon="icon.firefox" label="Firefox" @click="openLink(link.firefox)" />
       </div>
       <div class="flex align-items-center justify-content-between">
-        <Button icon="fa-solid fa-xmark" @click="toggle()" />
+        <Button class="p-button-danger" icon="fa-solid fa-xmark" @click="toggle()" />
       </div>
     </div>
   </div>
@@ -52,6 +42,9 @@ export default {
     toggle() {
       this.isSupported = !this.isSupported
     },
+    openLink(link) {
+      window.open(link, '_blank')
+    },
     checkBrowserSupport() {
       const browser = this.parser.getBrowser().name
       this.isSupported = this.supportedBrowsers.some((el) => {
@@ -66,7 +59,7 @@ export default {
 </script>
 <style lang="scss" scoped>
 .banner {
-  height: fit-content;
-  z-index: 1000;
+  height: 4rem;
+  z-index: 2000;
 }
 </style>
