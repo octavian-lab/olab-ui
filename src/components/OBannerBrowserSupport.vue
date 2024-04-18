@@ -2,7 +2,7 @@
   <div id="banner-browser-support">
     <div
       v-if="!isSupported"
-      class="banner p-3 font-bold bg-warning absolute top-0 left-0 right-0 flex flex-row justify-content-between align-items-center"
+      class="zIndex h-4rem p-3 font-bold bg-warning absolute top-0 left-0 right-0 flex flex-row justify-content-between align-items-center"
     >
       <div class="flex align-items-center">
         <div>
@@ -58,8 +58,7 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.banner {
-  height: 4rem;
+.zIndex {
   z-index: 2000;
 }
 </style>
