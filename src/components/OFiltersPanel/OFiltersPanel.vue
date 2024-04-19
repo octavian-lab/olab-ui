@@ -363,6 +363,10 @@ $defaultInputHeight: 2.6rem;
       .p-inputnumber-button-group > .p-button {
         height: 100%;
       }
+      .p-buttonset .p-button {
+        width: 50%;
+        height: 100%;
+      }
       .p-component:first-child:not(
           .p-inputgroup,
           .p-slider,
