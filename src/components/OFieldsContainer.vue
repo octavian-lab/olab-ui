@@ -17,7 +17,7 @@ export default {
 }
 </script>
 <style lang="scss">
-$defaultInputHeight: 34px;
+$defaultInputHeight: 2.7rem;
 .p-accordion-content {
   #o-fields-container {
     &.striped {
@@ -38,7 +38,6 @@ $defaultInputHeight: 34px;
         }
       }
     }
-
   }
 }
 
@@ -83,6 +82,9 @@ $defaultInputHeight: 34px;
 
     [class*='p-input']:not([class*='p-chips'], [class*='p-inputswitch']) {
       height: $defaultInputHeight;
+      [class*='label'] {
+        height: 100%;
+      }
     }
 
     .o-field__label {
