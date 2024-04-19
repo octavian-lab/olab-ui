@@ -303,7 +303,7 @@ export default {
 
 <style lang="scss">
 $borderColor: rgba(104, 104, 104, 0.2);
-$defaultInputHeight: 30px;
+$defaultInputHeight: 2.6rem;
 #filters-panel.p-panel {
   // OVERRIDE
   .p-panel-content {
