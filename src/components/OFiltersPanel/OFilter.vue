@@ -114,7 +114,7 @@ export default {
 </script>
 
 <style lang="scss">
-$borderColor: rgba(104, 104, 104, 0.2);
+$borderColor: var(--surface-border);
 .filter {
   position: relative;
   display: flex;
