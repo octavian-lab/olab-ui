@@ -42,7 +42,7 @@ import ODraggable from '@/components/ODraggable.vue'
 import OProgressBar from '@/components/OProgressBar.vue'
 
 export default {
-  install: (app, options = { installMixins: true }) => {
+  install: (app, options) => {
     if (!options.fxTranslate) {
       console.warn('Please pass to the options a translate function: fxTranslate')
       return
@@ -58,7 +58,7 @@ export default {
     app.use(modalplugin)
 
     // Aggiunta protezione mixins in conflitto con portal-v3 ( da fixare a breve )
-    if (options.installMixins === true) {
+    if (options.installMixins === undefined || options.installMixins === true) {
       app.mixin(functionmixin)
       app.mixin(datemixin)
     }
