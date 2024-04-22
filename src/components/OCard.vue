@@ -53,11 +53,6 @@ export default {
     contentColor: { Type: Number },
     textColor: { Type: Number }
   },
-  data() {
-    return {
-      cardBg: getComputedStyle(document.documentElement).getPropertyValue('--surface-c')
-    }
-  },
   mounted() {
     nextTick(() => {
       if (this.borderColor != null)
@@ -69,8 +64,10 @@ export default {
           this.$refs.OCardStyleAdvancedRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
           this.$refs.OCardStyleAdvancedTitleRef.style.color = `var(--special-color-${this.titleColor}-darken)`
         } else {
-          if (this.data.title)
+          if (this.data.title) {
             this.$refs.OCardTitleRef.style.backgroundColor = `var(--special-color-${this.titleColor})`
+            this.$refs.OCardTitleRef.style.color = `var(--special-color-${this.titleColor}-darken)`
+          }
         }
         if (this.data.icon)
           this.$refs.OCardIconModeDefaultRef.style.color = `var(--special-color-${this.titleColor})`
