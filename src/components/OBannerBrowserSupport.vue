@@ -6,14 +6,24 @@
     >
       <div class="flex align-items-center">
         <div>
-          Al momento ti trovi su un browser NON supportato. Ti invitiamo a scaricare uno dei
-          seguenti Browser:
+          <i class="fad fa-triangle-exclamation mr-1"></i
+          >{{ $translate('admin.generic.browser.not.supported') }}
         </div>
-        <Button class="ml-2" :icon="icon.chrome" label="Chrome" @click="openLink(link.chrome)" />
-        <Button class="ml-2" :icon="icon.firefox" label="Firefox" @click="openLink(link.firefox)" />
+        <Button
+          class="ml-2 p-button-sm"
+          :icon="icon.chrome"
+          :label="isDesktop ? 'Chrome' : undefined"
+          @click="openLink(link.chrome)"
+        />
+        <Button
+          class="ml-2 p-button-sm"
+          :icon="icon.firefox"
+          :label="isDesktop ? 'Firefox' : undefined"
+          @click="openLink(link.firefox)"
+        />
       </div>
       <div class="flex align-items-center justify-content-between">
-        <Button class="p-button-danger" icon="fa-solid fa-xmark" @click="toggle()" />
+        <Button class="p-button-danger ml-2" icon="fa-solid fa-xmark" @click="toggle()" />
       </div>
     </div>
   </div>
