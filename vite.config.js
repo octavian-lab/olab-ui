@@ -30,7 +30,7 @@ export default defineConfig({
           moment: 'moment',
           axios: 'axios',
           primevue: '$primevue',
-          'chart.js': 'Chart',
+          'chart.js': 'chart.js',
           'chart.js/helpers': 'Chart.helpers',
           'qrcode-vue3': 'QRCode'
         }
