@@ -56,17 +56,17 @@ $defaultInputHeight: 2.7rem;
     .o-field.col-6:nth-child(4n + 2),
     .o-field.col-6:nth-child(4n + 3) {
       @media screen and (min-width: 768px) {
-        background: var(--surface-d);
+        background: var(--surface-200);
       }
     }
     .o-field.col-12:nth-child(odd) {
       @media screen and (min-width: 768px) {
-        background: var(--surface-d);
+        background: var(--surface-200);
       }
     }
     .o-field:nth-child(odd) {
       @media screen and (max-width: 768px) {
-        background: var(--surface-d);
+        background: var(--surface-200);
       }
     }
   }
