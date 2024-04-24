@@ -3,12 +3,12 @@
     <Button
       icon="fad fa-angle-up"
       :class="['border-noround px-2', { 'border-top-right-rounded': borderRightRounded }]"
-      @click="$emit('onAddDay', 1)"
+      @click="$emit('onChangeDay', 1)"
     />
     <Button
       icon="fad fa-angle-down"
       :class="['border-noround px-2', { 'border-bottom-right-rounded': borderRightRounded }]"
-      @click="$emit('onAddDay', -1)"
+      @click="$emit('onChangeDay', -1)"
     />
   </div>
 </template>
