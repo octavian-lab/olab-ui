@@ -14,7 +14,15 @@ export default defineConfig({
       formats: ['es', 'cjs', 'umd', 'iife']
     },
     rollupOptions: {
-      external: ['vue', 'primevue', 'moment', 'axios', 'chart.js', 'qrcode-vue3'],
+      external: [
+        'vue',
+        'primevue',
+        'moment',
+        'axios',
+        'chart.js',
+        'chart.js/helpers',
+        'qrcode-vue3'
+      ],
       output: {
         exports: 'named',
         globals: {
@@ -23,7 +31,8 @@ export default defineConfig({
           axios: 'axios',
           primevue: '$primevue',
           'chart.js': 'Chart',
-          "qrcode-vue3": 'QRCode'
+          'chart.js/helpers': 'Chart.helpers',
+          'qrcode-vue3': 'QRCode'
         }
       },
       plugins: [
