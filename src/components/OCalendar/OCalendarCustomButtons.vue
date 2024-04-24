@@ -1,6 +1,6 @@
 <template>
-  <div :id="buttonId" class="flex flex-column">
-    <Button :icon="icon" :class="buttonClasses" @click="emitAddDay" />
+  <div id="o-calendar-custom-button" class="flex flex-column">
+    <Button :icon="icon()" :class="buttonClasses" @click="emitChangeDay" />
   </div>
 </template>
 
@@ -18,42 +18,40 @@ export default {
     }
   },
   computed: {
-    buttonId() {
-      return `o-calendar-button-${this.direction}`
-    },
-    icon() {
-      return `far fa-${this.direction === 'minus' ? 'minus' : 'plus'}`
-    },
     buttonClasses() {
       return [
         'border-noround px-2',
-        { 'border-top-left-rounded': this.borderRounded && this.direction === 'minus' },
-        { 'border-bottom-left-rounded': this.borderRounded && this.direction === 'minus' },
-        { 'border-top-right-rounded': this.borderRounded && this.direction === 'plus' },
-        { 'border-bottom-right-rounded': this.borderRounded && this.direction === 'plus' }
+        {
+          'border-top-left-rounded border-bottom-left-rounded':
+            this.borderRounded && this.direction === 'minus'
+        },
+        {
+          'border-top-right-rounded border-bottom-right-rounded':
+            this.borderRounded && this.direction === 'plus'
+        }
       ]
     }
   },
   methods: {
-    emitAddDay() {
+    emitChangeDay() {
       const value = this.direction === 'minus' ? -1 : 1
-      this.$emit('onAddDay', value)
+      this.$emit('onChangeDay', value)
+    },
+    icon() {
+      return `far fa-${this.direction}`
     }
   }
 }
 </script>
 
 <style scoped lang="scss">
-#o-calendar-button-minus {
+#o-calendar-custom-button {
   .border-top-left-rounded {
     border-top-left-radius: var(--border-radius) !important;
   }
   .border-bottom-left-rounded {
     border-bottom-left-radius: var(--border-radius) !important;
   }
-}
-
-#o-calendar-button-plus {
   .border-top-right-rounded {
     border-top-right-radius: var(--border-radius) !important;
   }

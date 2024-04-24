@@ -2,7 +2,7 @@
   <div id="o-calendar">
     <div v-if="!advanced" class="p-inputgroup">
       <OCalendarCustomButtons
-        @onAddDay="doAddDay($event)"
+        @onChangeDay="doChangeDay($event)"
         direction="minus"
         :borderRounded="borderRounded"
       />
@@ -19,7 +19,7 @@
         :touch-u-i="isMobile"
         :placeholder="placeholder"
       />
-      <OCalendarCustomButtons @onAddDay="doAddDay($event)" direction="plus" />
+      <OCalendarCustomButtons @onChangeDay="doChangeDay($event)" direction="plus" />
     </div>
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
@@ -66,7 +66,7 @@
           hide-on-date-time-select
           :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons @onAddDay="doAddDay($event, 'from')" />
+        <OCalendarButtons @onChangeDay="doChangeDay($event, 'from')" />
       </div>
       <div v-if="mode === 'range'" class="p-inputgroup">
         <Calendar
@@ -79,7 +79,7 @@
           hide-on-date-time-select
           :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons :borderRightRounded="false" @onAddDay="doAddDay($event, 'to')" />
+        <OCalendarButtons :borderRightRounded="false" @onChangeDay="doChangeDay($event, 'to')" />
       </div>
       <span
         v-if="mode === 'range' || mode === 'more-months' || mode === 'periods'"
@@ -225,7 +225,7 @@ export default {
     setMidnight() {
       if (this.modelValue == null) this.modelValue = this.getMidNight(moment()).toDate()
     },
-    doAddDay(amount, dataToChange) {
+    doChangeDay(amount, dataToChange) {
       if (!dataToChange) {
         if (!this.modelValue) {
           this.modelValue = this.getMidNight(moment()).toDate()
