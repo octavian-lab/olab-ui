@@ -13,7 +13,7 @@
         <span v-if="el.icon" class="icon">
           <i :class="el.icon"></i>
         </span>
-        <span v-html="el.label"></span>
+        <span>{{ el.label }}</span>
       </div>
     </template>
     <template #value="el" v-if="options === 'languages'">
@@ -25,7 +25,7 @@
         <span v-if="option.icon" class="icon">
           <i :class="option.icon"></i>
         </span>
-        <span v-html="option.label"></span>
+        <span>{{ option.label }}</span>
       </div>
     </template>
     <template #option="{ option }" v-if="options === 'languages'">
