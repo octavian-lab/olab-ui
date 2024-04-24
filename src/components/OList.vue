@@ -142,7 +142,6 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-$borderColor: #e0e0e0;
 #o-list {
   //CASO COL 2
   &.divided {
@@ -154,7 +153,7 @@ $borderColor: #e0e0e0;
       &.divided-striped {
         &:nth-child(4n + 2),
         &:nth-child(4n + 3) {
-          background: var(--bluegray-100) !important;
+          background:  var(--surface-ground) !important;
         }
       }
     }
@@ -166,7 +165,7 @@ $borderColor: #e0e0e0;
       justify-content: space-between;
       align-items: center;
       padding: 0.3rem 0;
-      border-bottom: 1px solid $borderColor;
+      border-bottom: 1px solid var(--surface-border);
       &:last-child {
         border-bottom: none;
       }
@@ -189,7 +188,7 @@ $borderColor: #e0e0e0;
   }
 
   .border-bottom:not(:last-child) {
-    border-bottom: 1px solid $borderColor;
+    border-bottom: 1px solid var(--surface-border);
   }
   //PER SINGOLA COLONNA
   .striped-row {
@@ -198,7 +197,7 @@ $borderColor: #e0e0e0;
     }
 
     &:nth-child(even) {
-      background-color: #e8e8e8;
+      background-color:  var(--surface-ground);
     }
   }
 }

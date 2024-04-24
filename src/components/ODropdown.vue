@@ -6,6 +6,7 @@
     option-label="label"
     :options="results"
     :placeholder="$translate('admin.generic.dropdown.placeholder')"
+    :autoFilterFocus="true"
   >
     <template #value="el" v-if="options === 'languages'">
       <span v-html="valuesCalcLanguages(el)" v-if="el.value != null"></span>
@@ -62,7 +63,7 @@ export default {
   },
   methods: {
     handleShowClear() {
-      if (Array.isArray(this.options)) {
+      if (Array.isArray(this.options) || typeof this.options === 'string') {
         // caso in cui le opzioni sono un array
         return this.showClear
       } else {

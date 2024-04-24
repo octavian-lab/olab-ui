@@ -285,6 +285,22 @@ export default {
       if (!this.joinSelectAllToggle) {
         this.doClearFilters()
       }
+    },
+    reorderDividedColumns() {
+      const dividedColumns = document.querySelector('.divided-columns')
+      const widthStyleDesktop = window.innerWidth > 1200
+      if (dividedColumns?.children.length > 0) {
+        for (const [index, el] of Array.from(dividedColumns.children).entries()) {
+          if (widthStyleDesktop) {
+            el.style = `order: ${index}`
+            return
+          }
+
+          // Inverto pari e dispari da mobile e tablet.
+          if (index % 2 === 0) el.className += ' flex-order-1'
+          else el.className += ' flex-order-2'
+        }
+      }
     }
   },
   created() {
@@ -297,13 +313,14 @@ export default {
   },
   mounted() {
     this.teleportFilter.isMounted = true
+    this.reorderDividedColumns()
   }
 }
 </script>
 
 <style lang="scss">
-$borderColor: rgba(104, 104, 104, 0.2);
-$defaultInputHeight: 30px;
+$borderColor: var(--surface-border);
+$defaultInputHeight: 2.6rem;
 #filters-panel.p-panel {
   // OVERRIDE
   .p-panel-content {
@@ -342,7 +359,7 @@ $defaultInputHeight: 30px;
   // FILTER FIELD DEFAULT STYLE
   .filter {
     &:nth-child(even) {
-      background: var(--bluegray-100);
+      background: var(--surface-ground);
     }
     .filter-name {
       padding-right: 5px;
@@ -361,6 +378,10 @@ $defaultInputHeight: 30px;
         align-items: center;
       }
       .p-inputnumber-button-group > .p-button {
+        height: 100%;
+      }
+      .p-buttonset .p-button {
+        width: 50%;
         height: 100%;
       }
       .p-component:first-child:not(
@@ -384,15 +405,9 @@ $defaultInputHeight: 30px;
     display: flex;
     flex-wrap: wrap;
     align-content: start;
-    @media screen and (max-width: 1200px) {
-      display: block;
-    }
     .filter {
       width: v-bind(colWidth);
-      &:nth-child(4n + 2),
-      &:nth-child(4n + 3) {
-        background: var(--bluegray-100) !important;
-      }
+
       &:nth-child(odd) {
         border-right: 2px solid $borderColor;
         @media screen and (max-width: 1200px) {
@@ -407,17 +422,22 @@ $defaultInputHeight: 30px;
           }
         }
       }
+      @media screen and (min-width: 1201px) {
+        &:nth-child(4n + 2),
+        &:nth-child(4n + 3) {
+          background: var(--surface-ground) !important;
+        }
+      }
       @media screen and (max-width: 1200px) {
         width: 100%;
         border-left: none !important;
         padding-right: 0 !important;
-        &:nth-child(odd) {
-          background: var(--bluegray-100) !important;
-        }
-        &:nth-child(even) {
-          background: transparent !important;
+        &:nth-child(4n - 3),
+        &:nth-child(4n - 2) {
+          background: var(--surface-ground);
         }
       }
+
       .filter-name {
         padding-right: 5px;
         @media screen and (max-width: 1200px) {
@@ -464,7 +484,7 @@ $defaultInputHeight: 30px;
   .filters-join {
     .filter {
       &:nth-child(odd) {
-        background: var(--bluegray-100) !important;
+        background: var(--surface-ground) !important;
       }
       &:nth-child(even) {
         background: transparent !important;

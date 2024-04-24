@@ -17,7 +17,30 @@ export default {
 }
 </script>
 <style lang="scss">
-$defaultInputHeight: 34px;
+$defaultInputHeight: 2.7rem;
+.p-accordion-content {
+  #o-fields-container {
+    &.striped {
+      .o-field.col-6:nth-child(4n + 2),
+      .o-field.col-6:nth-child(4n + 3) {
+        @media screen and (min-width: 768px) {
+          background: var(--surface-b);
+        }
+      }
+      .o-field.col-12:nth-child(odd) {
+        @media screen and (min-width: 768px) {
+          background: var(--surface-b);
+        }
+      }
+      .o-field:nth-child(odd) {
+        @media screen and (max-width: 768px) {
+          background: var(--surface-b);
+        }
+      }
+    }
+  }
+}
+
 #o-fields-container {
   width: 100%;
   margin-left: 0;
@@ -33,17 +56,17 @@ $defaultInputHeight: 34px;
     .o-field.col-6:nth-child(4n + 2),
     .o-field.col-6:nth-child(4n + 3) {
       @media screen and (min-width: 768px) {
-        background: var(--bluegray-100);
+        background: var(--surface-b);
       }
     }
     .o-field.col-12:nth-child(odd) {
       @media screen and (min-width: 768px) {
-        background: var(--bluegray-100);
+        background: var(--surface-b);
       }
     }
     .o-field:nth-child(odd) {
       @media screen and (max-width: 768px) {
-        background: var(--bluegray-100);
+        background: var(--surface-b);
       }
     }
   }
@@ -59,6 +82,9 @@ $defaultInputHeight: 34px;
 
     [class*='p-input']:not([class*='p-chips'], [class*='p-inputswitch']) {
       height: $defaultInputHeight;
+      [class*='label'] {
+        height: 100%;
+      }
     }
 
     .o-field__label {
