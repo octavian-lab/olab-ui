@@ -571,6 +571,7 @@ export default {
         case 'bets':
         case 'wins':
         case 'ggr':
+        case 'buyin':
           if (!this.currencyInExport) return value
           let amount = ''
           amount = this.$modal.data.amountCurrencyMap

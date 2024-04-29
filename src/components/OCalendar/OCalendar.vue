@@ -1,7 +1,11 @@
 <template>
   <div id="o-calendar">
     <div v-if="!advanced" class="p-inputgroup">
-      <OCalendarButtonMinus @onAddDay="doAddDay($event)" />
+      <OCalendarCustomButtons
+        @onChangeDay="doChangeDay($event)"
+        direction="minus"
+        :borderRounded="borderRounded"
+      />
       <Calendar
         class="w-100"
         v-model="modelValue"
@@ -15,7 +19,7 @@
         :touch-u-i="isMobile"
         :placeholder="placeholder"
       />
-      <OCalendarButtonPlus @onAddDay="doAddDay($event)" />
+      <OCalendarCustomButtons @onChangeDay="doChangeDay($event)" direction="plus" />
     </div>
     <div class="p-inputgroup" v-else>
       <!-- CALENDAR MOBILE: ( FATTO CON DROPDOWN PER MOTIVI DI SPAZIO SU MOBILE )  -->
@@ -37,7 +41,7 @@
         :allowempty="unselectable === true ? undefined : false"
       >
         <template #option="{ option }">
-          <span class="font-sm">{{ option.label }}</span>
+          <div class="font-sm">{{ option.label }}</div>
         </template>
       </SelectButton>
 
@@ -62,7 +66,7 @@
           hide-on-date-time-select
           :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons @onAddDay="doAddDay($event, 'from')" />
+        <OCalendarButtons @onChangeDay="doChangeDay($event, 'from')" />
       </div>
       <div v-if="mode === 'range'" class="p-inputgroup">
         <Calendar
@@ -75,7 +79,7 @@
           hide-on-date-time-select
           :touch-u-i="!isDesktop"
         />
-        <OCalendarButtons :borderRightRounded="false" @onAddDay="doAddDay($event, 'to')" />
+        <OCalendarButtons :borderRightRounded="false" @onChangeDay="doChangeDay($event, 'to')" />
       </div>
       <span
         v-if="mode === 'range' || mode === 'more-months' || mode === 'periods'"
@@ -92,12 +96,14 @@
 import moment from 'moment'
 import Datemixin from '@/mixins/datemixin.js'
 import OCalendarButtons from '@/components/OCalendar/OCalendarButtons.vue'
-import OCalendarButtonMinus from '@/components/OCalendar/OCalendarButtonMinus.vue'
-import OCalendarButtonPlus from '@/components/OCalendar/OCalendarButtonPlus.vue'
+import OCalendarCustomButtons from '@/components/OCalendar/OCalendarCustomButtons.vue'
 
 export default {
   name: 'OCalendar',
-  components: { OCalendarButtonPlus, OCalendarButtonMinus, OCalendarButtons },
+  components: {
+    OCalendarButtons,
+    OCalendarCustomButtons
+  },
   emits: ['update:from', 'update:to', 'update:modelValue'],
   props: {
     placeholder: { type: String, default: () => 'dd / mm / yy hh:mm' },
@@ -106,7 +112,11 @@ export default {
     to: { type: [Date, Object, String], default: () => null },
     advanced: { type: Boolean, default: () => true },
     empty: { type: Boolean, default: () => false },
-    filteredOptions: { type: Array, default: () => [] }
+    filteredOptions: { type: Array, default: () => [] },
+    borderRounded: {
+      type: Boolean,
+      default: true
+    }
   },
   data() {
     return {
@@ -215,7 +225,7 @@ export default {
     setMidnight() {
       if (this.modelValue == null) this.modelValue = this.getMidNight(moment()).toDate()
     },
-    doAddDay(amount, dataToChange) {
+    doChangeDay(amount, dataToChange) {
       const period = this.$attrs.dateFormat === 'mm/yy' ? 'months' : 'days'
       if (!dataToChange) {
         if (!this.modelValue) {

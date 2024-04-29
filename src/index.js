@@ -43,7 +43,7 @@ import OProgressBar from '@/components/OProgressBar.vue'
 import OBannerBrowserSupport from '@/components/OBannerBrowserSupport.vue'
 
 export default {
-  install: (app, options = {}) => {
+  install: (app, options) => {
     if (!options.fxTranslate) {
       console.warn('Please pass to the options a translate function: fxTranslate')
       return
@@ -58,8 +58,11 @@ export default {
     app.use(loadingplugin)
     app.use(modalplugin)
 
-    app.mixin(functionmixin)
-    app.mixin(datemixin)
+    // Aggiunta protezione mixins in conflitto con portal-v3 ( da fixare a breve )
+    if (options.installMixins === undefined || options.installMixins === true) {
+      app.mixin(functionmixin)
+      app.mixin(datemixin)
+    }
 
     app.config.globalProperties.$translate = options.fxTranslate
     app.config.globalProperties.$filters = {
