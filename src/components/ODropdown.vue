@@ -123,7 +123,9 @@ export default {
       if (typeof data[0] === 'object') {
         behaviourSimple = false
       }
-      for (let el of data) {
+      for (let i = 0; i < data.length; i++) {
+        const el = data[i]
+
         let label = el.label
         let value = null
         if (behaviourSimple) {
@@ -142,7 +144,7 @@ export default {
 
         let icon = null
         if (this.icons.length > 0) {
-          icon = this.icons[ret.length]
+          icon = this.icons[i]
         }
 
         ret.push({ label, value, icon })
