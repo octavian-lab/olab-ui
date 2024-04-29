@@ -8,9 +8,25 @@
     :placeholder="$translate('admin.generic.dropdown.placeholder')"
     :autoFilterFocus="true"
   >
+    <template #value="el" v-if="icons.length > 0">
+      <div>
+        <span v-if="el.icon" class="icon">
+          <i :class="el.icon"></i>
+        </span>
+        <span>{{ el.label }}</span>
+      </div>
+    </template>
     <template #value="el" v-if="options === 'languages'">
       <span v-html="valuesCalcLanguages(el)" v-if="el.value != null"></span>
       <span v-else> {{ el.placeholder }} </span>
+    </template>
+    <template #option="{ option }" v-if="icons.length > 0">
+      <div>
+        <span v-if="option.icon" class="icon">
+          <i :class="option.icon"></i>
+        </span>
+        <span>{{ option.label }}</span>
+      </div>
     </template>
     <template #option="{ option }" v-if="options === 'languages'">
       <span v-html="optionCalcLanguages(option)"></span>
@@ -32,7 +48,8 @@ export default {
     options: { type: [Array, String], required: true },
     showClear: { type: Boolean, default: () => true },
     prependValueOnLabel: { type: Boolean, default: () => true },
-    translator: { type: String, default: () => null }
+    translator: { type: String, default: () => null },
+    icons: { type: Array, default: () => [] }
   },
   watch: {
     options: {
@@ -106,7 +123,9 @@ export default {
       if (typeof data[0] === 'object') {
         behaviourSimple = false
       }
-      for (let el of data) {
+      for (let i = 0; i < data.length; i++) {
+        const el = data[i]
+
         let label = el.label
         let value = null
         if (behaviourSimple) {
@@ -122,7 +141,13 @@ export default {
         if (prependValueOnLabel) {
           label = `${value} - ${label}`
         }
-        ret.push({ label, value })
+
+        let icon = null
+        if (this.icons.length > 0) {
+          icon = this.icons[i]
+        }
+
+        ret.push({ label, value, icon })
       }
       return ret
     },
@@ -193,3 +218,9 @@ export default {
   }
 }
 </script>
+
+<style scoped>
+.icon {
+  margin-right: 0.5em;
+}
+</style>
