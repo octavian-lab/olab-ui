@@ -1,29 +1,34 @@
 <template>
-  <div id="banner-browser-support">
+  <div id="banner-browser-support" class="zIndex font-bold fixed top-0 left-0 right-0">
     <div
       v-if="!isSupported"
-      class="zIndex h-4rem p-3 font-bold bg-warning absolute top-0 left-0 right-0 flex flex-row justify-content-between align-items-center"
+      class="p-3 h-5rem bg-red-500 font-bold bg-warning flex flex-row justify-content-between align-items-center"
     >
       <div class="flex align-items-center">
         <div>
-          <i class="fad fa-triangle-exclamation mr-1"></i
+          <i class="fad fa-triangle-exclamation text-xl mr-1"></i
           >{{ $translate('admin.generic.browser.not.supported') }}
         </div>
         <Button
-          class="ml-2 p-button-sm"
+          outlined
+          class="ml-2 border-none"
           :icon="icon.chrome"
-          :label="isDesktop ? 'Chrome' : undefined"
           @click="openLink(link.chrome)"
-        />
+        >
+          <img class="h-2rem w-2rem" src="../assets/images/chrome.svg" alt="" />
+        </Button>
+
         <Button
-          class="ml-2 p-button-sm"
+          outlined
+          class="ml-2 border-none"
           :icon="icon.firefox"
-          :label="isDesktop ? 'Firefox' : undefined"
           @click="openLink(link.firefox)"
-        />
+        >
+          <img class="h-2rem w-2rem" src="../assets/images/firefox.svg" alt="" />
+        </Button>
       </div>
       <div class="flex align-items-center justify-content-between">
-        <Button class="p-button-danger ml-2" icon="fa-solid fa-xmark" @click="toggle()" />
+        <Button class="p-button-sm ml-2" icon="fa-solid fa-xmark" @click="toggle()" />
       </div>
     </div>
   </div>
