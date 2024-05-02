@@ -28,7 +28,7 @@
         </Button>
       </div>
       <div class="flex align-items-center justify-content-between">
-        <Button class="p-button-sm ml-2" icon="fa-solid fa-xmark" @click="toggle()" />
+        <Button class="text-2xl text-white ml-2" text icon="fa-solid fa-xmark" @click="toggle()" />
       </div>
     </div>
   </div>
