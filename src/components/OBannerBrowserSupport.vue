@@ -9,27 +9,10 @@
           <i class="fad fa-triangle-exclamation text-xl mr-1"></i
           >{{ $translate('admin.generic.browser.not.supported') }}
         </div>
-        <Button
-          outlined
-          class="ml-2 border-none"
-          :icon="icon.chrome"
-          @click="openLink(link.chrome)"
-        >
-          <img class="h-2rem w-2rem" src="../assets/images/chrome.svg" alt="" />
-        </Button>
-
-        <Button
-          outlined
-          class="ml-2 border-none"
-          :icon="icon.firefox"
-          @click="openLink(link.firefox)"
-        >
-          <img class="h-2rem w-2rem" src="../assets/images/firefox.svg" alt="" />
-        </Button>
+        <img class="h-2rem w-2rem ml-2" src="../assets/images/chrome.svg" alt="" />
+        <img class="h-2rem w-2rem ml-2" src="../assets/images/firefox.svg" alt="" />
       </div>
-      <div class="flex align-items-center justify-content-between">
-        <Button class="text-2xl text-white ml-2" text icon="fa-solid fa-xmark" @click="toggle()" />
-      </div>
+      <Button class="text-2xl text-white ml-2" text icon="fa-solid fa-xmark" @click="toggle()" />
     </div>
   </div>
 </template>
@@ -46,10 +29,6 @@ export default {
       link: {
         chrome: 'https://www.google.com/intl/it_it/chrome/',
         firefox: 'https://www.mozilla.org/it/firefox/new/'
-      },
-      icon: {
-        chrome: 'fa-brands fa-chrome',
-        firefox: 'fa-brands fa-firefox-browser'
       }
     }
   },
