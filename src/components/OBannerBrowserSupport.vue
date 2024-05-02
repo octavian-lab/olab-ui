@@ -12,7 +12,7 @@
         <img class="h-2rem w-2rem ml-2" src="../assets/images/chrome.svg" alt="" />
         <img class="h-2rem w-2rem ml-2" src="../assets/images/firefox.svg" alt="" />
       </div>
-      <Button class="text-2xl text-white ml-2" text icon="fa-solid fa-xmark" @click="toggle()" />
+      <Button class="text-2xl text-white ml-2" text icon="fa-solid fa-xmark" @click="closeBanner" />
     </div>
   </div>
 </template>
@@ -33,8 +33,8 @@ export default {
     }
   },
   methods: {
-    toggle() {
-      this.isSupported = !this.isSupported
+    closeBanner() {
+      this.isSupported = false
     },
     openLink(link) {
       window.open(link, '_blank')
