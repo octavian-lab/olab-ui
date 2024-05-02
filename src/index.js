@@ -40,6 +40,7 @@ import OFiltersPanel from './components/OFiltersPanel/OFiltersPanel.vue'
 import OPassword from './components/OPassword.vue'
 import ODraggable from '@/components/ODraggable.vue'
 import OProgressBar from '@/components/OProgressBar.vue'
+import OBannerBrowserSupport from '@/components/OBannerBrowserSupport.vue'
 
 export default {
   install: (app, options) => {
@@ -94,6 +95,7 @@ export {
   OPassword,
   ODraggable,
   OProgressBar,
+  OBannerBrowserSupport,
   useLoading,
   useModal,
   useFunctions
