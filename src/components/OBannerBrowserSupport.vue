@@ -5,7 +5,7 @@
       class="p-3 h-5rem bg-red-500 font-bold flex flex-row justify-content-between align-items-center"
     >
       <div class="flex align-items-center">
-        <div>
+        <div class="text-white">
           <i class="fad fa-triangle-exclamation text-xl mr-1"></i
           >{{ $translate('admin.generic.browser.not.supported') }}
         </div>
