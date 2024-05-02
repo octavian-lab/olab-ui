@@ -2,7 +2,7 @@
   <div id="banner-browser-support" class="zIndex font-bold fixed top-0 left-0 right-0">
     <div
       v-if="!isSupported"
-      class="p-3 h-5rem bg-red-500 font-bold bg-warning flex flex-row justify-content-between align-items-center"
+      class="p-3 h-5rem bg-red-500 font-bold flex flex-row justify-content-between align-items-center"
     >
       <div class="flex align-items-center">
         <div>
