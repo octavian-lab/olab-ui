@@ -1,6 +1,14 @@
 export default function (value, currency = 'EUR', hideCurrency = false) {
+  let currencyRef = currency
+  if (!isNaN(parseInt(currencyRef))) {
+    currencyRef = 'XXX'
+  }
+  if (currencyRef.length !== 3) {
+    currencyRef = 'XXX'
+  }
+
   let precision
-  switch (currency) {
+  switch (currencyRef) {
     case 'EUR':
       precision = 2
       break
@@ -16,13 +24,13 @@ export default function (value, currency = 'EUR', hideCurrency = false) {
   let valueDouble
   let formatter
 
-  switch (currency) {
+  switch (currencyRef) {
     case 'PTS':
-      return `${value} ${currency}`
+      return `${value} ${currencyRef}`
     default:
       formatter = new Intl.NumberFormat('it-IT', {
         style: 'currency',
-        currency: currency
+        currency: currencyRef
       })
       valueDouble = parseFloat(value) / Math.pow(10, precision)
 
