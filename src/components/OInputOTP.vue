@@ -77,6 +77,10 @@ const handleKeyDown = (event, index) => {
       otpInput.value.children[index - 1].focus()
     }
 
+    if (!isDigitsFull()) {
+      emit('update:modelValue', null)
+    }
+
     return
   }
 
@@ -111,6 +115,7 @@ const onPaste = async (event) => {
     digits[i] = arr[i]
   })
 
+  emit('update:modelValue', digits.join(''))
   emit('onPaste')
 }
 </script>
