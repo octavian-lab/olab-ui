@@ -16,12 +16,15 @@
       />
     </div>
 
-    <div class="flex align-items-center justify-content-center" v-else-if="requiredFilters.length !== 0 && doRefreshData != null">
+    <div
+      class="flex align-items-center justify-content-center"
+      v-else-if="requiredFilters.length !== 0 && doRefreshData != null"
+    >
       <i
         v-tooltip="
           fastfilter
             ? {
-                value: $translate('admin.filter.panel.compile.required.filters')
+                value: $translate(requiredFieldsText)
               }
             : undefined
         "
@@ -31,7 +34,7 @@
         ]"
       />
       <span v-if="!fastfilter" class="font-bold text-responsive text-uppercase">
-        {{ $translate('admin.filter.panel.compile.required.filters') }}
+        {{ $translate(requiredFieldsText) }}
       </span>
     </div>
   </transition>
@@ -47,7 +50,11 @@ export default {
     fastfilter: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean },
     requiredFilters: { type: Array },
-    btnLoading: Boolean
+    btnLoading: Boolean,
+    requiredFieldsText: {
+      type: String,
+      default: () => 'admin.filter.panel.compile.required.filters'
+    }
   }
 }
 </script>

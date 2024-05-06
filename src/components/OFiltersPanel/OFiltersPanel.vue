@@ -69,6 +69,7 @@
             :btnDisabled="btnDisabled"
             :requiredFilters="requiredFilters"
             :btnLoading="btnLoading"
+            :requiredFieldsText="requiredFieldsText"
           />
         </slot>
       </div>
@@ -101,7 +102,11 @@ export default {
     title: String,
     titleTranslated: String,
     btnLoading: Boolean,
-    joinSelectAll: { type: Boolean, default: () => true }
+    joinSelectAll: { type: Boolean, default: () => true },
+    requiredFieldsText: {
+      type: String,
+      default: () => 'admin.filter.panel.compile.required.filters'
+    }
   },
   inject: {
     query: { default: undefined } // REQUIRED
