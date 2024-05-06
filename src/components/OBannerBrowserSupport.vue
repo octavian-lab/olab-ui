@@ -1,8 +1,8 @@
 <template>
-  <div id="banner-browser-support" class="zIndex font-bold fixed top-0 left-0 right-0">
+  <div id="banner-browser-support" class="banner font-bold fixed top-0 left-0 right-0">
     <div
       v-if="!showBanner"
-      class="p-3 h-5rem bg-red-500 font-bold flex flex-row justify-content-between align-items-center"
+      class="p-3 h-5rem font-bold flex flex-row justify-content-between align-items-center"
     >
       <div class="flex align-items-center">
         <div class="text-white">
@@ -62,8 +62,9 @@ export default {
 }
 </script>
 <style lang="scss" scoped>
-.zIndex {
+.banner {
   z-index: 2000;
+  background-color: #fd6a5f;
 }
 
 img {
