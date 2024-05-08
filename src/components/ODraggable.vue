@@ -1,7 +1,7 @@
 <template>
   <div id="o-draggable" class="relative">
     <Skeleton
-      v-if="useApi && isLoading"
+      v-if="saveMode === 'pageSettings' && isLoading"
       id="o-draggable-skeleton"
       class="absolute"
       :width="skeletonRect.width"
@@ -61,10 +61,10 @@ export default {
     isDragAlwaysActive: { type: Boolean, default: () => false },
     isGridActive: { type: Boolean, default: () => false },
     colClassMap: { type: Object, default: () => {} },
-    useApi: { type: Boolean, default: () => false },
+    saveMode: { type: String, default: () => 'store' },
     isTooltipActive: { type: Boolean, default: () => true },
     isLabelActive: { type: Boolean, default: () => false },
-    isEditMode: {type:Boolean, default:() => false}
+    isEditMode: { type: Boolean, default: () => false }
   },
   data() {
     return {
@@ -92,9 +92,12 @@ export default {
       }
     }
   },
-  watch:{
-    elementsNumber(val){
-      if(val) this.elements = this.createElements()
+  watch: {
+    elementsNumber(val) {
+      if (val) {
+        this.elements = this.createElements()
+        this.isLoading = false
+      }
     }
   },
   methods: {
@@ -152,17 +155,21 @@ export default {
       this.elements.splice(oldIndex, 1)
       this.elements.splice(newIndex, 0, tmp)
 
-      if (!this.useApi) {
-        this.useSettingsStore.updateDraggableTemplates({
-          page: this.currentPageName,
-          value: this.elements
-        })
-        this.elements = this.useSettingsStore.getDraggableTemplates(this.currentPageName)
-      }
-
-      if (this.useApi) {
-        if (this.isFirstTime) this.doAddPageSettings()
-        else this.doEditPageSettings()
+      switch (this.saveMode) {
+        case 'store':
+          this.useSettingsStore.updateDraggableTemplates({
+            page: this.currentPageName,
+            value: this.elements
+          })
+          this.elements = this.useSettingsStore.getDraggableTemplates(this.currentPageName)
+          break
+        case 'pageSettings':
+          if (this.isFirstTime) this.doAddPageSettings()
+          else this.doEditPageSettings()
+          break
+        case 'custom':
+          this.$emit('dropElement', { oldIdx: oldIndex, newIdx: newIndex })
+          break
       }
     },
     async doSearchPageSettings() {
@@ -223,7 +230,7 @@ export default {
   async created() {
     this.isDragEnabled = this.isDragAlwaysActiveComp
 
-    if (!this.useApi) {
+    if (this.saveMode === 'store') {
       this.isLoading = false
       const arr = this.useSettingsStore.getDraggableTemplates(this.currentPageName)
 
@@ -236,7 +243,7 @@ export default {
       return
     }
 
-    if (this.useApi) {
+    if (this.saveMode === 'pageSettings') {
       const site = localStorage.getItem('site')
 
       const module = await import(`../api/${site}/index.js`)
@@ -253,9 +260,7 @@ export default {
         const width = rect.width + 'px'
         this.skeletonRect.width = `calc(${width} - 4rem)`
       }
-
       this.createDraggable()
-
       if (this.$refs.oDraggableBtn != null) this.$refs.oDraggableBtn.$el.style.opacity = '1'
     })
   }
