@@ -42,7 +42,7 @@ export default {
   name: 'OBannerBrowserSupport',
   data() {
     return {
-      supportedBrowsers: ['Chrome', 'Firefox'],
+      supportedBrowsers: ['Chrome', 'Firefox', 'Safari'],
       parser: new UAParser(),
       showBanner: null,
       link: {
