@@ -147,22 +147,25 @@
         v-if="exportMode === 'all' || exportMode === 'json'"
         icon="fad fa-brackets-curly"
         :label="$translate('admin.generic.export.json')"
-        :disabled="disabled"
+        :disabled="disabled || $loading.isLoadingLength()"
         @click="showPrevieworExport('JSON')"
+        :loading="$loading.isLoading(`table-export-JSON`)"
       />
       <Button
         v-if="exportMode === 'all' || exportMode === 'csv'"
         icon="fad fa-file-csv"
         :label="$translate('admin.generic.export.csv')"
-        :disabled="disabled"
+        :disabled="disabled || $loading.isLoadingLength()"
         @click="showPrevieworExport('CSV')"
+        :loading="$loading.isLoading(`table-export-CSV`)"
       />
       <Button
         v-if="exportMode === 'all' || exportMode === 'xls'"
         icon="fad fa-file-spreadsheet"
         :label="$translate('admin.generic.export.xls')"
-        :disabled="disabled"
+        :disabled="disabled || $loading.isLoadingLength()"
         @click="showPrevieworExport('XLS')"
+        :loading="$loading.isLoading(`table-export-XLS`)"
       />
     </template>
   </Dialog>
@@ -598,44 +601,56 @@ export default {
         key: keysPath[keysPath.length - 1]
       }
     },
-    async showPrevieworExport(type) {
-      this.currencyKeyCounter = 0
-      this.selectColumnsData = []
-      const dataProcessed =
-        type === 'preview'
-          ? [...this.$modal.data.processed].splice(0, this.displayedRows)
-          : this.$modal.data.processed
-      await dataProcessed.forEach((processedData) => {
-        const b = {}
-        for (const [key, value] of Object.entries(processedData)) {
-          for (const selectedkey of this.selectKeys) {
-            if (typeof value === 'object' && key === selectedkey.split('.')[0]) {
-              const { key: objKey, value: objValue } = this.calcObj(
-                { ...value },
-                selectedkey.split('.')
-              )
-              b[selectedkey] = this.checkExportType(type, objKey, objValue)
-            }
-            if (key == selectedkey) {
-              b[key] = this.checkExportType(type, key, value)
+    showPrevieworExport(type) {
+      document.body.style.cursor = 'wait'
+      this.$loading.start(`table-export-${type}`)
+
+      // questa non è un operazione asincrona, ma blocca il thread in base al carico e alle performance del dispositivo
+      // il timeout serve per avviare l'effetto di loading poco prima che si blocca il thread, finite tutte le operazioni si sblocca e si ottiene il risultato
+      // non si usa un web worker poichè il passaggio di dati stesso (deep clone) è pesante e la gestione delle funzioni è complessa
+      const timeout = setTimeout(() => {
+        this.currencyKeyCounter = 0
+        this.selectColumnsData = []
+        const dataProcessed =
+          type === 'preview'
+            ? [...this.$modal.data.processed].splice(0, this.displayedRows)
+            : this.$modal.data.processed
+        dataProcessed.forEach((processedData) => {
+          const b = {}
+          for (const [key, value] of Object.entries(processedData)) {
+            for (const selectedkey of this.selectKeys) {
+              if (typeof value === 'object' && key === selectedkey.split('.')[0]) {
+                const { key: objKey, value: objValue } = this.calcObj(
+                  { ...value },
+                  selectedkey.split('.')
+                )
+                b[selectedkey] = this.checkExportType(type, objKey, objValue)
+              }
+              if (key == selectedkey) {
+                b[key] = this.checkExportType(type, key, value)
+              }
             }
           }
-        }
-        this.selectColumnsData.push(b)
-        this.currencyKeyCounter++
-      })
+          this.selectColumnsData.push(b)
+          this.currencyKeyCounter++
+        })
 
-      switch (type) {
-        case 'CSV':
-          this.doExportCSV()
-          break
-        case 'JSON':
-          this.doExportJSON()
-          break
-        case 'XLS':
-          this.doExportXLS()
-          break
-      }
+        switch (type) {
+          case 'CSV':
+            this.doExportCSV()
+            break
+          case 'JSON':
+            this.doExportJSON()
+            break
+          case 'XLS':
+            this.doExportXLS()
+            break
+        }
+
+        this.$loading.stop(`table-export-${type}`)
+        document.body.style.cursor = 'default'
+        clearTimeout(timeout)
+      }, 10)
     },
     doExportJSON() {
       const data = JSON.stringify(this.selectColumnsData)
