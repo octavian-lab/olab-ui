@@ -138,14 +138,17 @@ export default {
     query: {
       deep: true,
       immediate: true,
-      handler() {
+      handler(val) {
+        // Abilito la checkbox "select all" se all'interno del panel sono tutte attive.
+        this.toggleAutoSelectAll(val)
+
         this.$nextTick(() => {
           this.requiredFilters = Array.from(document.querySelectorAll('.filter')).filter(
             (el) => el.attributes['data-required-field'].value === 'true'
           )
         })
       }
-    }
+    },
   },
   computed: {
     ctxMenuItems() {
@@ -217,6 +220,18 @@ export default {
     }
   },
   methods: {
+    toggleAutoSelectAll(val) {
+      let checkboxes
+      if (val.join != null) checkboxes = Object.entries(val.join)
+      else checkboxes = Object.entries(val).filter(([key]) => key.includes('proj'))
+
+      const checkboxActive = []
+      for (let el of checkboxes) {
+        if (el[1] === true) checkboxActive.push(el[1])
+      }
+
+      this.joinSelectAllToggle = checkboxes.length === checkboxActive.length;
+    },
     doUseTemplate(savedQuery) {
       for (let [key, val] of Object.entries(savedQuery)) {
         if (this.isDateZulu(val) && this.query[key]) {
@@ -269,6 +284,7 @@ export default {
         if (key.includes('proj')) {
           hasProjKey = true
           joinKeys.add(key)
+          console.log(joinKeys)
         }
         if (key === 'join') {
           hasJoinKey = true
