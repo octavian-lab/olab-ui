@@ -284,7 +284,6 @@ export default {
         if (key.includes('proj')) {
           hasProjKey = true
           joinKeys.add(key)
-          console.log(joinKeys)
         }
         if (key === 'join') {
           hasJoinKey = true
