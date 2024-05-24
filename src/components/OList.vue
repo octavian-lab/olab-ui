@@ -85,7 +85,8 @@ export default {
       return [
         { divided: this.col > 1 },
         { 'group-table-mode': this.groupTable },
-        { 'slot-olist': this.$slots.default }
+        { 'slot-olist': this.$slots.default },
+        { 'striped-slot-olist': this.$slots.default && this.striped }
       ]
     },
     checkType(valueType) {
@@ -153,13 +154,25 @@ export default {
       &.divided-striped {
         &:nth-child(4n + 2),
         &:nth-child(4n + 3) {
-          background:  var(--surface-ground) !important;
+          background: var(--surface-ground) !important;
         }
       }
     }
   }
 
   &.slot-olist {
+    //STRIPED PER SLOT
+    &.striped-slot-olist {
+      :deep(div) {
+        &:nth-child(odd) {
+          background-color: transparent;
+        }
+
+        &:nth-child(even) {
+          background-color: var(--surface-ground);
+        }
+      }
+    }
     :deep(div) {
       display: flex;
       justify-content: space-between;
@@ -197,7 +210,7 @@ export default {
     }
 
     &:nth-child(even) {
-      background-color:  var(--surface-ground);
+      background-color: var(--surface-ground);
     }
   }
 }
