@@ -195,6 +195,9 @@ export default {
     translator: { type: Boolean, default: () => true },
     currencyInExport: {
       type: Boolean
+    },
+    amountInteger: {
+      type: Boolean
     }
   },
   data() {
@@ -522,6 +525,14 @@ export default {
         life: duration
       })
     },
+    formatNumber(num) {
+      // esempi: 0,08 - 123,55
+      let numStr = num.toString()
+      if (numStr.length < 3) {
+        numStr = numStr.padStart(3, '0')
+      }
+      return numStr.slice(0, -2) + ',' + numStr.slice(-2)
+    },
     handlerTypeExport(key, value) {
       switch (key) {
         case 'fromDate':
@@ -575,7 +586,12 @@ export default {
         case 'wins':
         case 'ggr':
         case 'buyin':
-          if (!this.currencyInExport) return value
+          if (this.amountInteger && !this.currencyInExport) {
+            return value
+          }
+          if (!this.amountInteger && !this.currencyInExport) {
+            return this.formatNumber(value)
+          }
           let amount = ''
           amount = this.$modal.data.amountCurrencyMap
             ? this.$filters.asAmount(
