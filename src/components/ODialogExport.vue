@@ -573,7 +573,7 @@ export default {
         case 'value':
           return this.$translate(`decode.self.exclusion.period.${value}`)
         case 'type':
-          return this.$transtale(`decode.platform.type.${value}`)
+          return this.$translate(`decode.platform.type.${value}`)
         case 'amount':
         case 'real':
         case 'deposit':
