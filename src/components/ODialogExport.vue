@@ -527,11 +527,13 @@ export default {
     },
     formatNumber(num) {
       // esempi: 0,08 - 123,55
-      let numStr = num.toString()
+      const isNegative = num < 0
+      let numStr = Math.abs(num).toString()
       if (numStr.length < 3) {
         numStr = numStr.padStart(3, '0')
       }
-      return numStr.slice(0, -2) + ',' + numStr.slice(-2)
+      const formattedNumber = numStr.slice(0, -2) + ',' + numStr.slice(-2)
+      return isNegative ? '-' + formattedNumber : formattedNumber
     },
     handlerTypeExport(key, value) {
       switch (key) {
@@ -570,6 +572,8 @@ export default {
           return this.$translate(`decode.limit.status.${value}`)
         case 'value':
           return this.$translate(`decode.self.exclusion.period.${value}`)
+        case 'type':
+          return this.$transtale(`decode.platform.type.${value}`)
         case 'amount':
         case 'real':
         case 'deposit':
