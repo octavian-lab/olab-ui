@@ -573,23 +573,37 @@ export default {
         case 'value':
           return this.$translate(`decode.self.exclusion.period.${value}`)
         case 'type':
+        case 'platformType':
           return this.$translate(`decode.platform.type.${value}`)
         case 'amount':
-        case 'real':
         case 'deposit':
         case 'withdrawable':
-        case 'bonus':
         case 'balanceReal':
         case 'balanceWithdrawable':
         case 'balanceBonus':
         case 'amountTotal':
         case 'totalBets':
         case 'totalWins':
-        case 'profit':
         case 'bets':
         case 'wins':
         case 'ggr':
         case 'buyin':
+        case 'count':
+        case 'real':
+        case 'bonus':
+        case 'total':
+        case 'netBuyTotal':
+        case 'netBuyBonus':
+        case 'netBuyReal':
+        case 'turnover':
+        case 'profit':
+        case 'debitReal':
+        case 'debitBonus':
+        case 'debitTotal':
+        case 'winReal':
+        case 'winBonus':
+        case 'winTotal':
+        case 'profitUndefined':
           if (this.amountInteger && !this.currencyInExport) {
             return value
           }
