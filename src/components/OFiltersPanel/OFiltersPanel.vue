@@ -96,7 +96,7 @@ export default {
     useApi: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean, default: () => false },
     col: { type: [Number, String], default: () => 1 },
-    showSaveQuery: { type: Boolean, default: () => false },
+    showSaveQuery: { type: Boolean, default: () => true },
     icon: { type: String, default: () => 'fad fa-filters' },
     panelClass: String,
     title: String,
@@ -148,7 +148,7 @@ export default {
           )
         })
       }
-    },
+    }
   },
   computed: {
     ctxMenuItems() {
@@ -230,7 +230,7 @@ export default {
         if (el[1] === true) checkboxActive.push(el[1])
       }
 
-      this.joinSelectAllToggle = checkboxes.length === checkboxActive.length;
+      this.joinSelectAllToggle = checkboxes.length === checkboxActive.length
     },
     doUseTemplate(savedQuery) {
       for (let [key, val] of Object.entries(savedQuery)) {
