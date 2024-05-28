@@ -13,8 +13,11 @@
 
     <div class="mb-3 flex align-items-center">
       <i class="fad fa-circle-info fa-xl mr-2" />
-      <span>
-        {{ $translate('admin.global.page.setting.info.text') }}
+      <span v-if="mode === 'export'">
+        {{ $translate('admin.global.page.setting.export.info.text.api') }}
+      </span>
+      <span v-if="mode === 'filter'">
+        {{ $translate('admin.global.page.setting.filter.info.text.api') }}
       </span>
     </div>
 
