@@ -29,13 +29,9 @@
         :options="selects.calendarOptions"
         :showClear="unselectable"
         dataKey="value"
-        optionValue="value"
+        option-label="label"
         :placeholder="$translate('admin.generic.select.date.type')"
-      >
-        <template #option="{ option }">
-          <div>{{ $translate(option.label) }}</div>
-        </template>
-      </Dropdown>
+      />
       <!--  CALENDAR DEFAULT: VISIBILE DA DESKTOP  -->
       <SelectButton
         v-else-if="isDesktop && mode === 'default'"
@@ -45,22 +41,18 @@
         :allowempty="unselectable === true ? undefined : false"
       >
         <template #option="{ option }">
-          <div class="font-sm">{{ $translate(option.label) }}</div>
+          <div class="font-sm">{{ option.label }}</div>
         </template>
       </SelectButton>
-
       <!-- CALENDAR DEFAULT: @CLICK MORE MONHTS -->
       <Dropdown
         v-else-if="mode === 'more-months' || mode === 'periods'"
         v-model="modelValue"
         :options="defaultDropdownOptions"
-        optionValue="value"
+        optionLabel="label"
+        option-value="value"
         :placeholder="$translate('admin.generic.select.period')"
-      >
-        <template #option="{ option }">
-          <div>{{ $translate(option.label) }}</div>
-        </template>
-      </Dropdown>
+      />
       <!-- CALENDAR DEFAULT: @CLICK RANGE -->
       <div v-if="mode === 'range'" class="p-inputgroup mr-2">
         <Calendar
@@ -98,12 +90,13 @@
     </div>
   </div>
 </template>
-
 <script>
 import moment from 'moment'
 import Datemixin from '@/mixins/datemixin.js'
 import OCalendarButtons from '@/components/OCalendar/OCalendarButtons.vue'
 import OCalendarCustomButtons from '@/components/OCalendar/OCalendarCustomButtons.vue'
+
+const siteName = localStorage.getItem('site')
 
 export default {
   name: 'OCalendar',
@@ -134,7 +127,7 @@ export default {
         previousMonths: [],
         periods: [
           {
-            label: 'admin.generic.calendar.this.week',
+            label: this.$translate('admin.generic.calendar.this.week'),
             value: {
               date: {
                 from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toISOString(),
@@ -143,7 +136,7 @@ export default {
             }
           },
           {
-            label: 'admin.generic.calendar.last.week',
+            label: this.$translate('admin.generic.calendar.last.week'),
             value: {
               date: {
                 from: this.getMidNight(
@@ -161,6 +154,13 @@ export default {
     }
   },
   watch: {
+    dynamicGettersLang: {
+      handler() {
+        this.selects.calendarOptions = this.generateOptions()
+        this.getPreviousMonths()
+        this.filterOptions()
+      }
+    },
     extQuery(val) {
       if (this.advanced) {
         if (!val.from && !val.to) this.doReset()
@@ -189,13 +189,14 @@ export default {
           this.$emit('update:modelValue', valueToEmit)
         }
       }
-    },
-    '$store.getters.getLangCode'() {
-      this.selects.calendarOptions = this.generateOptions()
-      this.filterOptions()
     }
   },
   computed: {
+    dynamicGettersLang() {
+      return siteName === 'agp'
+        ? this.$store.getters.getDictionaryLang
+        : this.$store.getters.getLangCode
+    },
     extQuery() {
       if (this.advanced) return { from: this.from, to: this.to }
       return this.$attrs.modelValue
@@ -262,7 +263,6 @@ export default {
       let ret
       let tmp
       let date = JSON.stringify({ from: this.from, to: this.to })
-
       if (JSON.parse(date).from == null && JSON.parse(date).to == null) {
         ret = null
         return ret
@@ -270,7 +270,6 @@ export default {
       const today = JSON.stringify(this.getCalendarOption(1).date)
       const yesterday = JSON.stringify(this.getCalendarOption(2).date)
       const currMonth = JSON.stringify(this.getCalendarOption(4).date)
-
       // N.B. Il case 6 viene escluso dalla pre-valorizzazione ( poiché viene usato in modalità "Range" )
       switch (date) {
         case today:
@@ -300,9 +299,8 @@ export default {
         //AGGIUNGO 1 PERCHÈ I DECODE PARTONO DA 1 E I MONTH DA 0
         const monthValue = this.addPeriod(moment(), -i, 'months').month() + 1
         const yearValue = this.addPeriod(moment(), -i, 'months').year()
-
         ret.push({
-          label: 'decode.month.' + monthValue + ' ' + yearValue,
+          label: this.$translate('decode.month.' + monthValue) + ' ' + yearValue,
           value: this.getCalendarOption(5).updateDate(i)
         })
       }
@@ -317,7 +315,7 @@ export default {
       let ret = []
       arr.forEach((el) => {
         ret.push({
-          label: 'admin.generic.last.days.' + el,
+          label: this.$translate('admin.generic.last.days.' + el),
           value: {
             date: {
               from: this.getMidNight(
@@ -334,7 +332,7 @@ export default {
       return [
         {
           value: 1,
-          label: 'admin.generic.calendar.today',
+          label: this.$translate('admin.generic.calendar.today'),
           date: {
             from: this.getMidNight(moment()).toDate(),
             to: this.getEndOf(moment(), 'day').toDate()
@@ -342,7 +340,7 @@ export default {
         },
         {
           value: 2,
-          label: 'admin.generic.calendar.yesterday',
+          label: this.$translate('admin.generic.calendar.yesterday'),
           date: {
             from: this.getMidNight(this.getYesterday()).toDate(),
             to: this.getEndOf(this.getYesterday(), 'day').toDate()
@@ -350,7 +348,7 @@ export default {
         },
         {
           value: 3,
-          label: 'admin.generic.periods',
+          label: this.$translate('admin.generic.periods'),
           date: {
             from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toDate(),
             to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toDate()
@@ -358,7 +356,7 @@ export default {
         },
         {
           value: 4,
-          label: 'admin.generic.calendar.this.month',
+          label: this.$translate('admin.generic.calendar.this.month'),
           date: {
             from: this.getMidNight(this.getStartOf(moment(), 'month')).toDate(),
             to: this.getMidNight(this.getEndOf(moment(), 'month')).toDate()
@@ -366,7 +364,7 @@ export default {
         },
         {
           value: 5,
-          label: 'admin.generic.other.months',
+          label: this.$translate('admin.generic.other.months'),
           date: {
             from: this.getStartOf(this.addPeriod(moment(), -1, 'months'), 'month').toDate(),
             to: this.getEndOf(this.addPeriod(moment(), -1, 'months'), 'month').toDate()
@@ -387,7 +385,7 @@ export default {
         },
         {
           value: 6,
-          label: 'admin.generic.select.date.range',
+          label: this.$translate('admin.generic.select.date.range'),
           date: {
             from: this.getMidNight(moment()).toDate(),
             to: this.getEndOf(moment(), 'day').toDate()
@@ -428,18 +426,15 @@ export default {
   }
 }
 </script>
-
 <style scoped lang="scss">
 #o-calendar {
   max-height: 35px;
   height: 100%;
   width: 100%;
-
   .p-inputgroup {
     width: 100%;
     height: 100%;
     min-height: 2.5rem;
-
     :deep(.p-button):not(.p-datepicker-trigger) {
       padding: 0.2rem;
       width: 100%;
@@ -447,7 +442,6 @@ export default {
       display: flex;
       justify-content: center;
     }
-
     :deep(.p-selectbutton) {
       width: 100%;
       display: flex;
