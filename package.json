@@ -45,6 +45,7 @@
     "eslint": "^8.39.0",
     "eslint-plugin-vue": "^9.11.0",
     "moment": "^2.29.4",
+    "moment-timezone": "^0.5.45",
     "pathe": "^1.1.1",
     "pinia": "^2.1.6",
     "pinia-plugin-persist": "^1.0.0",
