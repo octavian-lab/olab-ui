@@ -526,14 +526,8 @@ export default {
       })
     },
     formatNumber(num) {
-      // esempi: 0,08 - 123,55
-      const isNegative = num < 0
-      let numStr = Math.abs(num).toString()
-      if (numStr.length < 3) {
-        numStr = numStr.padStart(3, '0')
-      }
-      const formattedNumber = numStr.slice(0, -2) + ',' + numStr.slice(-2)
-      return isNegative ? '-' + formattedNumber : formattedNumber
+        const valueDouble = parseFloat(num) / Math.pow(10, 2)
+        return valueDouble
     },
     handlerTypeExport(key, value) {
       switch (key) {
