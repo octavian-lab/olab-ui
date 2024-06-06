@@ -10,7 +10,17 @@ export const useKeycloackAuthStore = defineStore('settings', {
       refresh: null
     }
   }),
-  getters: {},
+  getters: {
+    getTokenExpire: (state) => {
+      return state.token.id.expire
+    },
+    getRefreshToken: (state) => {
+      return state.token.refresh
+    },
+    isAuthenticated(state) {
+      return state.token.id.value !== null
+    }
+  },
   actions: {
     updateInfo(info) {
       this.info = info
@@ -20,6 +30,9 @@ export const useKeycloackAuthStore = defineStore('settings', {
       // MOLTIPLICO IL TOKEN ( ESPRESSO IN SECONDI ) PER POTERLO COMPARARE CON DATE.NOW() ( ESPRESSO IN MILLISECONDI )
       this.token.id.expire = expire * 1000
       this.token.refresh = refresh
+    },
+    logout(){
+      this.token.id.value = null
     }
   },
   persist: {

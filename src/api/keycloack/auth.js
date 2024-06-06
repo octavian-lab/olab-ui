@@ -6,9 +6,6 @@ export default {
   getAccessToken(params) {
     return axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
       url: '/token',
       data: querystring.stringify({
         grant_type: 'authorization_code',
@@ -22,9 +19,6 @@ export default {
   refreshToken(params) {
     return axios({
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
-      },
       url: '/token',
       data: querystring.stringify({
         grant_type: 'refresh_token',
@@ -33,5 +27,5 @@ export default {
         refresh_token: params.refreshToken
       })
     })
-  }
+  },
 }

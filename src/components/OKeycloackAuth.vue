@@ -37,13 +37,11 @@ export default {
     }
   },
   mounted() {
-    // const { getAccessCode, getAccessToken } = useKeycloack()
+    const { getAccessCode, getAccessToken } = useKeycloack()
     if (!location.href.includes('code')) {
-      // getAccessCode(this.clientId, this.redirectUrl)
-      console.log('faccio login')
+      getAccessCode(this.clientId, this.redirectUrl)
     } else {
-      // getAccessToken(this.clientId, this.redirectUrl, this.clientSecret)
-      console.log('prendo code')
+      getAccessToken(this.clientId, this.redirectUrl, this.clientSecret)
     }
   }
 }
