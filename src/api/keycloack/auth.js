@@ -1,12 +1,12 @@
 import {useAxiosRequest} from './request.js'
 
 const axios = useAxiosRequest()
-import querystring from 'querystring'
+import queryString from 'query-string';
 
 export default {
     getAccessToken(params) {
         return axios.post('/token',
-            querystring.stringify({
+            queryString.stringify({
                 grant_type: 'authorization_code',
                 client_id: params.clientId,
                 client_secret: params.clientSecret,
@@ -17,7 +17,7 @@ export default {
     },
     refreshToken(params) {
         return axios.post('/token',
-            querystring.stringify({
+            queryString.stringify({
                 grant_type: 'refresh_token',
                 client_id: params.clientId,
                 client_secret: params.clientSecret,
