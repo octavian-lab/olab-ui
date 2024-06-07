@@ -6,11 +6,11 @@ import loadingplugin from '@/plugins/loadingplugin.js'
 import modalplugin from '@/plugins/modalplugin.js'
 import functionmixin from '@/mixins/functionmixin.js'
 import datemixin from '@/mixins/datemixin.js'
+import { useKeycloack } from '@/mixins/keycloack.js'
 
 // USAGES IN JS FILES
 const useFunctions = () => functionmixin.methods
 const useModal = () => modalplugin.modal
-
 const useLoading = () => loadingplugin.loading
 
 // FILTERS IMPORT
@@ -98,5 +98,6 @@ export {
   OBannerBrowserSupport,
   useLoading,
   useModal,
-  useFunctions
+  useFunctions,
+  useKeycloack
 }
