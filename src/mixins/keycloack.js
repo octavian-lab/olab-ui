@@ -34,12 +34,11 @@ export function useKeycloack() {
   }
   const decodeToken = (token) => {
     const decodedToken = jwtDecode(token)
-    console.log('id_token decodificato', decodedToken)
     return decodedToken
   }
   const checkAndRefreshToken = async (clientId, clientSecret) => {
     const keycloackStore = useKeycloackAuthStore()
-    if (Date.now() > keycloackStore.getTokenExpire) {
+    if (keycloackStore.getIdToken && (Date.now() > keycloackStore.getIdToken.expire)) {
       try {
         const json = {
           clientId,
@@ -50,7 +49,7 @@ export function useKeycloack() {
         updateStoreInfo(data)
       } catch (e) {
         // verificare che fare al fallimento della chiamata
-        console.log(e)
+        keycloackStore.logout()
       }
     }
   }

@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-export const useKeycloackAuthStore = defineStore('settings', {
+export const useKeycloackAuthStore = defineStore('keycloack-auth', {
   state: () => ({
     info: null,
     token: {
@@ -11,8 +11,11 @@ export const useKeycloackAuthStore = defineStore('settings', {
     }
   }),
   getters: {
-    getTokenExpire: (state) => {
-      return state.token.id.expire
+    getAuthInfo: (state) => {
+      return state.info
+    },
+    getIdToken: (state) => {
+      return state.token.id
     },
     getRefreshToken: (state) => {
       return state.token.refresh
