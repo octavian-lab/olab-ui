@@ -55,6 +55,7 @@ export default {
           return moment(date1).isAfter(moment(date2))
       }
     },
+
     difference(date1, date2, period) {
       //PERIOD DEVE ESSERE AL PLURALE (es. days,months,...)
       let unitToShow = `as${period.charAt(0).toUpperCase() + period.slice(1)}`

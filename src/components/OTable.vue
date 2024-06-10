@@ -102,7 +102,7 @@
     </ColumnGroup>
     <slot name="content" />
     <ODialogExport
-      v-if="$modal.isVisible('ODialogExport')"
+      v-if="$modal.isVisible('ODialogExport') && exportable"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
