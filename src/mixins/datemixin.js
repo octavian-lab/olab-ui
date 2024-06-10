@@ -9,7 +9,12 @@ export default {
       const regex = /^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}.\d{3}Z$/
       return regex.test(string)
     },
-    normalizeForRequest(date) {
+    normalizeForRequest(date, timezone) {
+      if (timezone && timezone !== 'Europe/Rome') {
+        console.log('entro in timezone')
+        const timezonedDate = moment.tz(date, timezone)
+        return new Date(timezonedDate.format('YYYY/MM/DD HH:mm:ss'))
+      }
       return moment(date).utc().toDate()
     },
     getMidNight(date) {
