@@ -555,7 +555,7 @@ export default {
         case 'lastInvoice':
         case 'nextInvoice':
         case 'dateClose':
-          return this.$filters.asDate(value)
+          return value ? this.$filters.asDate(value) : null
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
         case 'idSkin':
@@ -622,7 +622,7 @@ export default {
     calcObj(obj, keysPath) {
       let ret = { ...obj }
       for (let i = 1; i < keysPath.length; i++) {
-        ret = ret[keysPath[i]]
+        ret = (ret !== null && ret[keysPath[i]] ) ? ret[keysPath[i]] : null
       }
       return {
         value: ret,
