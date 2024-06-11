@@ -11,7 +11,6 @@ export default {
     },
     normalizeForRequest(date, timezone) {
       if (timezone && timezone !== 'Europe/Rome') {
-        console.log('entro in timezone')
         const timezonedDate = moment.tz(date, timezone)
         return new Date(timezonedDate.format('YYYY/MM/DD HH:mm:ss'))
       }
