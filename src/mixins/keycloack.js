@@ -4,7 +4,7 @@ import { jwtDecode } from 'jwt-decode'
 export function useKeycloack() {
   // [METHODS]
   const getAccessCode = (clientId, redirectUrl) => {
-    location.href = `https://iam-stage.octavianlab.com/realms/stage/protocol/openid-connect/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=openid profile email phone address&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
+    location.href = `https://iam.octavianlab.com/realms/stage/protocol/openid-connect/auth?client_id=${clientId}&redirect_uri=${redirectUrl}&scope=olab-profile olab-app openid&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
   }
   const getAccessToken = async (clientId, redirectUrl, clientSecret) => {
     try {
@@ -61,7 +61,7 @@ export function useKeycloack() {
   const logout = async () => {
     const keycloackStore = useKeycloackAuthStore()
     try {
-      location.href = `https://iam-stage.octavianlab.com/realms/stage/protocol/openid-connect/logout`
+      location.href = `https://iam.octavianlab.com/realms/stage/protocol/openid-connect/logout`
       keycloackStore.logout()
     } catch (e) {
       console.log(e)
