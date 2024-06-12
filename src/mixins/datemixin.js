@@ -10,7 +10,8 @@ export default {
       return regex.test(string)
     },
     normalizeForRequest(date, timezone) {
-      if (timezone && timezone !== 'Europe/Rome') {
+      // moment.tz.guess() IL TIMEZONE DELL'UTENTE LOGGATO
+      if (timezone && timezone !== moment.tz.guess()) {
         const timezonedDate = moment.tz(date, timezone)
         return new Date(timezonedDate.format('YYYY/MM/DD HH:mm:ss'))
       }

@@ -185,6 +185,11 @@ export default {
       checkTranslate: this.checkTranslate
     }
   },
+  inject: {
+      query:{
+          default:null
+      }
+  },
   props: {
     useApi: { type: Boolean, default: () => false },
     exportFilename: {
@@ -526,8 +531,8 @@ export default {
       })
     },
     formatNumber(num) {
-        const valueDouble = parseFloat(num) / Math.pow(10, 2)
-        return valueDouble
+      const valueDouble = parseFloat(num) / Math.pow(10, 2)
+      return valueDouble
     },
     handlerTypeExport(key, value) {
       switch (key) {
@@ -555,7 +560,7 @@ export default {
         case 'lastInvoice':
         case 'nextInvoice':
         case 'dateClose':
-          return this.$filters.asDate(value)
+          return this.$filters.asDate(value,undefined,this.query?.timezone)
         case 'idLicensee':
           return this.$store.getters.getLicenseeDescription(value)
         case 'idSkin':
