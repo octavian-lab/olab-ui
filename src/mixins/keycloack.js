@@ -4,19 +4,21 @@ import { ref } from 'vue'
 // IL FILE API È IMPORTATO NELLE SINGOLE FUNZIONI CHE LO UTILIZZANO, PER AVERE LA URL CON L'ENVIRONMENT CORRETTO
 
 const baseURL = ref('https://iam.octavianlab.com/realms/stage/protocol/openid-connect')
+const redirectURL = ref(location.origin)
 export function useKeycloack() {
   // [METHODS]
-  const checkKeycloackAuth = async (apiURL,clientId,clientSecret) => {
+  const checkKeycloackAuth = async ({ apiURL, siteURL, clientId, clientSecret }) => {
     updateEnvBaseURL(apiURL)
-    if (!getStorageData("isAuthenticated")) {
-      if (!location.href.includes("code=") && !location.href.includes("session_state=")) {
+    updateRedirectURL(siteURL)
+    if (!getStorageData('isAuthenticated')) {
+      if (!location.href.includes('code=') && !location.href.includes('session_state=')) {
         // REDIRECT NELLA PAGINA DI AUTENTICAZIONE
-        getAccessCode(clientId, location.origin);
+        getAccessCode(clientId, redirectURL.value)
       } else {
         // API PER PRENDERE TOKEN DI ACCESSO E METTERE TOKEN E INFORMAZIONI IN STORE
-        await getAccessToken(clientId, clientSecret);
-        const homeCleanedUrl = `${window.location.origin}${window.location.pathname}`;
-        window.history.replaceState(null, "", homeCleanedUrl);
+        await getAccessToken(clientId, clientSecret)
+        const homeCleanedUrl = `${window.url || ''}${window.location.pathname || '' }`
+        window.history.replaceState(null, '', homeCleanedUrl)
       }
     }
   }
@@ -27,11 +29,16 @@ export function useKeycloack() {
       baseURL.value = baseURL.value.replace('stage', environment)
     }
   }
+  const updateRedirectURL = (siteURL) => {
+    if(!location.origin.includes('localhost:')) {
+      redirectURL.value = `${location.origin}${siteURL}`
+    }
+  }
   const getAccessCode = (clientId) => {
     // REDIRECT ALLA PAGINA DI LOGIN DI KEYCLOACK
-    location.href = `${baseURL.value}/auth?client_id=${clientId}&redirect_uri=${location.origin}&scope=olab-profile olab-app openid&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
+    location.href = `${baseURL.value}/auth?client_id=${clientId}&redirect_uri=${redirectURL.value}&scope=olab-profile olab-app openid&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
   }
-  const getAccessToken = async (clientId,  clientSecret) => {
+  const getAccessToken = async (clientId, clientSecret) => {
     // API PER PRENDERE IL TOKEN DI AUTENTICAZIONE PER EFFETTUARE LE API
     try {
       const APIFile = async () => await import('@/api/keycloack/index.js')
@@ -40,7 +47,7 @@ export function useKeycloack() {
       const json = {
         clientId,
         clientSecret,
-        redirectUrl: location.origin,
+        redirectUrl: redirectURL.value,
         code
       }
       const { data } = await API.default.auth.getAccessToken(json)
