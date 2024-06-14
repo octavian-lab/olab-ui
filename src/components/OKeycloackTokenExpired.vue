@@ -16,7 +16,7 @@
       <Button
         :label="$translate('admin.generic.do.login')"
         icon="fad fa-sign-in"
-        @click="useKeycloack().getAccessCode(clientId,redirectURL)"
+        @click="useKeycloack().getAccessCode(clientId)"
       />
     </div>
   </div>
@@ -27,10 +27,6 @@ import { useKeycloack } from '@/mixins/keycloack.js'
 export default {
   props: {
     clientId: {
-      type: String,
-      required: true
-    },
-    redirectURL: {
       type: String,
       required: true
     },
