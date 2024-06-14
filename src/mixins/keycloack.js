@@ -17,7 +17,7 @@ export function useKeycloack() {
       } else {
         // API PER PRENDERE TOKEN DI ACCESSO E METTERE TOKEN E INFORMAZIONI IN STORE
         await getAccessToken(clientId, clientSecret)
-        const homeCleanedUrl = `${window.url || ''}${window.location.pathname || '' }`
+        const homeCleanedUrl = `${window.url || ''}${window.location.pathname || ''}`
         window.history.replaceState(null, '', homeCleanedUrl)
       }
     }
@@ -30,12 +30,14 @@ export function useKeycloack() {
     }
   }
   const updateRedirectURL = (siteURL) => {
-    if(!location.origin.includes('localhost:')) {
+    if (!location.origin.includes('localhost:')) {
       redirectURL.value = `${location.origin}${siteURL}`
     }
   }
   const getAccessCode = (clientId) => {
     // REDIRECT ALLA PAGINA DI LOGIN DI KEYCLOACK
+    const keycloackStore = useKeycloackAuthStore()
+    keycloackStore.updateKeycloackAuth(true)
     location.href = `${baseURL.value}/auth?client_id=${clientId}&redirect_uri=${redirectURL.value}&scope=olab-profile olab-app openid&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
   }
   const getAccessToken = async (clientId, clientSecret) => {
@@ -74,10 +76,10 @@ export function useKeycloack() {
   }
   const checkAndRefreshToken = async (clientId, clientSecret) => {
     // API PER VERIFICARE SE IL TOKEN È SCADUTO E AGGIORNARLO IN TAL CASO
-    const APIFile = async () => await import('@/api/keycloack/index.js')
-    const API = await APIFile()
     const keycloackStore = useKeycloackAuthStore()
-    if (keycloackStore.getIdToken && Date.now() > keycloackStore.getIdToken.expire) {
+    if (keycloackStore.getIdToken && (Date.now() > keycloackStore.getIdToken.expire)) {
+      const APIFile = async () => await import('@/api/keycloack/index.js')
+      const API = await APIFile()
       try {
         const json = {
           clientId,

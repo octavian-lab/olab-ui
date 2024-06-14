@@ -41,7 +41,7 @@ import OPassword from './components/OPassword.vue'
 import ODraggable from '@/components/ODraggable.vue'
 import OProgressBar from '@/components/OProgressBar.vue'
 import OBannerBrowserSupport from '@/components/OBannerBrowserSupport.vue'
-import OKeycloackTokenExpired from '@/components/OKeycloackTokenExpired.vue'
+import OKeycloackTokenExpired from '@/components/OKeycloack/OKeycloackTokenExpired.vue'
 
 export default {
   install: (app, options) => {
