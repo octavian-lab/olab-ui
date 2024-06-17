@@ -1,25 +1,20 @@
-import { useKeycloackAuthStore } from '@/store/keycloack-auth.js'
+import { useKeycloakAuthStore } from '@/store/keycloak-auth.js'
 import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
 // IL FILE API È IMPORTATO NELLE SINGOLE FUNZIONI CHE LO UTILIZZANO, PER AVERE LA URL CON L'ENVIRONMENT CORRETTO
 
 const baseURL = ref('https://iam.octavianlab.com/realms/stage/protocol/openid-connect')
 const redirectURL = ref(location.origin)
-export function useKeycloack() {
+export function useKeycloak() {
   // [METHODS]
-  const checkKeycloackAuth = async ({ apiURL, siteURL, clientId, clientSecret }) => {
+  const checkKeycloakAuth = async ({ apiURL, siteURL, clientId, clientSecret }) => {
     updateEnvBaseURL(apiURL)
     updateRedirectURL(siteURL)
     if (!getStorageData('isAuthenticated')) {
-      if (!location.href.includes('code=') && !location.href.includes('session_state=')) {
-        // REDIRECT NELLA PAGINA DI AUTENTICAZIONE
-        getAccessCode(clientId, redirectURL.value)
-      } else {
-        // API PER PRENDERE TOKEN DI ACCESSO E METTERE TOKEN E INFORMAZIONI IN STORE
-        await getAccessToken(clientId, clientSecret)
-        const homeCleanedUrl = `${window.url || ''}${window.location.pathname || ''}`
-        window.history.replaceState(null, '', homeCleanedUrl)
-      }
+      // REDIRECT NELLA PAGINA DI AUTENTICAZIONE
+      getAccessCode(clientId)
+      // API PER PRENDERE TOKEN DI ACCESSO E METTERE TOKEN E INFORMAZIONI IN STORE
+      await getAccessToken(clientId, clientSecret)
     }
   }
   const updateEnvBaseURL = (apiURL) => {
@@ -35,15 +30,21 @@ export function useKeycloack() {
     }
   }
   const getAccessCode = (clientId) => {
-    // REDIRECT ALLA PAGINA DI LOGIN DI KEYCLOACK
-    const keycloackStore = useKeycloackAuthStore()
-    keycloackStore.updateKeycloackAuth(true)
+    if (location.href.includes('code=') && location.href.includes('session_state=')) {
+      return
+    }
+    // REDIRECT ALLA PAGINA DI LOGIN DI KEYCLOAK
+    const keycloakStore = useKeycloakAuthStore()
+    keycloakStore.updateKeycloakAuth(true)
     location.href = `${baseURL.value}/auth?client_id=${clientId}&redirect_uri=${redirectURL.value}&scope=olab-profile olab-app openid&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
   }
   const getAccessToken = async (clientId, clientSecret) => {
+    if (!location.href.includes('code=') && !location.href.includes('session_state=')) {
+      return
+    }
     // API PER PRENDERE IL TOKEN DI AUTENTICAZIONE PER EFFETTUARE LE API
     try {
-      const APIFile = async () => await import('@/api/keycloack/index.js')
+      const APIFile = async () => await import('@/api/keycloak/index.js')
       const API = await APIFile()
       const code = location.href.split('code=')[1].split('#')[0]
       const json = {
@@ -54,16 +55,18 @@ export function useKeycloack() {
       }
       const { data } = await API.default.auth.getAccessToken(json)
       updateStoreInfo(data)
+      const homeCleanedUrl = `${window.url || ''}${window.location.pathname || ''}`
+      window.history.replaceState(null, '', homeCleanedUrl)
     } catch (e) {
       console.log(e)
     }
   }
   const updateStoreInfo = (data) => {
     // AGGIORNA LE INFO DELL'UTENTE LOGGATO
-    const keycloackStore = useKeycloackAuthStore()
+    const keycloakStore = useKeycloakAuthStore()
     const decodedToken = decodeToken(data['id_token'])
-    keycloackStore.updateInfo({ ...decodedToken.profile, ...decodedToken.app })
-    keycloackStore.updateTokens({
+    keycloakStore.updateInfo({ ...decodedToken.profile, ...decodedToken.app })
+    keycloakStore.updateTokens({
       id: data['id_token'],
       refresh: data['refresh_token'],
       expire: decodedToken.exp
@@ -76,34 +79,34 @@ export function useKeycloack() {
   }
   const checkAndRefreshToken = async (clientId, clientSecret) => {
     // API PER VERIFICARE SE IL TOKEN È SCADUTO E AGGIORNARLO IN TAL CASO
-    const keycloackStore = useKeycloackAuthStore()
-    if (keycloackStore.getIdToken && (Date.now() > keycloackStore.getIdToken.expire)) {
-      const APIFile = async () => await import('@/api/keycloack/index.js')
+    const keycloakStore = useKeycloakAuthStore()
+    if (keycloakStore.getIdToken && Date.now() > keycloakStore.getIdToken.expire) {
+      const APIFile = async () => await import('@/api/keycloak/index.js')
       const API = await APIFile()
       try {
         const json = {
           clientId,
           clientSecret,
-          refreshToken: keycloackStore.getRefreshToken
+          refreshToken: keycloakStore.getRefreshToken
         }
         const { data } = await API.default.auth.refreshToken(json)
         updateStoreInfo(data)
       } catch (e) {
-        keycloackStore.logout()
+        keycloakStore.logout()
       }
     }
   }
   const getStorageData = (data) => {
     // RITORNA I DATI DELLO STORE
-    const keycloackStore = useKeycloackAuthStore()
+    const keycloakStore = useKeycloakAuthStore()
     // da utilizzare per info e isAuthenticated
-    return keycloackStore[data]
+    return keycloakStore[data]
   }
   const logout = async () => {
-    const keycloackStore = useKeycloackAuthStore()
+    const keycloakStore = useKeycloakAuthStore()
     try {
       location.href = `${baseURL.value}/logout`
-      keycloackStore.logout()
+      keycloakStore.logout()
     } catch (e) {
       console.log(e)
     }
@@ -112,10 +115,11 @@ export function useKeycloack() {
   return {
     baseURL: baseURL,
     logout,
-    checkKeycloackAuth,
+    checkKeycloakAuth,
     checkAndRefreshToken,
     updateStoreInfo,
     updateEnvBaseURL,
+    updateRedirectURL,
     decodeToken,
     getAccessCode,
     getAccessToken,

@@ -1,5 +1,6 @@
 <template>
   <div
+    v-if="!isModal"
     class="p-2 h-5rem flex align-items-center"
     :style="{
       background: 'var(--surface-800)'
@@ -13,17 +14,12 @@
       <div class="my-3 font-bold text-2xl">
         {{ $translate('admin.generic.session.expired') }}
       </div>
-      <Button
-        :label="$translate('admin.generic.do.login')"
-        icon="fad fa-sign-in"
-        @click="useKeycloack().getAccessCode(clientId)"
-      />
+      <OKeycloakLoginButton label="admin.generic.do.login" icon="fad fa-sign-in" />
     </div>
   </div>
 </template>
 <script>
-import { useKeycloack } from '@/mixins/keycloack.js'
-
+import OKeycloakLoginButton from '@/components/OKeycloak/OKeycloakLoginButton.vue'
 export default {
   props: {
     clientId: {
@@ -34,10 +30,11 @@ export default {
       type: String,
       required: true,
       default: () => 'https://cdn.octavianlab.com/v3/bo/octavianlab/logo.png'
+    },
+    isModal: {
+      type: Boolean,
+      default: () => false
     }
-  },
-  methods: {
-    useKeycloack
   }
 }
 </script>

@@ -1,9 +1,9 @@
 import axios from 'axios'
-import {useKeycloack} from "@/mixins/keycloack.js";
+import {useKeycloak} from "@/mixins/keycloak.js";
 
 const axiosConfig = () => {
     return {
-        baseURL: useKeycloack().baseURL.value,
+        baseURL: useKeycloak().baseURL.value,
         timeout: 15000,
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',

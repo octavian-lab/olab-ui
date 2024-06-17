@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
-export const useKeycloackAuthStore = defineStore('keycloack-auth', {
+export const useKeycloakAuthStore = defineStore('keycloak-auth', {
   state: () => ({
-    keycloackAuth:false,
+    keycloakAuth:false,
     info: null,
     token: {
       id: {
@@ -24,13 +24,13 @@ export const useKeycloackAuthStore = defineStore('keycloack-auth', {
     isAuthenticated(state) {
       return state.token.id.value !== null
     },
-    isKeycloackAuth(state) {
-      return state.keycloackAuth
+    isKeycloakAuth(state) {
+      return state.keycloakAuth
     }
   },
   actions: {
-    updateKeycloackAuth(value){
-      this.keycloackAuth = value
+    updateKeycloakAuth(value){
+      this.keycloakAuth = value
     },
     updateInfo(info) {
       this.info = info
@@ -49,7 +49,7 @@ export const useKeycloackAuthStore = defineStore('keycloack-auth', {
     enabled: true,
     strategies: [
       {
-        key: `olab-ui-${localStorage.getItem('site')}:keycloack-auth`,
+        key: `olab-ui-${localStorage.getItem('site')}:keycloak-auth`,
         storage: localStorage
       }
     ]
