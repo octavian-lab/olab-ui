@@ -6,7 +6,7 @@ import loadingplugin from '@/plugins/loadingplugin.js'
 import modalplugin from '@/plugins/modalplugin.js'
 import functionmixin from '@/mixins/functionmixin.js'
 import datemixin from '@/mixins/datemixin.js'
-import { useKeycloack } from '@/mixins/keycloack.js'
+import { useKeycloak } from '@/mixins/keycloak.js'
 
 // USAGES IN JS FILES
 const useFunctions = () => functionmixin.methods
@@ -41,7 +41,8 @@ import OPassword from './components/OPassword.vue'
 import ODraggable from '@/components/ODraggable.vue'
 import OProgressBar from '@/components/OProgressBar.vue'
 import OBannerBrowserSupport from '@/components/OBannerBrowserSupport.vue'
-import OKeycloackTokenExpired from '@/components/OKeycloackTokenExpired.vue'
+import OKeycloakTokenExpired from '@/components/OKeycloak/OKeycloakTokenExpired.vue'
+import OKeycloakLoginButton from '@/components/OKeycloak/OKeycloakLoginButton.vue'
 
 export default {
   install: (app, options) => {
@@ -97,9 +98,10 @@ export {
   ODraggable,
   OProgressBar,
   OBannerBrowserSupport,
-  OKeycloackTokenExpired,
+  OKeycloakTokenExpired,
+  OKeycloakLoginButton,
   useLoading,
   useModal,
   useFunctions,
-  useKeycloack
+  useKeycloak
 }
