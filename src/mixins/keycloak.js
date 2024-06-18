@@ -80,7 +80,7 @@ export function useKeycloak() {
   const checkAndRefreshToken = async (clientId, clientSecret) => {
     // API PER VERIFICARE SE IL TOKEN È SCADUTO E AGGIORNARLO IN TAL CASO
     const keycloakStore = useKeycloakAuthStore()
-    if (keycloakStore.getIdToken && Date.now() > keycloakStore.getIdToken.expire) {
+    if (keycloakStore.getIdToken?.value && Date.now() > keycloakStore.getIdToken.expire) {
       const APIFile = async () => await import('@/api/keycloak/index.js')
       const API = await APIFile()
       try {
@@ -105,8 +105,9 @@ export function useKeycloak() {
   const logout = async () => {
     const keycloakStore = useKeycloakAuthStore()
     try {
-      location.href = `${baseURL.value}/logout`
+      const keycloakStore = useKeycloakAuthStore()
       keycloakStore.logout()
+      location.href = `${baseURL.value}/logout`
     } catch (e) {
       console.log(e)
     }

@@ -43,6 +43,7 @@ export const useKeycloakAuthStore = defineStore('keycloak-auth', {
     },
     logout(){
       this.token.id.value = null
+      this.keycloakAuth = false
     }
   },
   persist: {
