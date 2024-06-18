@@ -35,6 +35,7 @@
 </template>
 
 <script>
+import languages from '@/mixins/languages.js'
 export default {
   name: 'ODropdown',
   data() {
@@ -194,7 +195,9 @@ export default {
       let prependValue = true
       switch (this.options) {
         case 'languages':
-          ret = [...this.$store.getters[this.options]]
+          ret = this.$store.getters[this.options]
+            ? [...this.$store.getters[this.options]]
+            : [...languages.methods.selectLanguages()]
           prependValue = false
           break
         case 'licensees':
