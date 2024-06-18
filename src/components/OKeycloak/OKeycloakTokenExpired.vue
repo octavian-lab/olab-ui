@@ -14,13 +14,16 @@
       <div class="my-3 font-bold text-2xl">
         {{ $translate('admin.generic.session.expired') }}
       </div>
-      <OKeycloakLoginButton label="admin.generic.do.login" icon="fad fa-sign-in" />
+      <OKeycloakLoginButton :clientId="clientId" label="admin.generic.do.login" icon="fad fa-sign-in" />
     </div>
   </div>
 </template>
 <script>
 import OKeycloakLoginButton from '@/components/OKeycloak/OKeycloakLoginButton.vue'
 export default {
+  components:{
+    OKeycloakLoginButton
+  },
   props: {
     clientId: {
       type: String,
