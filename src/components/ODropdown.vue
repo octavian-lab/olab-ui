@@ -16,7 +16,7 @@
         <span>{{ el.label }}</span>
       </div>
     </template>
-    <template #value="el" v-if="options === 'languages'">
+    <template #value="el" v-if="options === 'languages' || generateLanguageList">
       <span v-html="valuesCalcLanguages(el)" v-if="el.value != null"></span>
       <span v-else> {{ el.placeholder }} </span>
     </template>
@@ -28,14 +28,13 @@
         <span>{{ option.label }}</span>
       </div>
     </template>
-    <template #option="{ option }" v-if="options === 'languages'">
+    <template #option="{ option }" v-if="options === 'languages' || generateLanguageList">
       <span v-html="optionCalcLanguages(option)"></span>
     </template>
   </Dropdown>
 </template>
 
 <script>
-import languages from '@/mixins/languages.js'
 export default {
   name: 'ODropdown',
   data() {
@@ -50,7 +49,8 @@ export default {
     showClear: { type: Boolean, default: () => true },
     prependValueOnLabel: { type: Boolean, default: () => true },
     translator: { type: String, default: () => null },
-    icons: { type: Array, default: () => [] }
+    icons: { type: Array, default: () => [] },
+    generateLanguageList: { type: Boolean, default: () => false }
   },
   watch: {
     options: {
@@ -195,9 +195,7 @@ export default {
       let prependValue = true
       switch (this.options) {
         case 'languages':
-          ret = this.$store.getters[this.options]
-            ? [...this.$store.getters[this.options]]
-            : [...languages.methods.selectLanguages()]
+          ret = [...this.$store.getters[this.options]]
           prependValue = false
           break
         case 'licensees':
