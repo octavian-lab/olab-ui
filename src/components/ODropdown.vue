@@ -58,6 +58,8 @@ export default {
       handler(val) {
         if (typeof this.options === 'string') {
           this.generateOptionsByType()
+        } else if (this.generateLanguageList === true) {
+          this.results = this.elaborate(val, this.translator, false)
         } else {
           this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
         }
