@@ -16,7 +16,7 @@
         <span>{{ el.label }}</span>
       </div>
     </template>
-    <template #value="el" v-if="options === 'languages'">
+    <template #value="el" v-if="options === 'languages' || generateLanguageList">
       <span v-html="valuesCalcLanguages(el)" v-if="el.value != null"></span>
       <span v-else> {{ el.placeholder }} </span>
     </template>
@@ -28,7 +28,7 @@
         <span>{{ option.label }}</span>
       </div>
     </template>
-    <template #option="{ option }" v-if="options === 'languages'">
+    <template #option="{ option }" v-if="options === 'languages' || generateLanguageList">
       <span v-html="optionCalcLanguages(option)"></span>
     </template>
   </Dropdown>
@@ -49,7 +49,8 @@ export default {
     showClear: { type: Boolean, default: () => true },
     prependValueOnLabel: { type: Boolean, default: () => true },
     translator: { type: String, default: () => null },
-    icons: { type: Array, default: () => [] }
+    icons: { type: Array, default: () => [] },
+    generateLanguageList: { type: Boolean, default: () => false }
   },
   watch: {
     options: {
@@ -58,7 +59,8 @@ export default {
         if (typeof this.options === 'string') {
           this.generateOptionsByType()
         } else {
-          this.results = this.elaborate(val, this.translator, this.prependValueOnLabel)
+          const prepend = this.generateLanguageList ? false : this.prependValueOnLabel
+          this.results = this.elaborate(val, this.translator, prepend)
         }
       }
     },
