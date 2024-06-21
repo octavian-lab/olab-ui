@@ -1,13 +1,18 @@
 <template>
   <Button
-    :label="$translate(label)"
-    :severity="severity"
-    :icon="icon"
-    @click="useKeycloak().getAccessCode(clientId)"
-  />
+      :style="{
+        background: '#424242',
+        borderColor:'#424242'
+      }"
+      :class="`text-white p-1 ${width}`"
+      @click="useKeycloak().getAccessCode(clientId)"
+  >
+    <img style="height: 25px" src="https://cdn.octavianlab.com/v3/bo/octavianlab/small-logo.png"/>
+    <div class="text-center w-full font-semibold">Octavian SSO</div>
+  </Button>
 </template>
 <script>
-import { useKeycloak } from '@/mixins/keycloak.js'
+import {useKeycloak} from '@/mixins/keycloak.js'
 
 export default {
   props: {
@@ -15,17 +20,9 @@ export default {
       type: String,
       required: true
     },
-    severity: {
+    width: {
       type: String,
-      default: () => 'warning'
-    },
-    label: {
-      type: String,
-      default: () => 'admin.generic.keycloak.login'
-    },
-    icon: {
-      type: String,
-      default: () => 'fad fa-key'
+      default: () => 'w-full'
     }
   },
   methods: {
