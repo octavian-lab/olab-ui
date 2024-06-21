@@ -3,7 +3,7 @@
     v-if="!isModal"
     class="p-2 h-5rem flex align-items-center"
     :style="{
-      background: 'var(--surface-800)'
+      background: headerColor
     }"
   >
     <img :src="logo" class="h-3rem" />
@@ -14,7 +14,7 @@
       <div class="my-3 font-bold text-2xl">
         {{ $translate('admin.generic.session.expired') }}
       </div>
-      <OKeycloakLoginButton :clientId="clientId" label="admin.generic.do.login" icon="fad fa-sign-in" />
+      <OKeycloakLoginButton :clientId="clientId" width="w-auto" />
     </div>
   </div>
 </template>
@@ -37,6 +37,10 @@ export default {
     isModal: {
       type: Boolean,
       default: () => false
+    },
+    headerColor:{
+      type:String,
+      default: ()=> '#1e1e1e'
     }
   }
 }
