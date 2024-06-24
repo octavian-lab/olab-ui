@@ -20,9 +20,7 @@ export function useKeycloak() {
   const updateEnvBaseURL = (apiURL) => {
     // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
     const environment = apiURL.split('.')[0].split('/')[2]
-    if (environment !== 'stage') {
-      baseURL.value = baseURL.value.replace('stage', environment)
-    }
+    baseURL.value = baseURL.value.replace('stage', environment === 'live' ? 'live' : 'stage')
   }
   const updateRedirectURL = (siteURL) => {
     if (!location.origin.includes('localhost:')) {
