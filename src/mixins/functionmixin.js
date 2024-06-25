@@ -1,6 +1,7 @@
 import { useMediaQuery } from '@vueuse/core'
 import { useCookies } from 'vue3-cookies'
 import moment from 'moment'
+import { useKeycloak } from '@/mixins/keycloak.js'
 export default {
   data() {
     return {
@@ -89,12 +90,19 @@ export default {
     },
     isTimedOut(userTimer) {
       const { cookies } = useCookies()
+      const keycloak = useKeycloak()
       let lastCall = cookies.get('lastApiCall')
       const defaultTimeout = userTimer || 20 // -> [20 min. di default]
       const now = moment()
       if (!lastCall) lastCall = now
       const dateExpire = moment(lastCall).add(defaultTimeout, 'minutes')
-      const ret = now.isAfter(dateExpire)
+      let ret = null
+      if(keycloak.getStorageData('isKeycloakAuth')){
+        const expireToken = keycloak.decodeToken(keycloak.getStorageData('getRefreshToken')).exp * 1000
+        ret = now.isAfter(new Date(expireToken))
+      } else {
+        ret = now.isAfter(dateExpire)
+      }
       if (ret) {
         console.log('Uscita forzata; timeout superiore a 20 min.')
         console.log('NOW:', now.toDate())
