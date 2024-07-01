@@ -195,7 +195,7 @@ export default {
     dynamicGettersLang() {
       return siteName === 'agp'
         ? this.$store.getters.getDictionaryLang
-        : this.$store.getters.getLangCode
+        : this.$store.getters.storedLanguage
     },
     extQuery() {
       if (this.advanced) return { from: this.from, to: this.to }

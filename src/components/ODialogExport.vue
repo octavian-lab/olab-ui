@@ -526,8 +526,8 @@ export default {
       })
     },
     formatNumber(num) {
-        const valueDouble = parseFloat(num) / Math.pow(10, 2)
-        return valueDouble
+      const valueDouble = parseFloat(num) / Math.pow(10, 2)
+      return valueDouble
     },
     handlerTypeExport(key, value) {
       switch (key) {
@@ -568,7 +568,7 @@ export default {
           return this.$translate(`decode.self.exclusion.period.${value}`)
         case 'type':
         case 'platformType':
-          return this.$translate(`decode.platform.type.${value}`)
+          return `${value} - ${this.$translate(`decode.platform.type.${value}`)}`
         case 'amount':
         case 'deposit':
         case 'withdrawable':
