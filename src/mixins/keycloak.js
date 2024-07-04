@@ -102,12 +102,12 @@ export function useKeycloak() {
     // da utilizzare per info e isAuthenticated
     return keycloakStore[data]
   }
-  const logout = async () => {
+  const logout = async (clientId) => {
     const keycloakStore = useKeycloakAuthStore()
     try {
       const keycloakStore = useKeycloakAuthStore()
       keycloakStore.logout()
-      location.href = `${baseURL.value}/logout`
+      location.href = `${baseURL.value}/logout?post_logout_redirect_uri=${redirectURL.value}&client_id=${clientId}`
     } catch (e) {
       console.log(e)
     }
