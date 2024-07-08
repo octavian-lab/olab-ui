@@ -15,7 +15,7 @@ export default {
   name: 'OBulkOperationUI',
   emits: ['onHideBulk'],
   props: {
-    lottieName: { type: String, required: true },
+    lottieName: { type: String, default: () => 'g-translate' },
     serviceName: { type: String, required: true },
     serviceFunction: { type: String, required: true },
     items: { type: Array, required: true }
