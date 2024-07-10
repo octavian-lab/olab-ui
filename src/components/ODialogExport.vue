@@ -53,6 +53,14 @@
             />
 
             <Button
+              outlined
+              class="mr-3 p-button-info"
+              :label="$translate('admin.generic.change.amount.integer')"
+              icon="fad fa-swap-arrows"
+              @click="changeAmountInteger"
+            />
+
+            <Button
               v-if="useApi"
               :disabled="selectKeys.length === 0"
               class="mr-3 p-button-secondary"
@@ -195,9 +203,6 @@ export default {
     translator: { type: Boolean, default: () => true },
     currencyInExport: {
       type: Boolean
-    },
-    amountInteger: {
-      type: Boolean
     }
   },
   data() {
@@ -213,7 +218,8 @@ export default {
       templateEditValue: null,
       collapsed: true,
       lottie: { common },
-      currencyKeyCounter: 0
+      currencyKeyCounter: 0,
+      amountInteger: true
     }
   },
   watch: {
@@ -265,6 +271,10 @@ export default {
     }
   },
   methods: {
+    changeAmountInteger() {
+      this.showPrevieworExport('preview')
+      this.amountInteger = !this.amountInteger
+    },
     handleUpdateVisible() {
       this.doDeleteFilters()
       this.$modal.close()
@@ -622,7 +632,7 @@ export default {
     calcObj(obj, keysPath) {
       let ret = { ...obj }
       for (let i = 1; i < keysPath.length; i++) {
-        ret = (ret !== null && ret[keysPath[i]] ) ? ret[keysPath[i]] : null
+        ret = ret !== null && ret[keysPath[i]] ? ret[keysPath[i]] : null
       }
       return {
         value: ret,
