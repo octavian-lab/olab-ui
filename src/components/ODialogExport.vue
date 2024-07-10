@@ -272,8 +272,8 @@ export default {
   },
   methods: {
     changeAmountInteger() {
-      this.showPrevieworExport('preview')
       this.amountInteger = !this.amountInteger
+      this.showPrevieworExport('preview')
     },
     handleUpdateVisible() {
       this.doDeleteFilters()
