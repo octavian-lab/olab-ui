@@ -43,6 +43,7 @@ import OProgressBar from '@/components/OProgressBar.vue'
 import OBannerBrowserSupport from '@/components/OBannerBrowserSupport.vue'
 import OKeycloakTokenExpired from '@/components/OKeycloak/OKeycloakTokenExpired.vue'
 import OKeycloakLoginButton from '@/components/OKeycloak/OKeycloakLoginButton.vue'
+import OBulkOperationUI from '@/components/OBulkOperationUI.vue'
 
 export default {
   install: (app, options) => {
@@ -100,6 +101,7 @@ export {
   OBannerBrowserSupport,
   OKeycloakTokenExpired,
   OKeycloakLoginButton,
+  OBulkOperationUI,
   useLoading,
   useModal,
   useFunctions,
