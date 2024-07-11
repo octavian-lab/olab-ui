@@ -7,8 +7,8 @@ const baseURL = ref('https://iam.octavianlab.com/realms/stage/protocol/openid-co
 const redirectURL = ref(location.origin)
 export function useKeycloak() {
   // [METHODS]
-  const checkKeycloakAuth = async ({ apiURL, siteURL, clientId, clientSecret }) => {
-    updateEnvBaseURL(apiURL)
+  const checkKeycloakAuth = async ({ siteURL, clientId, clientSecret }) => {
+    updateEnvBaseURL()
     updateRedirectURL(siteURL)
     if (!getStorageData('isAuthenticated')) {
       // REDIRECT NELLA PAGINA DI AUTENTICAZIONE
@@ -17,11 +17,13 @@ export function useKeycloak() {
       await getAccessToken(clientId, clientSecret)
     }
   }
-  const updateEnvBaseURL = (apiURL) => {
+  const updateEnvBaseURL = () => {
     // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
-    const environment = apiURL.split('.')[0].split('/')[2]
-    if (environment === 'live') {
-      baseURL.value = baseURL.value.replace('stage', environment)
+    const site = localStorage.getItem('site')
+    const utils = JSON.parse(localStorage.getItem(`olab-ui-${site}:utils`))
+    const environment = utils.env
+    if (environment === 'production' || environment === 'live') {
+      baseURL.value = baseURL.value.replace('stage', 'live')
     }
   }
   const updateRedirectURL = (siteURL) => {
