@@ -18,12 +18,8 @@ export default {
     lottieName: { type: String, default: () => 'g-translate' },
     serviceName: { type: String, required: true },
     serviceFunction: { type: String, required: true },
-    items: { type: Array, required: true }
-  },
-  data() {
-    return {
-      API: null
-    }
+    items: { type: Array, required: true },
+    API: { type: Object, required: true }
   },
   methods: {
     doBulkOperation(object) {
