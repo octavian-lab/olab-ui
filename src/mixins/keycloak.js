@@ -18,16 +18,12 @@ export function useKeycloak() {
     }
   }
 
-
-
-
-  const updateEnvBaseURL = () => {
+  const updateEnvBaseURL = (apiURL) => {
     // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
-    const site = localStorage.getItem('site')
-    const utils = JSON.parse(localStorage.getItem(`olab-ui-${site}:utils`))
-    const environment = utils.env
-    if (environment === 'production' || environment === 'live') {
-      baseURL.value = baseURL.value.replace('stage', 'live')
+    const environment = apiURL.split('.')[0].split('/')[2]
+    if (environment === 'live') {
+      baseURL.value = baseURL.value.replace('stage', environment)
+      baseURL.value = baseURL.value.replace('stage', environment)
     }
   }
 
