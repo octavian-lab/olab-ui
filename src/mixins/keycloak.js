@@ -18,6 +18,9 @@ export function useKeycloak() {
     }
   }
 
+
+
+
   const updateEnvBaseURL = () => {
     // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
     const site = localStorage.getItem('site')
