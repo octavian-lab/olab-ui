@@ -18,7 +18,6 @@ export function useKeycloak() {
     }
   }
 
-
   const updateEnvBaseURL = (apiURL) => {
     // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
     const site = localStorage.getItem('site')
@@ -26,6 +25,7 @@ export function useKeycloak() {
     const environment = utils.env
     if (environment === 'production' || environment === 'live') {
       baseURL.value = baseURL.value.replace('stage', 'live')
+    }
   }
 
   const init = (keycloackEndpoint) => {
