@@ -1,7 +1,6 @@
 import { useKeycloakAuthStore } from '@/store/keycloak-auth.js'
 import { jwtDecode } from 'jwt-decode'
 import { ref } from 'vue'
-import { deprecated } from 'eslint-plugin-vue/lib/rules/syntaxes/v-is.js'
 // IL FILE API È IMPORTATO NELLE SINGOLE FUNZIONI CHE LO UTILIZZANO, PER AVERE LA URL CON L'ENVIRONMENT CORRETTO
 
 const baseURL = ref('https://iam.octavianlab.com/realms/stage/protocol/openid-connect')
@@ -19,14 +18,14 @@ export function useKeycloak() {
     }
   }
 
-  // @deprecated
-  // const updateEnvBaseURL = (apiURL) => {
-  //   // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
-  //   const environment = apiURL.split('.')[0].split('/')[2]
-  //   if (environment === 'live') {
-  //      baseURL.value = baseURL.value.replace('stage', environment)
-  //   }
-  // }
+  //deprecated
+  const updateEnvBaseURL = (apiURL) => {
+    // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
+    const environment = apiURL.split('.')[0].split('/')[2]
+    if (environment === 'live') {
+       baseURL.value = baseURL.value.replace('stage', environment)
+    }
+  }
 
   const init = (keycloackEndpoint) => {
     baseURL.value = keycloackEndpoint
