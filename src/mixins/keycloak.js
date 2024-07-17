@@ -18,7 +18,7 @@ export function useKeycloak() {
     }
   }
 
-  //deprecated
+
   const updateEnvBaseURL = (apiURL) => {
     // AGGIORNA L'API URL IN BASE ALL'ENVIRONMENT
     const environment = apiURL.split('.')[0].split('/')[2]
