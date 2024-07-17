@@ -26,6 +26,11 @@ export function useKeycloak() {
       baseURL.value = baseURL.value.replace('stage', 'live')
     }
   }
+
+  const init = (keycloackEndpoint) => {
+    baseURL.value = keycloackEndpoint
+  }
+
   const updateRedirectURL = (siteURL) => {
     if (!location.origin.includes('localhost:')) {
       redirectURL.value = `${location.origin}${siteURL}`
@@ -119,6 +124,7 @@ export function useKeycloak() {
     baseURL: baseURL,
     logout,
     checkKeycloakAuth,
+    init,
     checkAndRefreshToken,
     updateStoreInfo,
     updateEnvBaseURL,
