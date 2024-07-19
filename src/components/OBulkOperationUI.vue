@@ -18,12 +18,8 @@ export default {
     lottieName: { type: String, default: () => 'g-translate' },
     serviceName: { type: String, required: true },
     serviceFunction: { type: String, required: true },
-    items: { type: Array, required: true }
-  },
-  data() {
-    return {
-      API: null
-    }
+    items: { type: Array, required: true },
+    api: { type: Object, required: true }
   },
   methods: {
     doBulkOperation(object) {
@@ -33,7 +29,7 @@ export default {
       }
       let currentIndex = this.items.findIndex((item) => item.id === object.id)
       const nextIndex = ++currentIndex
-      return this.API[`${this.serviceName}`]
+      return this.api[`${this.serviceName}`]
         [`${this.serviceFunction}`](object)
         .then(() => {
           if (this.items[nextIndex]) {
