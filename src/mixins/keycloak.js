@@ -51,6 +51,14 @@ export function useKeycloak() {
     }
     // API PER PRENDERE IL TOKEN DI AUTENTICAZIONE PER EFFETTUARE LE API
     try {
+      //PULISCO STORAGE PRIMA DI EFFETTUARE IL LOGIN
+      const keycloakStore = useKeycloakAuthStore()
+      keycloakStore.updateInfo(null)
+      keycloakStore.updateTokens({
+        id: null,
+        refresh: null,
+        expire: 0
+      })
       const APIFile = async () => await import('@/api/keycloak/index.js')
       const API = await APIFile()
       const code = location.href.split('code=')[1].split('#')[0]
