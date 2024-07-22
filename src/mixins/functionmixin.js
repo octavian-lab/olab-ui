@@ -99,7 +99,7 @@ export default {
       let ret = null
       if(keycloak.getStorageData('isKeycloakAuth')){
         const expireToken = keycloak.decodeToken(keycloak.getStorageData('getRefreshToken')).exp * 1000
-        ret = now.isAfter(new Date(expireToken))
+        ret = expireToken && now.isAfter(new Date(expireToken))
       } else {
         ret = now.isAfter(dateExpire)
       }
