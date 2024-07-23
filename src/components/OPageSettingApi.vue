@@ -44,22 +44,11 @@
           <div>
             <Button
               class="mr-3 p-button-secondary"
-              @click="$emit('onAddTemplate', 0)"
-              v-tooltip.bottom="$translate('admin.filter.store.search.global')"
+              @click="$emit('onAddTemplate')"
+              :label="$translate('admin.filter.store.search')"
+              icon="fad fa-floppy-disk mr-2"
               :loading="$loading.isLoading('add')"
-            >
-              <i class="fad fa-floppy-disk mr-2"></i>
-              <i class="fad fa-globe"></i>
-            </Button>
-            <Button
-              class="mr-3"
-              @click="$emit('onAddTemplate', 1)"
-              v-tooltip.bottom="$translate('admin.filter.store.search.personal')"
-              :loading="$loading.isLoading('add')"
-            >
-              <i class="fad fa-floppy-disk mr-2"></i>
-              <i class="fad fa-user"></i>
-            </Button>
+            />
           </div>
         </div>
       </template>
@@ -215,8 +204,7 @@ export default {
       if (mode === 'edit') {
         this.$emit('onEditTemplate', {
           data,
-          name: this.$modal.data.templateEditName,
-          mode: this.$modal.data.templateEditMode
+          name: this.$modal.data.templateEditName
         })
         this.$modal.data.templateEditCheck = null
         this.$modal.data.templateEditName = null

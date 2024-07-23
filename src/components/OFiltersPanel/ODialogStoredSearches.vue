@@ -76,13 +76,12 @@ export default {
         this.$loading.stop('search')
       }
     },
-    async doAddTemplateApi(mode) {
+    async doAddTemplateApi() {
       this.$loading.start('add')
       const json = {
         key: this.$modal.data.key,
         name: `${this.$modal.data.key} - ${this.$modal.data.list.length}`,
         value: JSON.stringify(this.query),
-        mode: mode,
         type: this.$modal.data.type
       }
 
@@ -110,11 +109,10 @@ export default {
         console.log(e)
       }
     },
-    async doEditTemplateApi({ data, name, mode }) {
+    async doEditTemplateApi({ data, name }) {
       this.$loading.start('edit')
       const json = {
-        name: name,
-        mode: mode
+        name: name
       }
 
       try {
