@@ -64,23 +64,10 @@
               v-if="useApi"
               :disabled="selectKeys.length === 0"
               class="mr-3 p-button-secondary"
-              @click="doAddTemplateApi([...selectKeys], 0)"
-              v-tooltip.bottom="$translate('admin.filter.store.template.global')"
-            >
-              <i class="fad fa-floppy-disk mr-2"></i>
-              <i class="fad fa-globe"></i>
-            </Button>
-            <Button
-              v-if="useApi"
-              :disabled="selectKeys.length === 0"
-              class="mr-3"
-              @click="doAddTemplateApi([...selectKeys], 1)"
-              v-tooltip.bottom="$translate('admin.filter.store.template.personal')"
-              :loading="$loading.isLoading('add')"
-            >
-              <i class="fad fa-floppy-disk p-mr-2"></i>
-              <i class="fad fa-user"></i>
-            </Button>
+              :label="$translate('admin.filter.store.template')"
+              icon="fad fa-floppy-disk mr-2"
+              @click="doAddTemplateApi([...selectKeys])"
+            />
 
             <Button
               v-if="!useApi"
@@ -358,13 +345,12 @@ export default {
         this.$loading.stop('search')
       }
     },
-    async doAddTemplateApi(template, mode) {
+    async doAddTemplateApi(template) {
       this.$loading.start('add')
       const json = {
         key: this.$modal.data.key,
         name: `${this.$modal.data.key} - ${this.globalExportTemplates.length}`,
         value: JSON.stringify(template),
-        mode: mode,
         type: this.$modal.data.type
       }
 
@@ -392,11 +378,10 @@ export default {
         console.log(e)
       }
     },
-    async doEditTemplateApi({ data, name, mode }) {
+    async doEditTemplateApi({ data, name }) {
       this.$loading.start('edit')
       const json = {
-        name: name,
-        mode: mode
+        name: name
       }
 
       try {

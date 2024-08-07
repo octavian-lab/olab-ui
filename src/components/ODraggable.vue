@@ -193,7 +193,6 @@ export default {
         key: this.currentPageName,
         name: `${this.currentPageName}-layout`,
         value: JSON.stringify(this.elements),
-        mode: 0,
         type: 2
       }
 
@@ -209,7 +208,6 @@ export default {
       const json = {
         name: this.currentPageName,
         value: JSON.stringify(this.elements),
-        mode: 0,
         type: 2
       }
 
