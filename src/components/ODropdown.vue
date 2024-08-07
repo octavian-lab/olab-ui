@@ -204,11 +204,6 @@ export default {
         case 'sites':
           ret = [...this.$store.getters[this.options]]
           break
-        case 'platforms':
-          ret = this.$store.getters.info.idLicensee
-            ? [...this.$store.getters.platformsByLicensee]
-            : [...this.$store.getters.platforms]
-          break
       }
       this.results = this.elaborate(
         this.generateSelects(ret, 'id', 'description'),
