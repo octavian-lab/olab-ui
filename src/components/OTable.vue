@@ -82,7 +82,7 @@
     </template>
     <template #empty>
       <div class="grid grid-nogutter text-center">
-        <OLottie :name="lottieName" />
+        <OLottie v-if="showLottie" :name="lottieName" />
         <div class="col-12 text-center font-bold">
           {{ $translate('admin.generic.empty.results') }}
         </div>
@@ -118,6 +118,10 @@ export default {
   name: 'OTable',
   props: {
     // PROPS OLAB
+    showLottie: {
+      type: Boolean,
+      default: () => true
+    },
     useApi: {
       type: Boolean,
       default: () => false
