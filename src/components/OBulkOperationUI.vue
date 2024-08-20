@@ -27,10 +27,11 @@ export default {
         this.$emit('onHideBulk')
         return
       }
+      const { id, ...objectWithoutId } = object
       let currentIndex = this.items.findIndex((item) => item.id === object.id)
       const nextIndex = ++currentIndex
       return this.api[`${this.serviceName}`]
-        [`${this.serviceFunction}`](object)
+        [`${this.serviceFunction}`](objectWithoutId)
         .then(() => {
           if (this.items[nextIndex]) {
             this.doBulkOperation(this.items[nextIndex])
