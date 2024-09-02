@@ -15,6 +15,7 @@ const useLoading = () => loadingplugin.loading
 
 // FILTERS IMPORT
 import asDate from './filters/asDate.js'
+import toJSDate from './filters/toJSDate.js'
 import asAmount from './filters/asAmount.js'
 import toAmount from './filters/toAmount.js'
 import asHHmm from './filters/asHHmm.js'
@@ -70,6 +71,7 @@ export default {
     app.config.globalProperties.$translate = options.fxTranslate
     app.config.globalProperties.$filters = {
       asDate,
+      toJSDate,
       asAmount,
       asHHmm,
       toAmount,
