@@ -173,7 +173,7 @@ export default {
       }
     },
     // Trasformazione da oggetto calendar smart a query per tutti i panels.
-    modelValue: {
+    modelValueCopy: {
       deep: true,
       handler(vmodel, oldVal) {
         if (!vmodel) {
@@ -192,6 +192,12 @@ export default {
     }
   },
   computed: {
+    //sono obbligato a fare una copia del modelValue per il caso dell'oggetto, perchè anche utilizzando il deep nella watch
+    //viene guardata la referenza quindi oldVal e newVal sono sempre uguali
+    modelValueCopy(){
+      if (this.advanced) return JSON.parse(JSON.stringify(this.modelValue))
+      return this.modelValue
+    },
     dynamicGettersLang() {
       return siteName === 'agp'
           ? this.$store.getters.getDictionaryLang
@@ -276,7 +282,7 @@ export default {
         return
       }
       const emitValue = (resource) => {
-        if (!oldVal || !this.compareDate(this.$filters.toJSDate(oldVal.date[resource], false), val.date[resource], 'equal')) {
+        if ((!oldVal || Object.entries(oldVal).length === 0) || !this.compareDate(oldVal.date[resource], val.date[resource], 'equal')) {
           const valueToEmit = this.$filters.toJSDate(val.date[resource], false)
           this.$emit(`update:${resource}`, valueToEmit)
         }
