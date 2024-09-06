@@ -1,6 +1,7 @@
 // STORE IMPORT
 import { store } from '@/store/index.js'
-
+import { setActivePinia } from "pinia";
+setActivePinia(store())
 // GLOBAL PLUGINS IMPORT
 import loadingplugin from '@/plugins/loadingplugin.js'
 import modalplugin from '@/plugins/modalplugin.js'
