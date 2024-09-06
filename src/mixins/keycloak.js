@@ -42,7 +42,6 @@ export function useKeycloak() {
     }
     // REDIRECT ALLA PAGINA DI LOGIN DI KEYCLOAK
     const keycloakStore = useKeycloakAuthStore()
-    keycloakStore.updateKeycloakAuth(true)
     location.href = `${baseURL.value}/auth?client_id=${clientId}&redirect_uri=${redirectURL.value}&scope=olab-profile olab-app openid&response_type=code&state4b0d44ba2e152425e9c8a70f2a3fe2bb1a83ff50`
   }
   const getAccessToken = async (clientId, clientSecret) => {
@@ -69,6 +68,7 @@ export function useKeycloak() {
         code
       }
       const { data } = await API.default.auth.getAccessToken(json)
+      keycloakStore.updateKeycloakAuth(true)
       updateStoreInfo(data)
       const homeCleanedUrl = `${window.url || ''}${window.location.pathname || ''}`
       window.history.replaceState(null, '', homeCleanedUrl)

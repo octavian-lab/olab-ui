@@ -1,4 +1,5 @@
 import axios from 'axios'
+import {useKeycloak} from '@/mixins/keycloak.js'
 
 const ENDPOINTS = {
   stage: {
@@ -21,7 +22,7 @@ const axiosConfig = () => {
     timeout: 15000,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: getUtils().token ? `token ${getUtils().token}` : ''
+      Authorization: getUtils().token ? `${useKeycloak().getStorageData('isKeycloakAuth') ? 'JWTIDP' : 'token'} ${getUtils().token}` : ''
     }
   }
 }
