@@ -92,7 +92,6 @@
 </template>
 <script>
 import moment from 'moment'
-import momentTZ from 'moment-timezone'
 import Datemixin from '@/mixins/datemixin.js'
 import OCalendarButtons from '@/components/OCalendar/OCalendarButtons.vue'
 import OCalendarCustomButtons from '@/components/OCalendar/OCalendarCustomButtons.vue'
@@ -166,6 +165,7 @@ export default {
       if (this.advanced) {
         if (!val.from && !val.to) this.doReset()
         if (val && typeof val.from === 'string' && this.advanced) {
+          if(this.modelValue && (this.modelValue.value === 3 || this.modelValue.value === 5)) return
           this.modelValue = this.getNumberFromDate()
         }
       } else {
