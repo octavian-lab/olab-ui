@@ -11,7 +11,7 @@
     >
       <i class="fad fa-info-circle mr-2" v-if="tooltip" />
       <span :class="{ 'text-disabled': disabled }">
-        {{ $translate(`admin.field.${name}`, label) }}
+        {{ setName() }}
       </span>
       <span v-if="required" class="ml-1">*</span>
       <OverlayPanel ref="tooltip-ofield">
@@ -34,9 +34,15 @@ export default {
     col: { type: [String, Object], default: () => '12' },
     required: { type: Boolean, default: () => false },
     inline: { type: Boolean, default: () => false },
-    disabled: { type: Boolean, default: () => false }
+    disabled: { type: Boolean, default: () => false },
+    translatedLabel: { type: Boolean, default: () => false }
   },
   methods: {
+    setName() {
+      return !this.translatedLabel
+        ? this.$translate(`admin.field.${this.name}`, this.label)
+        : this.name
+    },
     setTranslateKeyAttribute(prefix, name) {
       return this.$translate(prefix + name, '', true)
         .replaceAll('-', '')
