@@ -179,6 +179,7 @@ export default {
         if (!vmodel) {
           this.$emit('update:from', null)
           this.$emit('update:to', null)
+          this.handleDateEmit(vmodel)
           return
         }
         if (vmodel?.date != null && this.advanced) {
