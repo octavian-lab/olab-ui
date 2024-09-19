@@ -302,7 +302,7 @@ export default {
         return this.selects.calendarOptions.find((el) => el.value === value)
       }
     },
-    getNumberFromDate() {
+    getNumberFromDate(isOnMounted) {
       let ret
       let tmp
       let date = JSON.stringify({from: this.from, to: this.to})
@@ -310,9 +310,9 @@ export default {
         ret = null
         return ret
       }
-      const today = JSON.stringify(this.getCalendarOption(1).date)
-      const yesterday = JSON.stringify(this.getCalendarOption(2).date)
-      const currMonth = JSON.stringify(this.getCalendarOption(4).date)
+      const today = JSON.stringify(this.getCalendarOption(1)?.date)
+      const yesterday = JSON.stringify(this.getCalendarOption(2)?.date)
+      const currMonth = JSON.stringify(this.getCalendarOption(4)?.date)
       // N.B. Il case 6 viene escluso dalla pre-valorizzazione ( poiché viene usato in modalità "Range" )
       switch (date) {
         case today:
@@ -333,6 +333,7 @@ export default {
           }
           return tmp
       }
+      if(isOnMounted) this.startValue = ret
       return this.getCalendarOption(ret)
     },
     // TODO rendere globale se necessario ( se utilizzata 2 volte )
@@ -457,7 +458,7 @@ export default {
   },
   mounted() {
     if (this.advanced) {
-      this.modelValue = this.getNumberFromDate()
+      this.modelValue = this.getNumberFromDate(true)
       this.getPreviousMonths()
     } else {
       if (!this.empty) {
