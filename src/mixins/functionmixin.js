@@ -15,7 +15,7 @@ export default {
   },
   methods: {
     // UTILITY
-    isDisabled(data, arr) {
+    isButtonDisabled(data, arr) {
       return arr.some((key) => {
         return data[key] == null || (typeof data[key] === 'string' && data[key].trim() === '')
       })
