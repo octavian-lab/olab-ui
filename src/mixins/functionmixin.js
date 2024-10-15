@@ -15,6 +15,11 @@ export default {
   },
   methods: {
     // UTILITY
+    isDisabled(data, arr) {
+      return arr.some((key) => {
+        return data[key] == null || (typeof data[key] === 'string' && data[key].trim() === '')
+      })
+    },
     imgUrl(path, format = 'png') {
       if (path.startsWith('/')) path.replace('/', '')
       return `https://cdn.octavianlab.com/v3/bo/${this.site}/${path}.${format}`
@@ -97,8 +102,9 @@ export default {
       if (!lastCall) lastCall = now
       const dateExpire = moment(lastCall).add(defaultTimeout, 'minutes')
       let ret = null
-      if(keycloak.getStorageData('isKeycloakAuth')){
-        const expireToken = keycloak.decodeToken(keycloak.getStorageData('getRefreshToken')).exp * 1000
+      if (keycloak.getStorageData('isKeycloakAuth')) {
+        const expireToken =
+          keycloak.decodeToken(keycloak.getStorageData('getRefreshToken')).exp * 1000
         ret = expireToken && now.isAfter(new Date(expireToken))
       } else {
         ret = now.isAfter(dateExpire)
@@ -110,14 +116,14 @@ export default {
       }
       return ret
     },
-    getRandomColor(){
-      let letters = '0123456789ABCDEF'.split('');
-      let color = '#';
-      for (let i = 0; i < 6; i++ ) {
-        color += letters[Math.floor(Math.random() * 16)];
+    getRandomColor() {
+      let letters = '0123456789ABCDEF'.split('')
+      let color = '#'
+      for (let i = 0; i < 6; i++) {
+        color += letters[Math.floor(Math.random() * 16)]
       }
-      return color;
-    },
+      return color
+    }
     // TODO
     /*setTranslateKeyAttribute(prefix, name) {
             return this.$translate(prefix + name, '', true)
