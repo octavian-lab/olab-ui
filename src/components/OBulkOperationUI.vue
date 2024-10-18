@@ -19,7 +19,8 @@ export default {
     serviceName: { type: String, required: true },
     serviceFunction: { type: String, required: true },
     items: { type: Array, required: true },
-    api: { type: Object, required: true }
+    api: { type: Object, required: true },
+    removeIdForMultilanguage: { type: Boolean, default: () => false }
   },
   methods: {
     doBulkOperation(object) {
@@ -27,11 +28,15 @@ export default {
         this.$emit('onHideBulk')
         return
       }
-      const { id, ...objectWithoutId } = object
+      let json = object
+      if (this.removeIdForMultilanguage) {
+        const { id, ...objectWithoutId } = object
+        json = objectWithoutId
+      }
       let currentIndex = this.items.findIndex((item) => item.id === object.id)
       const nextIndex = ++currentIndex
       return this.api[`${this.serviceName}`]
-        [`${this.serviceFunction}`](objectWithoutId)
+        [`${this.serviceFunction}`](json)
         .then(() => {
           if (this.items[nextIndex]) {
             this.doBulkOperation(this.items[nextIndex])
