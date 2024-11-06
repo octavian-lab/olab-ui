@@ -48,11 +48,11 @@ export default {
         })
         .catch((e) => {
           console.log(e)
-          this.toast('error', e)
           if (this.items[nextIndex]) {
             this.doBulkOperation(this.items[nextIndex])
           } else {
             this.$loading.stop('bulk')
+            this.toast('error', e)
             this.$emit('onHideBulk')
           }
         })
