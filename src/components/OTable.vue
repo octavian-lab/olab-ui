@@ -85,7 +85,7 @@
     <template #empty>
       <div class="grid grid-nogutter text-center">
         <OLottie v-if="showLottie" :name="lottieName" />
-        <div class="col-12 my-5 text-center font-bold">
+        <div class="col-12 my-2 text-center font-bold">
           {{ $translate('admin.generic.empty.results') }}
         </div>
       </div>
