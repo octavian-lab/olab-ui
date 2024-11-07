@@ -60,6 +60,7 @@
           <Button
             v-if="exportable"
             class="hidden md:inline-flex p-button-outlined ml-2"
+            :class="headerButtonsStyle"
             icon="fad fa-external-link"
             :label="$translate('admin.generic.action.export')"
             @click="doExport($event)"
@@ -68,6 +69,7 @@
           <Button
             v-if="!isDesktop && showHandleResponsiveLayout"
             class="p-button-sm p-button-secondary ml-2"
+            :class="headerButtonsStyle"
             :label="$translate('admin.generic.view')"
             :icon="`fad ${handlerResponsiveLayout('icon', refResponsiveLayout)}`"
             @click="handlerResponsiveLayout('handle', refResponsiveLayout)"
@@ -83,7 +85,7 @@
     <template #empty>
       <div class="grid grid-nogutter text-center">
         <OLottie v-if="showLottie" :name="lottieName" />
-        <div class="col-12 text-center font-bold">
+        <div class="col-12 my-5 text-center font-bold">
           {{ $translate('admin.generic.empty.results') }}
         </div>
       </div>
@@ -204,6 +206,10 @@ export default {
     selectionMode: {
       type: [String, Boolean],
       default: () => false
+    },
+    headerButtonsStyle: {
+      type: String,
+      default: () => ''
     }
   },
   data() {
