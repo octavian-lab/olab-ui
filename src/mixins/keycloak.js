@@ -4,7 +4,7 @@ import { ref } from 'vue'
 // IL FILE API È IMPORTATO NELLE SINGOLE FUNZIONI CHE LO UTILIZZANO, PER AVERE LA URL CON L'ENVIRONMENT CORRETTO
 
 const baseURL = ref('https://iam.octavianlab.com/realms/stage/protocol/openid-connect')
-const redirectURL = ref(location.origin)
+const redirectURL = ref(`${location.origin}${location.pathname}`)
 export function useKeycloak() {
   // [METHODS]
   const checkKeycloakAuth = async ({ siteURL, clientId, clientSecret }) => {
@@ -33,7 +33,7 @@ export function useKeycloak() {
 
   const updateRedirectURL = (siteURL) => {
     if (!location.origin.includes('localhost:')) {
-      redirectURL.value = `${location.origin}${siteURL}`
+      console.log('siteUrl',siteURL)
     }
   }
   const getAccessCode = (clientId) => {
