@@ -104,7 +104,7 @@
     </ColumnGroup>
     <slot name="content" />
     <ODialogExport
-      v-if="$modal.isVisible('ODialogExport') && exportable"
+      v-if="this.$modal.isVisible('ODialogExport') && isDialogExportVisible"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
@@ -220,7 +220,8 @@ export default {
       expandedRows: [],
       lottie: null,
       filters: this.filtersModel ? { ...this.filtersModel } : null,
-      selectedColumns: []
+      selectedColumns: [],
+      isDialogExportVisible: false
     }
   },
   computed: {
@@ -320,11 +321,24 @@ export default {
       }
 
       this.$emit('onColumnSelect', { value: this.selectedColumns })
+    },
+    setDialogExportVisibility(visible) {
+      if (!this.exportable) return
+
+      let counter = parseInt(sessionStorage.getItem('exportCounter') || '0', 10)
+      counter = visible ? counter + 1 : 0
+
+      sessionStorage.setItem('exportCounter', String(counter))
+      this.isDialogExportVisible = counter === 1
     }
   },
   created() {
+    let counter = parseInt(sessionStorage.getItem('exportCounter') || '0', 10)
+    if (counter > 1) {
+      sessionStorage.setItem('exportCounter', '0')
+    }
+    this.setDialogExportVisibility(true)
     if (!this.dynamicColumns) return
-
     this.handlerDymanicColumns()
   },
   mounted() {
@@ -334,6 +348,9 @@ export default {
         this.refResponsiveLayout = responsiveTable
       }
     }
+  },
+  unmounted() {
+    this.setDialogExportVisibility(false)
   }
 }
 </script>

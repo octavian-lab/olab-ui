@@ -8,7 +8,7 @@
     @update:visible="handleUpdateVisible()"
     position="top"
     modal
-    :draggable="false"
+    :draggable="true"
   >
     <template #header>
       <div class="dialog-title">
