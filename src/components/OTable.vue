@@ -104,7 +104,7 @@
     </ColumnGroup>
     <slot name="content" />
     <ODialogExport
-      v-if="this.$modal.isVisible('ODialogExport') && this.exportable && isDialogExportVisible"
+      v-if="$modal.isVisible('ODialogExport') && exportable && isDialogExportVisible"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
@@ -323,8 +323,12 @@ export default {
       this.$emit('onColumnSelect', { value: this.selectedColumns })
     },
     setDialogExportVisibility() {
+      if (!this.exportable) return
+      // Creo una costante 'counter' alla quale assegno un Integer. Prendo la stringa della session, se assente metto '0'. Trasformo la stringa in Integer ed aggiungo 1.
       const counter = parseInt(sessionStorage.getItem('o-dialog-export-counter') || '0', 10) + 1
+      // Assegno o aggiorno il valore della session con il value 'counter'
       sessionStorage.setItem('o-dialog-export-counter', String(counter))
+      //Considerando che posso aprire solo una ODialogExport per volta e che la dialog è ri-utilizzabile. L'unica dialog che sarà renderizzata sarà quella della prima table che ha un'exportable.
       this.isDialogExportVisible = counter === 1
     }
   },
@@ -340,11 +344,14 @@ export default {
         this.refResponsiveLayout = responsiveTable
       }
     }
+  },
+  unmounted() {
+    sessionStorage.removeItem('o-dialog-export-counter')
   }
 }
 
-window.addEventListener('beforeunload', (event) => {
-  sessionStorage.setItem('o-dialog-export-counter', '0')
+window.addEventListener('beforeunload', () => {
+  sessionStorage.removeItem('o-dialog-export-counter')
 })
 </script>
 
