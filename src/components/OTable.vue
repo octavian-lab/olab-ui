@@ -324,11 +324,8 @@ export default {
     },
     setDialogExportVisibility() {
       if (!this.exportable) return
-      // Creo una costante 'counter' alla quale assegno un Integer. Prendo la stringa della session, se assente metto '0'. Trasformo la stringa in Integer ed aggiungo 1.
       const counter = parseInt(sessionStorage.getItem('o-dialog-export-counter') || '0', 10) + 1
-      // Assegno o aggiorno il valore della session con il value 'counter'
       sessionStorage.setItem('o-dialog-export-counter', String(counter))
-      //Considerando che posso aprire solo una ODialogExport per volta e che la dialog è ri-utilizzabile. L'unica dialog che sarà renderizzata sarà quella della prima table che ha un'exportable.
       this.isDialogExportVisible = counter === 1
     }
   },
