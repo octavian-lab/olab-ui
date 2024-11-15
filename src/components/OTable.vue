@@ -104,7 +104,7 @@
     </ColumnGroup>
     <slot name="content" />
     <ODialogExport
-      v-if="this.$modal.isVisible('ODialogExport') && isDialogExportVisible"
+      v-if="this.$modal.isVisible('ODialogExport') && this.exportable && isDialogExportVisible"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
@@ -322,22 +322,14 @@ export default {
 
       this.$emit('onColumnSelect', { value: this.selectedColumns })
     },
-    setDialogExportVisibility(visible) {
-      if (!this.exportable) return
-
-      let counter = parseInt(sessionStorage.getItem('exportCounter') || '0', 10)
-      counter = visible ? counter + 1 : 0
-
-      sessionStorage.setItem('exportCounter', String(counter))
+    setDialogExportVisibility() {
+      const counter = parseInt(sessionStorage.getItem('o-dialog-export-counter') || '0', 10) + 1
+      sessionStorage.setItem('o-dialog-export-counter', String(counter))
       this.isDialogExportVisible = counter === 1
     }
   },
   created() {
-    let counter = parseInt(sessionStorage.getItem('exportCounter') || '0', 10)
-    if (counter > 1) {
-      sessionStorage.setItem('exportCounter', '0')
-    }
-    this.setDialogExportVisibility(true)
+    this.setDialogExportVisibility()
     if (!this.dynamicColumns) return
     this.handlerDymanicColumns()
   },
@@ -348,11 +340,12 @@ export default {
         this.refResponsiveLayout = responsiveTable
       }
     }
-  },
-  unmounted() {
-    this.setDialogExportVisibility(false)
   }
 }
+
+window.addEventListener('beforeunload', (event) => {
+  sessionStorage.setItem('o-dialog-export-counter', '0')
+})
 </script>
 
 <style lang="scss">
