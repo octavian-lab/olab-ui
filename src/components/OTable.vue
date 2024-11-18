@@ -104,7 +104,7 @@
     </ColumnGroup>
     <slot name="content" />
     <ODialogExport
-      v-if="$modal.isVisible('ODialogExport') && exportable && isDialogExportVisible"
+      v-if="$modal.isVisible('ODialogExport') && exportable"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
@@ -220,8 +220,7 @@ export default {
       expandedRows: [],
       lottie: null,
       filters: this.filtersModel ? { ...this.filtersModel } : null,
-      selectedColumns: [],
-      isDialogExportVisible: false
+      selectedColumns: []
     }
   },
   computed: {
@@ -309,6 +308,7 @@ export default {
       }
     },
     handlerDymanicColumns() {
+      if (!this.dynamicColumns) return
       const tmp = this.useSettingsStore.getDynamicColumns(this.currentPageName)
       if (tmp) {
         this.selectedColumns = tmp
@@ -321,35 +321,21 @@ export default {
       }
 
       this.$emit('onColumnSelect', { value: this.selectedColumns })
-    },
-    setDialogExportVisibility() {
-      if (!this.exportable) return
-      const counter = parseInt(sessionStorage.getItem('o-dialog-export-counter') || '0', 10) + 1
-      sessionStorage.setItem('o-dialog-export-counter', String(counter))
-      this.isDialogExportVisible = counter === 1
     }
   },
   created() {
-    this.setDialogExportVisibility()
-    if (!this.dynamicColumns) return
     this.handlerDymanicColumns()
   },
   mounted() {
+    sessionStorage.setItem('o-dialog-export-counter', '0')
     if (!this.isDesktop && this.showHandleResponsiveLayout) {
       const responsiveTable = this.useSettingsStore.getResponsiveTables(this.currentPageName)
       if (responsiveTable) {
         this.refResponsiveLayout = responsiveTable
       }
     }
-  },
-  unmounted() {
-    sessionStorage.removeItem('o-dialog-export-counter')
   }
 }
-
-window.addEventListener('beforeunload', () => {
-  sessionStorage.removeItem('o-dialog-export-counter')
-})
 </script>
 
 <style lang="scss">

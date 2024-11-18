@@ -3,12 +3,12 @@
     id="dialog-global-export"
     :dismissableMask="false"
     :style="{ width: '95vw' }"
-    :visible="$modal.isVisible($options.name)"
+    :visible="$modal.isVisible($options.name) && isDialogVisible"
     :breakpoints="{ '960px': '75vw', '640px': '95%' }"
     @update:visible="handleUpdateVisible()"
     position="top"
     modal
-    :draggable="true"
+    :draggable="false"
   >
     <template #header>
       <div class="dialog-title">
@@ -206,7 +206,8 @@ export default {
       collapsed: true,
       lottie: { common },
       currencyKeyCounter: 0,
-      amountInteger: true
+      amountInteger: true,
+      isDialogVisible: false
     }
   },
   watch: {
@@ -741,11 +742,17 @@ export default {
     }
   },
   mounted() {
+    const counter = parseInt(sessionStorage.getItem('o-dialog-export-counter'))
+    this.isDialogVisible = counter === 0
+    sessionStorage.setItem('o-dialog-export-counter', String(counter + 1))
     if (!this.useApi) {
       this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
         this.currentPageName
       )
     }
+  },
+  unmounted() {
+    sessionStorage.setItem('o-dialog-export-counter', '0')
   }
 }
 </script>
