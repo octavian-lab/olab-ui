@@ -308,6 +308,7 @@ export default {
       }
     },
     handlerDymanicColumns() {
+      if (!this.dynamicColumns) return
       const tmp = this.useSettingsStore.getDynamicColumns(this.currentPageName)
       if (tmp) {
         this.selectedColumns = tmp
@@ -323,11 +324,10 @@ export default {
     }
   },
   created() {
-    if (!this.dynamicColumns) return
-
     this.handlerDymanicColumns()
   },
   mounted() {
+    sessionStorage.setItem('o-dialog-export-counter', '0')
     if (!this.isDesktop && this.showHandleResponsiveLayout) {
       const responsiveTable = this.useSettingsStore.getResponsiveTables(this.currentPageName)
       if (responsiveTable) {
