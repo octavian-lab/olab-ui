@@ -594,6 +594,7 @@ export default {
         case 'winBonus':
         case 'winTotal':
         case 'profitUndefined':
+        case 'award':
           if (this.amountInteger && !this.currencyInExport) {
             return value
           }
