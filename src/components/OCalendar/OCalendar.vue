@@ -58,7 +58,7 @@
         <Calendar
             v-model="modelValue.date.from"
             class="animate__animated animate__fadeIn"
-            showTime
+            :showTime="$attrs.showTime != null ? $attrs.showTime : true"
             :placeholder="$translate('admin.generic.from')"
             dateFormat="dd/mm/yy"
             icon="fad fa-calendar"
@@ -71,7 +71,7 @@
         <Calendar
             class="animate__animated animate__fadeIn"
             v-model="modelValue.date.to"
-            showTime
+            :showTime="$attrs.showTime != null ? $attrs.showTime : true"
             :placeholder="$translate('admin.generic.to')"
             dateFormat="dd/mm/yy"
             icon="fad fa-calendar"
