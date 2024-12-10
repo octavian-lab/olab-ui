@@ -20,7 +20,7 @@
     v-model:expandedRows="expandedRows"
     v-model:filters="filters"
     paginator-position="both"
-    :rows="50"
+    :rows="$attrs.rows || 50"
     :currentPageReportTemplate="getDtTemplate('currentPageReport')"
     :paginatorTemplate="getDtTemplate('paginator')"
     class="p-datatable-sm p-datatable-striped dt-text-responsive"
@@ -33,7 +33,7 @@
     autoLayout
     :paginator="paginator && value?.length > 0"
     :loading="loading || $loading.isLoading('search')"
-    :rowsPerPageOptions="rowsPerPageOptions"
+    :rowsPerPageOptions="$attrs.rowsPerPageOptions || rowsPerPageOptions"
     :responsiveLayout="refResponsiveLayout"
     sortMode="multiple"
     v-bind="$attrs"
