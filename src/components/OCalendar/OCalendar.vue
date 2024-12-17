@@ -60,7 +60,8 @@
             class="animate__animated animate__fadeIn"
             :showTime="$attrs.showTime != null ? $attrs.showTime : true"
             :placeholder="$translate('admin.generic.from')"
-            dateFormat="dd/mm/yy"
+            :dateFormat="$attrs.dateFormat != null ? $attrs.dateFormat : 'dd/mm/yy'"
+            :view="$attrs.view != null ? $attrs.view : 'date'"
             icon="fad fa-calendar"
             hide-on-date-time-select
             :touch-u-i="!isDesktop"
