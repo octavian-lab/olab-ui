@@ -127,31 +127,7 @@ export default {
       selects: {
         calendarOptions: [],
         previousMonths: [],
-        periods: [
-          {
-            label: this.$translate('admin.generic.calendar.this.week'),
-            value: {
-              date: {
-                from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toISOString(),
-                to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toISOString()
-              }
-            }
-          },
-          {
-            label: this.$translate('admin.generic.calendar.last.week'),
-            value: {
-              date: {
-                from: this.getMidNight(
-                  this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
-                ).toISOString(),
-                to: this.getMidNight(
-                  this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
-                ).toISOString()
-              }
-            }
-          },
-          ...this.generatePeriods()
-        ]
+        periods: []
       }
     }
   },
@@ -185,6 +161,11 @@ export default {
         if (!this.advanced && (!oldVal || !this.compareDate(oldVal, vmodel, 'equal'))) {
           this.handleDateEmit(vmodel, oldVal)
         }
+      }
+    },
+    mode(newMode) {
+      if (['more-months'].includes(newMode) && this.defaultDropdownOptions.length > 0) {
+        this.modelValue = this.defaultDropdownOptions[0].value
       }
     }
   },
@@ -353,6 +334,30 @@ export default {
     generatePeriods() {
       const arr = [3, 7, 15, 30, 60, 90]
       let ret = []
+      ret.push(
+        {
+          label: this.$translate('admin.generic.calendar.this.week'),
+          value: {
+            date: {
+              from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toISOString(),
+              to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toISOString()
+            }
+          }
+        },
+        {
+          label: this.$translate('admin.generic.calendar.last.week'),
+          value: {
+            date: {
+              from: this.getMidNight(
+                this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+              ).toISOString(),
+              to: this.getMidNight(
+                this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+              ).toISOString()
+            }
+          }
+        }
+      )
       arr.forEach((el) => {
         ret.push({
           label: this.$translate('admin.generic.last.days.' + el),
