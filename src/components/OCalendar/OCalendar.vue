@@ -339,8 +339,8 @@ export default {
           label: this.$translate('admin.generic.calendar.this.week'),
           value: {
             date: {
-              from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toISOString(),
-              to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toISOString()
+              from: this.getMidNight(this.getStartOf(moment().startOf('week'), 'day')).toDate(),
+              to: this.getMidNight(this.getEndOf(moment().endOf('week'), 'day')).toDate()
             }
           }
         },
