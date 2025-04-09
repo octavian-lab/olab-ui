@@ -109,6 +109,8 @@
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
       :currencyInExport="currencyInExport"
+      :hideSavedExport="hideSavedExport"
+      :hideButtonAmountInteger="hideButtonAmountInteger"
       translator
     />
   </DataTable>
@@ -174,6 +176,14 @@ export default {
     currencyInExport: {
       type: Boolean,
       default: () => true
+    },
+    hideSavedExport: {
+      type: Boolean,
+      default: () => false
+    },
+    hideButtonAmountInteger: {
+      type: Boolean,
+      default: () => false
     },
     // PROPS DI PRIMEVUE
     value: {
