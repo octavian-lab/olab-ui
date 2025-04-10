@@ -108,6 +108,7 @@ export function useKeycloak() {
         updateStoreInfo(data)
       } catch (e) {
         keycloakStore.logout()
+        throw e
       }
     }
   }
