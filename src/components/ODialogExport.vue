@@ -565,7 +565,6 @@ export default {
           return this.$translate(`decode.limit.status.${value}`)
         case 'value':
           return this.$translate(`decode.self.exclusion.period.${value}`)
-        case 'type':
         case 'platformType':
           return `${value} - ${this.$translate(`decode.platform.type.${value}`)}`
         case 'amount':
