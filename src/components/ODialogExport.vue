@@ -27,7 +27,7 @@
         />
 
         <OPageSettingStore
-          v-if="!useApi"
+          v-if="!useApi && !hideSavedExport"
           :results="globalExportTemplates"
           @onUseTemplate="doUseTemplate($event)"
           @onEditTemplate="doEditTemplateStore($event)"
@@ -53,6 +53,7 @@
             />
 
             <Button
+              v-if="!hideButtonAmountInteger"
               outlined
               class="mr-3 p-button-info"
               :label="$translate('admin.generic.change.amount.integer')"
@@ -70,7 +71,7 @@
             />
 
             <Button
-              v-if="!useApi"
+              v-if="!useApi && !hideSavedExport"
               :disabled="selectKeys.length === 0 || globalExportTemplates.length >= 10"
               class="mr-3"
               icon="fad fa-floppy-disk"
@@ -190,7 +191,9 @@ export default {
     translator: { type: Boolean, default: () => true },
     currencyInExport: {
       type: Boolean
-    }
+    },
+    hideSavedExport: { type: Boolean },
+    hideButtonAmountInteger: { type: Boolean }
   },
   data() {
     return {
