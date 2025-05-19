@@ -1,3 +1,10 @@
+const site = localStorage.getItem('site')
+// store del sito
+let currencies = []
+if(localStorage.getItem(`octavianlab-${site}-admin`)) {
+  const projectStore = JSON.parse(localStorage.getItem(`octavianlab-${site}-admin`))
+  currencies = projectStore.currency?.list || []
+}
 export default function (value, currency = 'EUR', hideCurrency = false) {
   let currencyRef = currency
   if (!isNaN(parseInt(currencyRef))) {
@@ -6,18 +13,12 @@ export default function (value, currency = 'EUR', hideCurrency = false) {
   if (currencyRef.length !== 3) {
     currencyRef = 'XXX'
   }
-
   let precision
-  switch (currencyRef) {
-    case 'EUR':
-      precision = 2
-      break
-    case 'RUB':
-      precision = 0
-      break
-    default:
-      precision = 2
-      break
+  if (currencies.length > 0) {
+    const currencyObj = currencies.find((el) => el.id === currencyRef)
+    precision = currencyObj ? currencyObj.precision || currencyObj.valuePrecision || currencyObj.fractions : 'EUR'
+  } else {
+    precision = 2
   }
 
   if (value == null) return ''
