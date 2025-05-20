@@ -79,7 +79,7 @@ Here are some of the available components (more coming soon):
 
 _...and many more!_
 
-For a full list of components, see the [`src/components/`](https://github.com/octavian-lab/olab-ui/tree/main/src/components) folder.
+For a full list of components, see the [`src/components/`](https://github.com/octavian-lab/olab-ui/tree/master/src/components) folder.
 
 ---
 
