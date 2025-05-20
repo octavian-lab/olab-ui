@@ -5,20 +5,20 @@
     :dismissableMask="false"
     :style="style"
     :visible="$modal.isVisible(name.toLowerCase())"
-    @update:visible="$modal.close()"
+    @update:visible="handleClose()"
     :breakpoints="breakpoints"
   >
     <template #header>
-        <slot name="header">
-            <div class="dialog-title">
-                <i :class="['mr-3', icon]" />
-                <span>{{ generateTitle() }}</span>
-            </div>
-        </slot>
+      <slot name="header">
+        <div class="dialog-title">
+          <i :class="['mr-3', icon]" />
+          <span>{{ generateTitle() }}</span>
+        </div>
+      </slot>
     </template>
-      <OFieldsContainer :showRequiredText="false" :striped="false">
-          <slot />
-      </OFieldsContainer>
+    <OFieldsContainer :showRequiredText="false" :striped="false">
+      <slot />
+    </OFieldsContainer>
     <template #footer v-if="$slots.footer || $slots['footer-top']">
       <slot name="footer-top" />
       <div
@@ -36,7 +36,6 @@
             {{ $translate('admin.dialog.text.required') }}
           </small>
         </div>
-
         <slot name="footer" />
       </div>
     </template>
@@ -71,16 +70,23 @@ export default {
     }
   },
   watch: {
-    '$modal.id'(dialogOpenLabel) {
-      if (dialogOpenLabel) {
-        this.modalIdentifier = this.$modal.data[this.identifier]
+    '$modal.id': {
+      immediate: true,
+      handler(dialogOpenLabel) {
+        if (dialogOpenLabel) {
+          if (this.identifier.includes('.')) {
+            const firstResource = this.identifier.split('.')[0]
+            const secondResource = this.identifier.split('.')[1]
+            this.modalIdentifier = this.$modal.data[firstResource][secondResource]
+          } else this.modalIdentifier = this.$modal.data[this.identifier]
+        }
       }
     }
   },
   computed: {
     hasIdentifier() {
       return (
-        (!this.$modal.mode !== 'add' &&
+        (this.$modal.mode !== 'add' &&
           this.$modal.data[this.identifier] != null &&
           this.modalIdentifier != null) ||
         (this.$modal.mode !== 'add' &&
@@ -91,23 +97,23 @@ export default {
     }
   },
   methods: {
-      handleClose() {
-          this.$modal.close();
-          this.$emit('close')
-      },
-      getCustomLabel() {
-          // Edit label
-          let ret = this.$translate("admin.dialog.editing.id");
-          // Clone label
-          if (this.$modal.mode === "clone") {
-              ret = this.$translate("admin.dialog.cloning.field");
-          }
-          // Custom label
-          if (this.$modal.mode != null && this.$modal.mode !== "clone") {
-              ret = this.$translate(`admin.dialog.${this.$modal.mode}.field`);
-          }
-          return ret;
-      },
+    handleClose() {
+      this.$modal.close()
+      this.$emit('close')
+    },
+    getCustomLabel() {
+      // Edit label
+      let ret = this.$translate('admin.dialog.editing.id')
+      // Clone label
+      if (this.$modal.mode === 'clone') {
+        ret = this.$translate('admin.dialog.cloning.field')
+      }
+      // Custom label
+      if (this.$modal.mode != null && this.$modal.mode !== 'clone') {
+        ret = this.$translate(`admin.dialog.${this.$modal.mode}.field`)
+      }
+      return ret
+    },
     generateTitle() {
       let ret = `admin.dialog.title.${this.name.toLowerCase()}`
       if (this.$modal.mode != null) ret += `.${this.$modal.mode}`
@@ -119,3 +125,12 @@ export default {
   }
 }
 </script>
+<style>
+#o-dialog #o-fields-container .o-field .o-field__value {
+  width: 50%;
+}
+#o-dialog .footer-left-content {
+  width: fit-content;
+  text-align: left;
+}
+</style>

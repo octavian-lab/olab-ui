@@ -3,12 +3,20 @@
     :class="['field o-field', { 'inline-field mb-0': inline }, generateResponsiveColumns()]"
     :data-multilanguage-key="setTranslateKeyAttribute('admin.field.', name)"
   >
-    <label :for="name" :class="['o-field__label', { 'mb-0': inline }]" v-tooltip="generateTooltip()">
+    <label
+      :for="name"
+      :class="['o-field__label', { 'mb-0': inline }]"
+      @click="!isDesktop ? $refs['tooltip-ofield'].toggle($event) : undefined"
+      v-tooltip="generateTooltip()"
+    >
       <i class="fad fa-info-circle mr-2" v-if="tooltip" />
       <span :class="{ 'text-disabled': disabled }">
-        {{ $translate(`admin.field.${name}`, label) }}
+        {{ setName() }}
       </span>
       <span v-if="required" class="ml-1">*</span>
+      <OverlayPanel ref="tooltip-ofield">
+        {{ generateTooltip().value }}
+      </OverlayPanel>
     </label>
     <div :id="name" :class="[{ 'o-field__value': inline }]">
       <slot />
@@ -26,9 +34,15 @@ export default {
     col: { type: [String, Object], default: () => '12' },
     required: { type: Boolean, default: () => false },
     inline: { type: Boolean, default: () => false },
-    disabled: { type: Boolean, default: () => false }
+    disabled: { type: Boolean, default: () => false },
+    translatedLabel: { type: Boolean, default: () => false }
   },
   methods: {
+    setName() {
+      return !this.translatedLabel
+        ? this.$translate(`admin.field.${this.name}`, this.label)
+        : this.name
+    },
     setTranslateKeyAttribute(prefix, name) {
       return this.$translate(prefix + name, '', true)
         .replaceAll('-', '')

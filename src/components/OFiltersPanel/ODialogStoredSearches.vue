@@ -1,219 +1,203 @@
 <template>
-    <Dialog
-        :dismissableMask="false"
-        modal
-        :style="{ width: '700px' }"
-        :visible="$modal.isVisible($options.name)"
-        :breakpoints="{ '960px': '75vw', '640px': '95%' }"
-        @update:visible="$modal.close()"
-    >
-        <template #header>
-            <div class="dialog-title">
-                <i class="fad fa-floppy-disk-circle-arrow-right mr-3" />
-                <span>{{ $translate("admin.title.stored.searches") }}</span>
-            </div>
-        </template>
-        <div class="p-grid">
-            <div class="col-12 flex align-items-center">
-                <i class="fad fa-triangle-exclamation text-warning fa-xl mr-2" />
-                <span class="font-bold ml-2">
-                    {{ $translate("admin.filter.stored.searches.warning") }}.
-                </span>
-            </div>
-            <div class="col-12 flex justify-content-between align-items-center">
-                <i class="fad fa-circle-info fa-xl mr-2" />
-                <span class="ml-2">
-                    {{ $translate("admin.filter.stored.searches.info") }}
-                </span>
-            </div>
-            <div class="col-12 mt-3">
-                <DataTable
-                    striped-rows
-                    removable-sort
-                    class="p-datatable-sm"
-                    :value="$modal.data.list"
-                >
-                    <template #header>
-                        <div class="flex justify-content-between">
-                            <i class="ml-3 fad fa-floppy-disk-circle-arrow-right fa-3x" />
-                            <Button
-                                icon="fad fa-plus-circle"
-                                @click="doSaveSelectedQuery()"
-                                :disabled="maxLimitReached"
-                                :label="
-                                    $translate('admin.filter.action.save.last.query')
-                                "
-                            />
-                        </div>
-                    </template>
-                    <template #empty>
-                        <div class="p-3 text-center">
-                            <span class="font-bold">{{
-                                $translate("admin.filter.stored.searches.empty")
-                            }}</span>
-                        </div>
-                    </template>
-                    <Column
-                        :header="$translate('admin.generic.label')"
-                        field="label"
-                        sortable
-                        body-class="pl-5 w-40"
-                    >
-                        <template #body="el">
-                            <InputText
-                                ref="newLabel"
-                                @keyup.enter="doHandleEdit({ label: savedSearch.newLabel }, true)"
-                                v-model="savedSearch.newLabel"
-                                class="animate__animated animate__fadeIn animate__fast"
-                                v-if="savedSearch.selected === el.data.id"
-                            />
-                            <div
-                                class="font-bold text-lg animate__animated animate__fadeIn animate__fast"
-                                v-else
-                            >
-                                {{ el.data.label }}
-                            </div>
-                        </template>
-                    </Column>
-                    <Column
-                        :header="$translate('admin.generic.date.created')"
-                        sortable
-                        field="dateCreated"
-                        body-class="text-center"
-                    >
-                        <template #body="el">
-                            <span>
-                                {{
-                                    el.data.dateCreated ? $filters.asDate(el.data.dateCreated) : "-"
-                                }}
-                            </span>
-                        </template>
-                    </Column>
-                    <Column
-                        :header="$translate('admin.generic.operations')"
-                        body-class="w-25"
-                    >
-                        <template #body="{ data }">
-                            <div
-                                class="flex justify-content-evenly"
-                                v-if="savedSearch.selected === data.id"
-                            >
-                                <Button
-                                    icon="fad fa-save"
-                                    class="p-button-sm"
-                                    :label="$translate('admin.generic.action.save')"
-                                    @click="doHandleEdit({ label: savedSearch.newLabel }, true)"
-                                />
-                                <Button
-                                    icon="fad fa-xmark"
-                                    class="p-button-danger p-button-sm p-button-outlined"
-                                    @click="doHandleEdit(data)"
-                                />
-                            </div>
-                            <div class="flex justify-content-evenly" v-else>
-                                <Button
-                                    icon="fas fa-arrow-up"
-                                    class="p-button-outlined p-button-sm"
-                                    :label="$translate('admin.generic.action.use')"
-                                    @click="doHandleUse(data.value)"
-                                />
-                                <Button
-                                    icon="fad fa-edit"
-                                    class="p-button-sm"
-                                    @click="doHandleEdit(data)"
-                                    v-tooltip.bottom="{
-                                        value: $translate('admin.action.edit.label'),
-                                    }"
-                                />
-                                <Button
-                                    icon="fad fa-trash"
-                                    class="p-button-danger p-button-sm"
-                                    @click="doHandleDelete(data)"
-                                />
-                            </div>
-                        </template>
-                    </Column>
-                </DataTable>
-            </div>
-        </div>
-    </Dialog>
+  <Dialog
+    id="dialog-stored-search"
+    :dismissableMask="false"
+    modal
+    :style="{ width: useApi ? '1000px' : '800px' }"
+    :visible="$modal.isVisible($options.name)"
+    :breakpoints="{ '960px': '75vw', '640px': '95%' }"
+    @update:visible="$modal.close()"
+  >
+    <template #header>
+      <div class="dialog-title">
+        <i class="fad fa-floppy-disk-circle-arrow-right mr-3" />
+        <span>{{ $translate('admin.title.stored.searches') }}</span>
+      </div>
+    </template>
+    <div class="p-grid">
+      <div class="col-12 mt-3">
+        <OPageSettingApi
+          v-if="useApi"
+          mode="filter"
+          :results="$modal.data.list"
+          @onUseTemplate="$emit('onUseTemplate', $event)"
+          @onAddTemplate="doAddTemplateApi($event)"
+          @onEditTemplate="doEditTemplateApi($event)"
+          @onDeleteTemplate="doDeleteTemplateApi($event)"
+        />
+
+        <OPageSettingStore
+          v-if="!useApi"
+          mode="filter"
+          :results="$modal.data.list"
+          @onUseTemplate="$emit('onUseTemplate', $event)"
+          @onAddTemplate="doAddTemplateStore()"
+          @onEditTemplate="doEditTemplateStore($event)"
+          @onDeleteTemplate="doDeleteTemplateStore($event)"
+        />
+      </div>
+    </div>
+  </Dialog>
 </template>
 
 <script>
+import { useSettingsStore } from '@/store/settings.js'
+import OPageSettingApi from '@/components/OPageSettingApi.vue'
+import OPageSettingStore from '@/components/OPageSettingStore.vue'
+
 export default {
-    name: "ODialogStoredSearches",
-    emits: ["onUseSavedQuery"],
-    inject: ["query"],
-    data() {
-        return {
-            savedSearch: {
-                selected: null,
-                newLabel: "",
-            },
-        };
+  name: 'ODialogStoredSearches',
+  components: { OPageSettingApi, OPageSettingStore },
+  inject: ['query'],
+  props: {
+    useApi: { type: Boolean, default: () => false }
+  },
+  data() {
+    return {
+      useSettingsStore: useSettingsStore(),
+      API: null
+    }
+  },
+  methods: {
+    async doSearchTemplateApi() {
+      this.$loading.start('search')
+      try {
+        const { data } = await this.API.pagesetting.search({
+          key: this.$modal.data.key,
+          type: this.$modal.data.type
+        })
+        data.data.forEach((el) => {
+          el.value = JSON.parse(el.value)
+        })
+        this.$modal.data.list = data.data
+      } catch (e) {
+        console.log(e)
+      } finally {
+        this.$loading.stop('search')
+      }
     },
-    computed: {
-        maxLimitReached() {
-            return this.$modal.data.list.length >= 10;
-        },
-    },
-    methods: {
-        doHandleDelete(data) {
-            this.$store.dispatch("deleteQueryPerPage", { page: this.$route.path.replaceAll("/", ""), id: data.id });
-            this.$toast.add({
-                severity: "success",
-                summary: this.$translate("admin.generic.operation.completed"),
-                detail: this.$translate("admin.filter.stored.search.deleted"),
-                life: 900,
-            });
-        },
-        doHandleUse(savedQuery) {
-            this.$emit("onUseSavedQuery", savedQuery);
-        },
-        doSaveSelectedQuery() {
-            if (this.maxLimitReached) {
-                this.$toast.add({
-                    severity: "info",
-                    summary: this.$translate("admin.toast.info"),
-                    detail: this.$translate(
-                        "admin.filter.stored.search.max.limit.reached"
-                    ),
-                    life: 900,
-                });
-                return;
-            }
-            this.$store.dispatch("saveQueryPerPage", {
-                page: this.$route.path.replaceAll("/", ""),
-                value: this.query,
-            });
-        },
-        doHandleEdit(data, saveEdit) {
-            if (saveEdit) {
-                this.$store.dispatch("updateQuerySearchName", {
-                    page: this.$route.path.replaceAll("/", ""),
-                    id: this.savedSearch.selected,
-                    newLabel: data.label,
-                });
-                this.savedSearch.selected = null;
-                return;
-            }
+    async doAddTemplateApi() {
+      this.$loading.start('add')
+      const json = {
+        key: this.$modal.data.key,
+        name: `${this.$modal.data.key} - ${this.$modal.data.list.length}`,
+        value: JSON.stringify(this.query),
+        type: this.$modal.data.type
+      }
 
-            if (this.savedSearch.selected !== data.id) {
-                this.savedSearch.selected = data.id;
-                this.savedSearch.newLabel = data.label;
-
-                this.$nextTick(() => {
-                    this.$refs.newLabel.$el.focus();
-                });
-            } else {
-                this.savedSearch.selected = null;
-            }
-        },
+      try {
+        await this.API.pagesetting.add(json)
+        await this.doSearchTemplateApi()
+        this.toast('success', 'add.search')
+      } catch (e) {
+        console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('add')
+      }
     },
-};
+    doAddTemplateStore() {
+      try {
+        this.useSettingsStore.saveSearchTemplates({
+          page: this.currentPageName,
+          value: JSON.parse(JSON.stringify(this.query))
+        })
+      } catch (e) {
+        this.toast('error', 'add.template.store.limit.reached')
+        console.log(e)
+      }
+    },
+    async doEditTemplateApi({ data, name }) {
+      this.$loading.start('edit')
+      const json = {
+        name: name
+      }
+
+      try {
+        await this.API.pagesetting.edit(data.id, json)
+        await this.doSearchTemplateApi()
+        this.toast('success', 'edit.search')
+      } catch (e) {
+        console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('edit')
+      }
+    },
+    doEditTemplateStore({ index, name }) {
+      this.useSettingsStore.updateSearchTemplates({
+        page: this.currentPageName,
+        index,
+        value: name
+      })
+    },
+    async doDeleteTemplateApi(id) {
+      this.$loading.start('delete')
+      try {
+        await this.API.pagesetting.delete(id)
+        await this.doSearchTemplateApi()
+        this.toast('success', 'delete.search')
+      } catch (e) {
+        console.log(e)
+        if (e.response.status !== 401) {
+          this.toast('error', e)
+        }
+      } finally {
+        this.$loading.stop('delete')
+      }
+    },
+    doDeleteTemplateStore(index) {
+      this.useSettingsStore.deleteSearchTemplates({
+        page: this.currentPageName,
+        index
+      })
+    }
+  },
+  created() {
+    if (this.useApi) {
+      const site = localStorage.getItem('site')
+      import(`../../api/${site}/index.js`).then((module) => {
+        this.API = module.default
+        this.doSearchTemplateApi({ key: this.$modal.data.key, type: this.$modal.data.type })
+      })
+    }
+  },
+  mounted() {
+    if (!this.useApi) {
+      this.$modal.data.list = this.useSettingsStore.getSearchTemplates(this.currentPageName)
+    }
+  }
+}
 </script>
-<style scoped>
+
+<style scoped lang="scss">
+#dialog-global-export {
+  .p-panel {
+    .p-panel-header {
+      .p-panel-icons {
+        align-items: normal;
+      }
+    }
+  }
+
+  .p-fluid {
+    .p-button {
+      width: auto;
+    }
+
+    .p-selectbutton.p-buttonset {
+      .p-button {
+        display: block;
+      }
+    }
+  }
+}
+
 :deep(.p-datatable) .p-datatable-footer {
-    padding: 0.5rem;
+  padding: 0.5rem;
 }
 </style>

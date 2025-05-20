@@ -5,21 +5,26 @@
     leave-active-class="fadeOutDown-custom"
     mode="out-in"
   >
-    <Button
-      v-if="requiredFilters.length === 0"
-      :class="['search-btn', { 'fadeInUp-custom': fastfilter }]"
-      :label="$translate('admin.action.search')"
-      icon="fad fa-magnifying-glass"
-      :disabled="btnDisabled"
-      :loading="$loading.isLoading('search')"
-      @click="doRefreshData()"
-    />
-    <div class="flex align-items-center justify-content-center" v-else>
+    <div v-if="requiredFilters.length === 0 && doRefreshData != null">
+      <Button
+        :class="['search-btn', { 'fadeInUp-custom': fastfilter }]"
+        :label="$translate('admin.action.search')"
+        icon="fad fa-magnifying-glass"
+        :disabled="btnDisabled"
+        :loading="btnLoading || $loading.isLoading('search')"
+        @click="doRefreshData()"
+      />
+    </div>
+
+    <div
+      class="flex align-items-center justify-content-center"
+      v-else-if="requiredFilters.length !== 0 && doRefreshData != null"
+    >
       <i
         v-tooltip="
           fastfilter
             ? {
-                value: $translate('admin.filter.panel.compile.required.filters')
+                value: $translate(requiredFieldsText)
               }
             : undefined
         "
@@ -28,8 +33,8 @@
           fastfilter ? 'ml-3' : 'mr-3'
         ]"
       />
-      <span v-if="!fastfilter" class="font-bold text-responsive font-uppercase">
-        {{ $translate('admin.filter.panel.compile.required.filters') }}
+      <span v-if="!fastfilter" class="font-bold text-responsive text-uppercase">
+        {{ $translate(requiredFieldsText) }}
       </span>
     </div>
   </transition>
@@ -44,12 +49,20 @@ export default {
   props: {
     fastfilter: { type: Boolean, default: () => false },
     btnDisabled: { type: Boolean },
-    requiredFilters: { type: Array }
+    requiredFilters: { type: Array },
+    btnLoading: Boolean,
+    requiredFieldsText: {
+      type: String,
+      default: () => 'admin.filter.panel.compile.required.filters'
+    }
   }
 }
 </script>
 
 <style lang="scss" scoped>
+.search-btn {
+  height: 100%;
+}
 .fadeInUp-custom {
   animation: fadeInUp;
   animation-duration: 0.2s;

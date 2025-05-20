@@ -11,7 +11,7 @@ const loading = reactive({
   },
   stop(label) {
     if (!label) {
-      this.arr.pop()
+      this.arr = []
       return
     }
     this.arr = this.arr.filter((el) => el !== label)
@@ -28,5 +28,6 @@ const loading = reactive({
 export default {
   install(app) {
     app.config.globalProperties.$loading = loading
-  }
+  },
+  loading
 }
