@@ -10,6 +10,19 @@
     "dist",
     "types"
   ],
+  "keywords": [
+    "vue",
+    "vue.js",
+    "vue2",
+    "vue3",
+    "ui library",
+    "component library",
+    "primevue",
+    "octavianlab",
+    "olab",
+    "olab ui",
+    "back office ui"
+  ],
   "types": "types/index.d.ts",
   "main": "./dist/olab-ui.umd.cjs",
   "module": "./dist/olab-ui.js",
