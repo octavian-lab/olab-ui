@@ -116,5 +116,5 @@ MIT © [Octavian Lab](https://www.octavianlab.com)
 ## ✨ Maintainers
 
 - [Emanuele Nocentelli](https://www.octavianlab.com) – Octavianlab CEO & Lead Architect
-- [Davidz99](https://github.com/emanuelenocentelli) - Frontend Team Leader
+- [Davidz99](https://github.com/Daveedz99) - Frontend Team Leader
 - Octavian Lab UI/UX & Frontend Team
