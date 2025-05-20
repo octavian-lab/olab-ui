@@ -7,8 +7,10 @@
   "private": false,
   "type": "module",
   "files": [
-    "dist"
+    "dist",
+    "types"
   ],
+  "types": "types/index.d.ts",
   "main": "./dist/olab-ui.umd.cjs",
   "module": "./dist/olab-ui.js",
   "exports": {
@@ -23,7 +25,8 @@
     "build": "vite build",
     "preview": "vite preview",
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore",
-    "format": "prettier --write src/"
+    "format": "prettier --write src/",
+    "generate:dts": "node generate-dts.mjs"
   },
   "peerDependencies": {
     "@vueuse/core": "^10.2.1",
@@ -54,6 +57,7 @@
     "primevue": "^3.30.1",
     "qrcode-vue3": "^1.6.8",
     "query-string": "9.0.0",
+    "rollup-plugin-visualizer": "^5.14.0",
     "sass": "^1.64.2",
     "vite": "^4.3.9",
     "vue": "^3.3.13",
