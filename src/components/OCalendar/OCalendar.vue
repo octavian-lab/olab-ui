@@ -132,8 +132,8 @@ export default {
             label: this.$translate('admin.generic.calendar.this.week'),
             value: {
               date: {
-                from: this.getMidNight(this.getStartOf(moment(), 'isoweek')).toISOString(),
-                to: this.getMidNight(this.getEndOf(moment(), 'isoweek')).toISOString()
+                from: this.getMidNight(this.getStartOf(moment(), 'isoweek')),
+                to: this.getMidNight(this.getEndOf(moment(), 'isoweek'))
               }
             }
           },
@@ -143,10 +143,10 @@ export default {
               date: {
                 from: this.getMidNight(
                     this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
-                ).toISOString(),
+                ),
                 to: this.getMidNight(
                     this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
-                ).toISOString()
+                )
               }
             }
           },
@@ -166,7 +166,7 @@ export default {
     extQuery(val) {
       if (this.advanced) {
         if (!val.from && !val.to) this.doReset()
-        if (val && typeof val.from === 'string' && this.advanced) {
+        if (val  && this.advanced) {
           if(this.modelValue && (this.modelValue.value === 3 || this.modelValue.value === 5)) return
           this.modelValue = this.getNumberFromDate()
         }
@@ -280,8 +280,8 @@ export default {
     },
     handleObjectEmit(val, oldVal) {
       if (val.value !== 6) {
-        this.$emit('update:from', val.date.from)
-        this.$emit('update:to', val.date.to)
+        this.$emit('update:from', this.$filters.toJSDate(val.date.from, false))
+        this.$emit('update:to', this.$filters.toJSDate(val.date.to, false))
         return
       }
       const emitValue = (resource) => {
@@ -307,7 +307,7 @@ export default {
     getNumberFromDate(isOnMounted) {
       let ret
       let tmp
-      let date = JSON.stringify({from: this.from, to: this.to})
+      let date = JSON.stringify({from: this.$filters.toJSDate(this.from), to: this.$filters.toJSDate(this.to)})
       if (JSON.parse(date).from == null && JSON.parse(date).to == null) {
         ret = null
         return ret
@@ -366,8 +366,8 @@ export default {
             date: {
               from: this.getMidNight(
                   this.getStartOf(this.addPeriod(moment(), -el, 'days'), 'day')
-              ).toISOString(),
-              to: this.getEndOf(moment(), 'day').toISOString()
+              ),
+              to: this.getEndOf(moment(), 'day')
             }
           }
         })
@@ -433,8 +433,8 @@ export default {
           value: 6,
           label: this.$translate('admin.generic.select.date.range'),
           date: {
-            from: this.$filters.toJSDate(this.getMidNight(moment())),
-            to: this.$filters.toJSDate(this.getEndOf(moment(), 'day'))
+            from: this.getMidNight(moment()).toDate(),
+            to: this.getEndOf(moment(), 'day').toDate()
           }
         }
       ]

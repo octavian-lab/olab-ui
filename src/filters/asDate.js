@@ -1,8 +1,9 @@
 import moment from 'moment-timezone'
 const site = localStorage.getItem('site')
-const utils = localStorage.getItem(`olab-ui-${site}:utils`) ? JSON.parse(localStorage.getItem(`olab-ui-${site}:utils`)) : {}
-const timezone = utils.timezone
 export default function (value, format = 'DD/MM/YYYY HH:mm:ss') {
+  // Messo il parse dello storage nella funzione, poichè se un utente cambia il timezone, la libreria non intercetta il comportamento
+  const utils = localStorage.getItem(`olab-ui-${site}:utils`) ? JSON.parse(localStorage.getItem(`olab-ui-${site}:utils`)) : {}
+  const timezone = utils.timezone
   if (value) {
     const utcDate = moment.utc(value).toDate()
     if (timezone && timezone !== moment.tz.guess()) {
