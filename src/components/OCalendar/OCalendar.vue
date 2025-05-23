@@ -167,7 +167,7 @@ export default {
       if (this.advanced) {
         if (!val.from && !val.to) this.doReset()
         if (val  && this.advanced) {
-          if(this.modelValue && (this.modelValue.value === 3 || this.modelValue.value === 5)) return
+          if(this.modelValue && (this.modelValue.value === 3 || this.modelValue.value === 5 || this.modelValue.value === 6)) return
           this.modelValue = this.getNumberFromDate()
         }
       } else {
