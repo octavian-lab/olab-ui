@@ -105,7 +105,7 @@
     <slot name="content" />
     <ODialogExport
       v-if="$modal.isVisible('ODialogExport') && exportable"
-      :results="value"
+      :results="valueCopy"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
@@ -231,7 +231,8 @@ export default {
       expandedRows: [],
       lottie: null,
       filters: this.filtersModel ? { ...this.filtersModel } : null,
-      selectedColumns: []
+      selectedColumns: [],
+      valueCopy: {...this.value}
     }
   },
   computed: {
@@ -270,7 +271,7 @@ export default {
         type: 0,
         translatedLabel: this.getTranslatedLabel(),
         amountCurrencyMap: !this.currencyKey ? undefined : this.getAmountCurrencyMap(currencyKey),
-        results: this.value
+        results: this.valueCopy
       })
     },
     getTranslatedLabel() {
