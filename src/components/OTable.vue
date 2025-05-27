@@ -63,7 +63,7 @@
             :class="headerButtonsStyle"
             icon="fad fa-external-link"
             :label="$translate('admin.generic.action.export')"
-            @click="doExport($event)"
+            @click="doExport()"
             :disabled="!value?.length"
           />
           <Button
@@ -105,6 +105,7 @@
     <slot name="content" />
     <ODialogExport
       v-if="$modal.isVisible('ODialogExport') && exportable"
+      :results="value"
       :useApi="useApi"
       :exportFilename="$attrs.exportFilename"
       :exportMode="exportMode"
@@ -268,7 +269,8 @@ export default {
         key: this.currentPageName,
         type: 0,
         translatedLabel: this.getTranslatedLabel(),
-        amountCurrencyMap: !this.currencyKey ? undefined : this.getAmountCurrencyMap(currencyKey)
+        amountCurrencyMap: !this.currencyKey ? undefined : this.getAmountCurrencyMap(currencyKey),
+        results: this.value
       })
     },
     getTranslatedLabel() {
@@ -337,7 +339,6 @@ export default {
     this.handlerDymanicColumns()
   },
   mounted() {
-    sessionStorage.setItem('o-dialog-export-counter', '0')
     if (!this.isDesktop && this.showHandleResponsiveLayout) {
       const responsiveTable = this.useSettingsStore.getResponsiveTables(this.currentPageName)
       if (responsiveTable) {

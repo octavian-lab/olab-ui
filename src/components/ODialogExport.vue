@@ -193,7 +193,8 @@ export default {
       type: Boolean
     },
     hideSavedExport: { type: Boolean },
-    hideButtonAmountInteger: { type: Boolean }
+    hideButtonAmountInteger: { type: Boolean },
+    results: { type: Array, default: () => [] },
   },
   data() {
     return {
@@ -745,18 +746,13 @@ export default {
     }
   },
   mounted() {
-    const counter = parseInt(sessionStorage.getItem('o-dialog-export-counter'))
-    this.isDialogVisible = counter === 0
-    sessionStorage.setItem('o-dialog-export-counter', String(counter + 1))
+    this.isDialogVisible = this.$modal.data.results === this.results
     if (!this.useApi) {
       this.globalExportTemplates = this.useSettingsStore.getGlobalExportTemplates(
         this.currentPageName
       )
     }
   },
-  unmounted() {
-    sessionStorage.setItem('o-dialog-export-counter', '0')
-  }
 }
 </script>
 <style lang="scss">
