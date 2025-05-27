@@ -20,7 +20,7 @@ const axiosConfig = () => {
     timeout: 15000,
     headers: {
       'Content-Type': 'application/json',
-      Authorization: getUtils().token ? `${useKeycloak().getStorageData('isKeycloakAuth') ? 'JWTIDP' : 'token'} ${getUtils().token}` : ''
+      Authorization: getUtils().token ? `${useKeycloak().getStorageData('isKeycloakAuth') ? 'JWTIDP' : 'Bearer'} ${getUtils().token}` : ''
     }
   }
 }
