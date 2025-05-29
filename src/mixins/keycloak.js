@@ -108,7 +108,7 @@ export function useKeycloak() {
         updateStoreInfo(data)
       } catch (e) {
         keycloakStore.logout()
-        location.href = '/'
+        window.location.reload()
         throw e
       }
     }
