@@ -1,8 +1,8 @@
 <template>
   <component
     :is="mode === 'export' ? 'Panel' : 'div'"
-    :toggleable="mode === 'export' ? true : false"
-    :collapsed="mode === 'export' ? true : false"
+    :toggleable="mode === 'export'"
+    :collapsed="mode === 'export'"
   >
     <template v-if="mode === 'export'" #header>
       <div class="font-bold">
@@ -40,7 +40,6 @@
       <template v-if="mode === 'filter'" #header>
         <div class="flex justify-content-between align-items-center">
           <i class="ml-3 fad fa-floppy-disk-circle-arrow-right fa-3x" />
-
           <div>
             <Button
               class="mr-3 p-button-secondary"
@@ -63,17 +62,18 @@
       <Column v-if="mode === 'filter'" expander class="w-3 text-center" />
       <Column field="name" :header="$translate('admin.generic.name')" bodyClass="cx">
         <template #body="{ index, data }">
-          <div v-if="$modal.data.templateEditCheck !== index" class="font-bold">
+          <div v-if="!editStates[index]" class="font-bold">
             {{ data.name }}
           </div>
           <InputText
-            v-if="$modal.data.templateEditCheck === index"
-            v-model="$modal.data.templateEditName"
+            v-else
+            v-model="editStates[index].name"
             :placeholder="$translate('admin.generic.enter.name')"
             @keyup.enter="doHandleEditTemplate(index, data, 'edit')"
           />
         </template>
       </Column>
+
       <Column
         v-if="mode === 'export'"
         field="value"
@@ -102,10 +102,11 @@
           {{ $filters.asDate(data.lastUpdate) }}
         </template>
       </Column>
+
       <Column field="author" :header="$translate('admin.generic.author')" bodyClass="cx" />
       <Column field="mode" :header="$translate('admin.field.type')" bodyClass="cx">
         <template #body="{ data, index }">
-          <div v-if="$modal.data.templateEditCheck !== index" class="font-bold">
+          <div v-if="!editStates[index]" class="font-bold">
             <i
               v-if="data.mode === 0"
               v-tooltip.bottom="$translate('admin.field.type.global')"
@@ -118,8 +119,8 @@
             ></i>
           </div>
           <SelectButton
-            v-if="$modal.data.templateEditCheck === index"
-            v-model="$modal.data.templateEditMode"
+            v-else
+            v-model="editStates[index].mode"
             :options="[0, 1]"
             aria-labelledby="basic"
           >
@@ -137,7 +138,7 @@
         bodyClass="w-10 cx"
       >
         <template #body="{ index, data }">
-          <div v-if="$modal.data.templateEditCheck !== index">
+          <div v-if="!editStates[index]">
             <SplitButton
               icon="fas fa-arrow-down"
               class="p-button-sm mr-3"
@@ -163,12 +164,12 @@
             />
           </div>
 
-          <div v-else-if="$modal.data.templateEditCheck === index" class="flex">
+          <div v-else class="flex">
             <Button
               icon="fad fa-save"
               class="p-button-sm mr-3"
               :label="$translate('admin.generic.action.save')"
-              :disabled="!$modal.data.templateEditName"
+              :disabled="!editStates[index].name"
               @click="doHandleEditTemplate(index, data, 'edit')"
               :loading="$loading.isLoading('edit')"
             />
@@ -196,32 +197,32 @@ export default {
   },
   data() {
     return {
-      expandedRows: []
+      expandedRows: [],
+      editStates: {}
     }
   },
   methods: {
     doHandleEditTemplate(index, data, mode) {
       if (mode === 'edit') {
+        const currentEdit = this.editStates[index]
         this.$emit('onEditTemplate', {
           data,
-          name: this.$modal.data.templateEditName
+          name: currentEdit.name,
+          mode: currentEdit.mode
         })
-        this.$modal.data.templateEditCheck = null
-        this.$modal.data.templateEditName = null
-        this.$modal.data.templateEditName = null
+        delete this.editStates[index]
         return
       }
 
       if (typeof index !== 'number') {
-        this.$modal.data.templateEditCheck = null
-        this.$modal.data.templateEditName = null
-        this.$modal.data.templateEditName = null
+        this.editStates = {}
         return
       }
 
-      this.$modal.data.templateEditCheck = index
-      this.$modal.data.templateEditName = data.name
-      this.$modal.data.templateEditMode = data.mode
+      this.editStates[index] = {
+        name: data.name,
+        mode: data.mode
+      }
     }
   }
 }
