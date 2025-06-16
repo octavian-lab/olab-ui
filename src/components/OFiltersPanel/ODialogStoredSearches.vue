@@ -109,10 +109,11 @@ export default {
         console.log(e)
       }
     },
-    async doEditTemplateApi({ data, name }) {
+    async doEditTemplateApi({ data, name, mode }) {
       this.$loading.start('edit')
       const json = {
-        name: name
+        name: name,
+        mode: mode
       }
 
       try {
