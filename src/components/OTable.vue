@@ -202,7 +202,7 @@ export default {
         amountCurrencyMap: currencyKey
           ? this.getAmountCurrencyMap(currencyKey, processedData)
           : undefined,
-        results: [...this.value] // shallow copy
+        results: this.valueCopy
       })
     },
     getTranslatedLabel(columns = []) {
