@@ -1,40 +1,38 @@
 <template>
   <div id="o-list" :class="oListContainerClass()">
     <slot>
-      <div v-for="el in items" :key="el" :class="oListClass()">
+      <div v-for="(el, index) in items" :key="el.label + '-' + index" :class="oListClass()">
         <!-- LABEL -->
         <div :class="['font-bold', el.labelClass, { 'px-3': striped }]">
           {{ elaborateLabel(el.label) }}:
         </div>
         <!-- VALUE -->
         <div :class="{ 'px-3 text-right': striped }">
-          <span
-            v-if="
-              el.value == null ||
-              el.value === '' ||
-              (Array.isArray(el.value) && el.value.length === 0)
-            "
-            >-
-          </span>
+          <span v-if="isValueEmpty(el.value)">-</span>
+
           <img
             v-else-if="checkType(el.valueType) === 'flag'"
             :class="`flag flag-${el.value.toLowerCase()}`"
           />
+
           <span
-            v-else-if="checkType(el.valueType) === 'boolean' && el.valueType.showIcon === false"
+            v-else-if="checkType(el.valueType) === 'boolean' && el.valueType?.showIcon === false"
           >
             {{ $translate(`admin.message.olist.boolean.${el.value}`) }}
           </span>
+
           <span
             v-else-if="checkType(el.valueType?.type) === 'boolean' && el.valueType.reverse === true"
           >
             <span>{{ $translate(`admin.message.olist.boolean.${el.value}`) }} - </span>
             <i :class="`fad fa-lg ${setIcon(!el.value)}`" />
           </span>
+
           <i
             v-else-if="checkType(el.valueType) === 'boolean'"
             :class="`fad fa-lg ${setIcon(el.value)}`"
           />
+
           <span
             v-else-if="checkType(el.valueType) !== 'string' && Array.isArray(elaborateValue(el))"
           >
@@ -102,6 +100,9 @@ export default {
           return 'fa-circle-xmark text-danger'
       }
     },
+    isValueEmpty(value) {
+      return value == null || value === '' || (Array.isArray(value) && value.length === 0)
+    },
     elaborateLabel(label) {
       let ret = label
       if (label.startsWith('admin')) ret = this.$translate(ret)
@@ -115,7 +116,14 @@ export default {
         return
       }
       // CASO IN CUI RICEVO UNA STRINGA SOTTOFORMA DI ARRAY LA TRANSFORMO COME TALE
-      if (type === 'array' && this.isParsable(ret)) ret = JSON.parse(ret)
+      if (type === 'array' && this.isParsable(ret)) {
+        try {
+          ret = JSON.parse(ret)
+        } catch (e) {
+          console.warn('Invalid array JSON in OList:', ret)
+          ret = []
+        }
+      }
 
       // CASO IN CUI IL VALORE DA STAMPARE È VINCOLATO DA UNA TRADUZIONE
       if (field.translator != null) {
