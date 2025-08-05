@@ -35,6 +35,10 @@
         />
       </div>
 
+      <div class="w-100" v-if="isErrorActive">
+        <Message severity="warn">{{ $translate('admin.generic.max.results.exceed') }}</Message>
+      </div>
+
       <div class="field col-12">
         <Panel :toggleable="true" v-model:collapsed="collapsed">
           <template #header>
@@ -194,7 +198,7 @@ export default {
     },
     hideSavedExport: { type: Boolean },
     hideButtonAmountInteger: { type: Boolean },
-    results: { type: Array, default: () => [] },
+    results: { type: Array, default: () => [] }
   },
   data() {
     return {
@@ -211,7 +215,8 @@ export default {
       lottie: { common },
       currencyKeyCounter: 0,
       amountInteger: true,
-      isDialogVisible: false
+      isDialogVisible: false,
+      isErrorActive: false
     }
   },
   watch: {
@@ -720,20 +725,29 @@ export default {
     },
     doExportXLS() {
       const array = []
-      this.selectColumnsData.forEach((element) => {
+      this.isErrorActive = false
+
+      for (const element of this.selectColumnsData) {
         const obj = {}
 
-        this.selectKeys.forEach((key) => {
-          obj[this.checkTranslate(key)] = element[key]
-        })
+        for (const key of this.selectKeys) {
+          const value = element[key]
+
+          if (typeof value === 'string' && value.length > 32767) {
+            this.isErrorActive = true
+            return
+          }
+
+          obj[this.checkTranslate(key)] = value
+        }
 
         array.push(obj)
-      })
+      }
+
       const ws = utils.json_to_sheet(array)
       const wb = utils.book_new()
       utils.book_append_sheet(wb, ws, 'Data')
       writeFileXLSX(wb, this.exportFilenameComp + '.xlsx')
-      this.toast('success', 'export.completed')
     }
   },
   created() {
@@ -752,7 +766,7 @@ export default {
         this.currentPageName
       )
     }
-  },
+  }
 }
 </script>
 <style lang="scss">
