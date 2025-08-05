@@ -122,106 +122,31 @@ import { useSettingsStore } from '@/store/settings.js'
 export default {
   name: 'OTable',
   props: {
-    // PROPS OLAB
-    showLottie: {
-      type: Boolean,
-      default: () => true
-    },
-    useApi: {
-      type: Boolean,
-      default: () => false
-    },
-    storeSession: {
-      type: Boolean,
-      default: () => false
-    },
-    exportMode: {
-      type: String,
-      default: () => 'all'
-    },
-    exportable: {
-      type: Boolean,
-      default: () => false
-    },
-    defaultExportKeys: {
-      type: Array,
-      default: () => []
-    },
-    lottieName: {
-      type: String,
-      default: () => null
-    },
-    name: {
-      type: String,
-      default: () => null
-    },
-    label: {
-      type: String,
-      default: () => ''
-    },
-    icon: {
-      type: String,
-      default: () => null
-    },
-    dynamicColumns: {
-      type: Array,
-      default: () => null
-    },
-    translator: {
-      type: Boolean,
-      default: () => true
-    },
-    currencyKey: {
-      type: String
-    },
-    currencyInExport: {
-      type: Boolean,
-      default: () => true
-    },
-    hideSavedExport: {
-      type: Boolean,
-      default: () => false
-    },
-    hideButtonAmountInteger: {
-      type: Boolean,
-      default: () => false
-    },
-    // PROPS DI PRIMEVUE
-    value: {
-      type: Array,
-      required: true
-    },
-    paginator: {
-      type: Boolean,
-      default: () => true
-    },
-    loading: {
-      type: Boolean
-    },
-    rowsPerPageOptions: {
-      type: Array,
-      default: () => [50, 100, 250, 500]
-    },
-    responsiveLayout: {
-      type: String,
-      default: () => 'stack'
-    },
-    showHandleResponsiveLayout: {
-      type: Boolean,
-      default: () => true
-    },
-    filtersModel: {
-      type: Object,
-      default: () => null
-    },
-    selectionMode: {
-      type: [String, Boolean],
-      default: () => false
-    },
-    headerButtonsStyle: {
-      type: String,
-      default: () => ''
-    }
+    showLottie: { type: Boolean, default: () => true },
+    useApi: { type: Boolean, default: () => false },
+    storeSession: { type: Boolean, default: () => false },
+    exportMode: { type: String, default: () => 'all' },
+    exportable: { type: Boolean, default: () => false },
+    defaultExportKeys: { type: Array, default: () => [] },
+    lottieName: { type: String, default: () => null },
+    name: { type: String, default: () => null },
+    label: { type: String, default: () => '' },
+    icon: { type: String, default: () => null },
+    dynamicColumns: { type: Array, default: () => null },
+    translator: { type: Boolean, default: () => true },
+    currencyKey: { type: String },
+    currencyInExport: { type: Boolean, default: () => true },
+    hideSavedExport: { type: Boolean, default: () => false },
+    hideButtonAmountInteger: { type: Boolean, default: () => false },
+    value: { type: Array, required: true },
+    paginator: { type: Boolean, default: () => true },
+    loading: { type: Boolean },
+    rowsPerPageOptions: { type: Array, default: () => [50, 100, 250, 500] },
+    responsiveLayout: { type: String, default: () => 'stack' },
+    showHandleResponsiveLayout: { type: Boolean, default: () => true },
+    filtersModel: { type: Object, default: () => null },
+    selectionMode: { type: [String, Boolean], default: () => false },
+    headerButtonsStyle: { type: String, default: () => '' }
   },
   data() {
     return {
@@ -232,7 +157,7 @@ export default {
       lottie: null,
       filters: this.filtersModel ? { ...this.filtersModel } : null,
       selectedColumns: [],
-      valueCopy: {...this.value}
+      valueCopy: null
     }
   },
   computed: {
@@ -262,31 +187,32 @@ export default {
     doExport() {
       const currencyKey = this.currencyKey ? this.currencyKey.split('.') : undefined
 
+      const processedData = this.$refs.dt?.processedData || []
+      const columns = this.$refs.dt?.columns || []
+      const exportKeys = this.defaultExportKeys.length
+        ? this.defaultExportKeys
+        : columns.filter((el) => el?.props?.field).map((el) => el.props.field)
+
       this.$modal.open('ODialogExport', {
-        processed: this.$refs.dt.processedData,
-        defaultExportKeys: this.defaultExportKeys.length
-          ? this.defaultExportKeys
-          : this.$refs.dt.columns.map((el) => el.props.field),
+        processed: processedData,
+        defaultExportKeys: exportKeys,
         key: this.currentPageName,
         type: 0,
-        translatedLabel: this.getTranslatedLabel(),
-        amountCurrencyMap: !this.currencyKey ? undefined : this.getAmountCurrencyMap(currencyKey),
-        results: this.valueCopy
+        translatedLabel: this.getTranslatedLabel(columns),
+        amountCurrencyMap: currencyKey
+          ? this.getAmountCurrencyMap(currencyKey, processedData)
+          : undefined,
+        results: [...this.value] // shallow copy
       })
     },
-    getTranslatedLabel() {
+    getTranslatedLabel(columns = []) {
       // missing expansion labels and columns without field props, but we use the translator before export
-      return this.$refs.dt.columns
+      return columns
         .filter((el) => el.props.field)
-        .map((el) => {
-          return {
-            key: el.props.field,
-            value: el.props.header
-          }
-        })
+        .map((el) => ({ key: el.props.field, value: el.props.header }))
     },
-    getAmountCurrencyMap(currencyKey) {
-      return this.$refs.dt.processedData.map((el) => {
+    getAmountCurrencyMap(currencyKey, processedData) {
+      return processedData.map((el) => {
         let currency
         if (currencyKey.length === 1) currency = el[currencyKey[0]]
         if (currencyKey.length === 2) currency = el[currencyKey[0]][currencyKey[1]]
@@ -294,44 +220,24 @@ export default {
       })
     },
     handlerResponsiveLayout(type, value) {
-      if (value === 'stack') {
-        switch (type) {
-          case 'handle':
-            this.refResponsiveLayout = 'scroll'
-            this.useSettingsStore.updateResponsiveTables({
-              page: this.currentPageName,
-              value: 'scroll'
-            })
-            break
-          case 'icon':
-            return 'fa-chart-bar'
-        }
-      } else if (value === 'scroll') {
-        switch (type) {
-          case 'handle':
-            this.refResponsiveLayout = 'stack'
-            this.useSettingsStore.updateResponsiveTables({
-              page: this.currentPageName,
-              value: 'stack'
-            })
-            break
-          case 'icon':
-            return 'fa-arrows-left-right-to-line'
-        }
+      const newValue = value === 'stack' ? 'scroll' : 'stack'
+      if (type === 'handle') {
+        this.refResponsiveLayout = newValue
+        this.useSettingsStore.updateResponsiveTables({
+          page: this.currentPageName,
+          value: newValue
+        })
+      } else if (type === 'icon') {
+        return value === 'stack' ? 'fa-chart-bar' : 'fa-arrows-left-right-to-line'
       }
     },
     handlerDymanicColumns() {
       if (!this.dynamicColumns) return
+
       const tmp = this.useSettingsStore.getDynamicColumns(this.currentPageName)
-      if (tmp) {
-        this.selectedColumns = tmp
-          .map((el) => {
-            return this.dynamicColumns.find((it) => it.header === el.header)
-          })
-          .filter((el) => el)
-      } else {
-        this.selectedColumns = this.dynamicColumns.filter((el) => el.selected === true)
-      }
+      this.selectedColumns = tmp
+        ? tmp.map((el) => this.dynamicColumns.find((it) => it.header === el.header)).filter(Boolean)
+        : this.dynamicColumns.filter((el) => el.selected === true)
 
       this.$emit('onColumnSelect', { value: this.selectedColumns })
     }
@@ -346,6 +252,8 @@ export default {
         this.refResponsiveLayout = responsiveTable
       }
     }
+    // copia immutabile dei dati per export
+    this.valueCopy = [...this.value]
   }
 }
 </script>
