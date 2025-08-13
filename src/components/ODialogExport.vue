@@ -603,10 +603,12 @@ export default {
         case 'winTotal':
         case 'profitUndefined':
         case 'award':
+        case 'trust':
           if (this.amountInteger && !this.currencyInExport) {
             return value
           }
           if (!this.amountInteger && !this.currencyInExport) {
+            if (isNaN(parseFloat(value))) return '-'
             return this.formatNumber(value)
           }
           let amount = ''
