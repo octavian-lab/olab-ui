@@ -232,7 +232,7 @@ export default {
       lottie: null,
       filters: this.filtersModel ? { ...this.filtersModel } : null,
       selectedColumns: [],
-      valueCopy: {...this.value}
+      valueCopy: [...this.value]
     }
   },
   computed: {

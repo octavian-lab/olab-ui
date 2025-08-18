@@ -16,6 +16,9 @@
         <span>{{ $translate('admin.generic.export') }}</span>
       </div>
     </template>
+    <Message v-if="notTranslatedKeys.size > 0" severity="warn" :closable="false">
+      Ci sono dei campi non tradotti, vuoi tradurli?
+    </Message>
     <div class="grid formgrid fluid">
       <div class="field col-12">
         <OPageSettingApi
@@ -211,7 +214,8 @@ export default {
       lottie: { common },
       currencyKeyCounter: 0,
       amountInteger: true,
-      isDialogVisible: false
+      isDialogVisible: false,
+      notTranslatedKeys: new Set()
     }
   },
   watch: {
@@ -276,9 +280,11 @@ export default {
       if (label) {
         if (label.value) return label.value
       }
-      const translated = this.$translate(`admin.generic.${key}`)
+      const keyWithoutUppercase = key.replace(/([A-Z])/g, match => '.' + match.toLowerCase()) // se trova una maiuscola nella chiave, la sostituisce con il punto e la lettera minuscola
+      const translated = this.$translate(`admin.generic.${keyWithoutUppercase}`)
       if (translated.includes('--') || translated.includes('admin')) {
-        return key
+        this.notTranslatedKeys.add(keyWithoutUppercase)
+        return keyWithoutUppercase
       }
       return translated
     },
