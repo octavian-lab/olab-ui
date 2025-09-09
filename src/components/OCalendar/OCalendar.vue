@@ -260,7 +260,7 @@ export default {
         if (!this.modelValue) {
           this.modelValue = this.getMidNight(moment()).toDate()
         }
-        this.modelValue = this.addPeriod(moment(this.modelValue), amount, period)
+        this.modelValue = this.addPeriod(moment(this.modelValue), amount, period).toDate()
         return
       }
       this.modelValue.date[dataToChange] = this.addPeriod(
