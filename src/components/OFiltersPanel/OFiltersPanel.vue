@@ -148,6 +148,22 @@ export default {
           )
         })
       }
+    },
+    allRequiredFilled(val) {
+      // Seleziona tutti gli input reali dentro i filtri
+      const filtersWithInput = Array.from(document.querySelectorAll('.filter')).map(el =>
+        el.querySelector('input, textarea, select')
+      ).filter(Boolean) // rimuove eventuali null
+
+      filtersWithInput.forEach((input) => {
+        // Rimuovi prima per evitare duplicati
+        input.removeEventListener('keyup', this.handleEnter)
+
+        // Aggiungi solo se tutti i required sono compilati
+        if (val) {
+          input.addEventListener('keyup', this.handleEnter)
+        }
+      })
     }
   },
   computed: {
@@ -217,9 +233,22 @@ export default {
         default:
           return '100%'
       }
+    },
+    allRequiredFilled() {
+      return this.requiredFilters.every((el) => {
+        const input = el.querySelector('input, select, textarea')
+        if (!input) return false
+        if (input.type === 'checkbox' || input.type === 'radio') return input.checked
+        return input.value !== '' && input.value != null
+      })
     }
   },
   methods: {
+    handleEnter(e) {
+      if (e.key === 'Enter') {
+        this.$emit('triggerSearch')
+      }
+    },
     toggleAutoSelectAll(val) {
       let checkboxes
       if (val.join != null) checkboxes = Object.entries(val.join)
