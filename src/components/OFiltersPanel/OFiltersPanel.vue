@@ -149,21 +149,8 @@ export default {
         })
       }
     },
-    allRequiredFilled(val) {
-      // Seleziona tutti gli input reali dentro i filtri
-      const filtersWithInput = Array.from(document.querySelectorAll('.filter')).map(el =>
-        el.querySelector('input, textarea, select')
-      ).filter(Boolean) // rimuove eventuali null
-
-      filtersWithInput.forEach((input) => {
-        // Rimuovi prima per evitare duplicati
-        input.removeEventListener('keyup', this.handleEnter)
-
-        // Aggiungi solo se tutti i required sono compilati
-        if (val) {
-          input.addEventListener('keyup', this.handleEnter)
-        }
-      })
+    isSearchDisabled(disabled) {
+      this.toggleEnterHandlers(disabled)
     }
   },
   computed: {
@@ -234,20 +221,50 @@ export default {
           return '100%'
       }
     },
-    allRequiredFilled() {
-      return this.requiredFilters.every((el) => {
-        const input = el.querySelector('input, select, textarea')
-        if (!input) return false
-        if (input.type === 'checkbox' || input.type === 'radio') return input.checked
-        return input.value !== '' && input.value != null
-      })
+    isSearchDisabled() {
+      return this.btnDisabled || this.requiredFilters.some(el => el.value === '' || el.value == null)
     }
   },
   methods: {
-    handleEnter(e) {
-      if (e.key === 'Enter') {
-        this.$emit('triggerSearch')
+    toggleEnterHandlers(disabled) {
+      // Rimuovo handler precedente se presente
+      if (this._panelEnterHandler && this.$el) {
+        this.$el.removeEventListener('keydown', this._panelEnterHandler, true)
+        this.$el.removeEventListener('keyup', this._panelEnterHandler, true)
+        this._panelEnterHandler = null
       }
+
+      const panel = this.$el
+      if (!panel) return
+
+      const handler = (e) => {
+        if (e.key !== 'Enter') return
+
+        const active = document.activeElement
+        if (!active || !panel.contains(active)) return
+
+        const tag = (active.tagName || '').toLowerCase()
+        const isPlainInput = tag === 'input' || tag === 'textarea'
+
+        const isPrimeInput =
+          active.matches?.('input.p-inputtext') ||
+          active.matches?.('input.p-inputnumber-input') ||
+          active.matches?.('input.p-dropdown-filter') ||
+          active.matches?.('input.p-calendar-input')
+
+        if (!isPlainInput && !isPrimeInput) return
+
+        if (disabled) {
+          e.preventDefault()
+          e.stopImmediatePropagation()
+        }
+      }
+
+      this._panelEnterHandler = handler
+
+      // Usa fase capture per intercettare PRIMA di PrimeVue
+      panel.addEventListener('keydown', handler, true)
+      panel.addEventListener('keyup', handler, true)
     },
     toggleAutoSelectAll(val) {
       let checkboxes
@@ -363,6 +380,14 @@ export default {
   mounted() {
     this.teleportFilter.isMounted = true
     this.reorderDividedColumns()
+    this.toggleEnterHandlers(this.isSearchDisabled)
+  },
+  beforeUnmount() {
+    if (this._panelEnterHandler && this.$el) {
+      this.$el.removeEventListener('keydown', this._panelEnterHandler, true)
+      this.$el.removeEventListener('keyup', this._panelEnterHandler, true)
+      this._panelEnterHandler = null
+    }
   }
 }
 </script>
