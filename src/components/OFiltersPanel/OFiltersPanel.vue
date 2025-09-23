@@ -148,6 +148,9 @@ export default {
           )
         })
       }
+    },
+    isSearchDisabled(disabled) {
+      this.toggleEnterHandlers(disabled)
     }
   },
   computed: {
@@ -217,9 +220,52 @@ export default {
         default:
           return '100%'
       }
+    },
+    isSearchDisabled() {
+      return this.btnDisabled || this.requiredFilters.some(el => el.value === '' || el.value == null)
     }
   },
   methods: {
+    toggleEnterHandlers(disabled) {
+      // Rimuovo handler precedente se presente
+      if (this._panelEnterHandler && this.$el) {
+        this.$el.removeEventListener('keydown', this._panelEnterHandler, true)
+        this.$el.removeEventListener('keyup', this._panelEnterHandler, true)
+        this._panelEnterHandler = null
+      }
+
+      const panel = this.$el
+      if (!panel) return
+
+      const handler = (e) => {
+        if (e.key !== 'Enter') return
+
+        const active = document.activeElement
+        if (!active || !panel.contains(active)) return
+
+        const tag = (active.tagName || '').toLowerCase()
+        const isPlainInput = tag === 'input' || tag === 'textarea'
+
+        const isPrimeInput =
+          active.matches?.('input.p-inputtext') ||
+          active.matches?.('input.p-inputnumber-input') ||
+          active.matches?.('input.p-dropdown-filter') ||
+          active.matches?.('input.p-calendar-input')
+
+        if (!isPlainInput && !isPrimeInput) return
+
+        if (disabled) {
+          e.preventDefault()
+          e.stopImmediatePropagation()
+        }
+      }
+
+      this._panelEnterHandler = handler
+
+      // Usa fase capture per intercettare PRIMA di PrimeVue
+      panel.addEventListener('keydown', handler, true)
+      panel.addEventListener('keyup', handler, true)
+    },
     toggleAutoSelectAll(val) {
       let checkboxes
       if (val.join != null) checkboxes = Object.entries(val.join)
@@ -334,6 +380,14 @@ export default {
   mounted() {
     this.teleportFilter.isMounted = true
     this.reorderDividedColumns()
+    this.toggleEnterHandlers(this.isSearchDisabled)
+  },
+  beforeUnmount() {
+    if (this._panelEnterHandler && this.$el) {
+      this.$el.removeEventListener('keydown', this._panelEnterHandler, true)
+      this.$el.removeEventListener('keyup', this._panelEnterHandler, true)
+      this._panelEnterHandler = null
+    }
   }
 }
 </script>
