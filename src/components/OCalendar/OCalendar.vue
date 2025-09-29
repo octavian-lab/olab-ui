@@ -18,7 +18,7 @@
         :dateFormat="$attrs.dateFormat ? $attrs.dateFormat : 'dd/mm/yy'"
         icon="fad fa-calendar"
         :touch-u-i="isMobile"
-        :placeholder="placeholder"
+        :placeholder="$translate(placeholder)"
       />
       <OCalendarCustomButtons
         v-if="showButtons"
@@ -113,7 +113,7 @@ export default {
   },
   emits: ['update:from', 'update:to', 'update:modelValue'],
   props: {
-    placeholder: { type: String, default: () => 'dd / mm / yy hh:mm' },
+    placeholder: { type: String, default: () => 'admin.generic.calendar.placeholder' },
     unselectable: { type: Boolean, default: () => true },
     from: { type: [Date, Object, String], default: () => null },
     to: { type: [Date, Object, String], default: () => null },
