@@ -193,10 +193,19 @@ export default {
         ? this.defaultExportKeys
         : columns.filter((el) => el?.props?.field).map((el) => el.props.field)
 
+      let key = this.currentPageName
+      if (typeof key === 'string') {
+        if (key.includes('playersdetail')) {
+          key = 'playersdetail'
+        } else if (key.includes('affiliatesdetail')) {
+          key = 'affiliatesdetail'
+        }
+      }
+
       this.$modal.open('ODialogExport', {
         processed: processedData,
         defaultExportKeys: exportKeys,
-        key: this.currentPageName,
+        key: key,
         type: 0,
         translatedLabel: this.getTranslatedLabel(columns),
         amountCurrencyMap: currencyKey
