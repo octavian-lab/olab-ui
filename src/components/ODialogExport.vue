@@ -246,11 +246,21 @@ export default {
       return this.exportFilename
     },
     keys() {
-      let ret = []
-      if (this.$modal.data.processed != null && this.$modal.data.processed.length > 0) {
-        ret = this.calcKeys(this.$modal.data.processed[0])
+      const processed = this.$modal.data.processed || []
+      if (!processed.length) return []
+
+      const allKeys = new Map()
+
+      for (const el of processed) {
+        const keys = this.calcKeys(el)
+        for (const k of keys) {
+          if (!allKeys.has(k.value)) {
+            allKeys.set(k.value, k)
+          }
+        }
       }
-      return ret
+
+      return Array.from(allKeys.values())
     },
     checkFilters() {
       if (this.selectKeys.length === this.keys.length) {
@@ -465,25 +475,21 @@ export default {
         this.selectKeys = this.selectKeys.filter((el) => el !== value[0])
       }
     },
-    calcKeys(el) {
+    calcKeys(el, prefix = '') {
       const ret = []
-      for (const key of Object.keys(el)) {
-        const currValue = el[key]
-        if (typeof currValue === 'object' && currValue !== null && !currValue.length) {
-          const tmp = this.calcKeys(currValue)
-          for (const keyDeep of tmp) {
-            ret.push({
-              label: key + '.' + keyDeep.value,
-              value: key + '.' + keyDeep.value
-            })
-            const setKey = key + '.' + keyDeep.value
-            this.buttonSwitch[setKey] = false
-          }
+
+      for (const [key, currValue] of Object.entries(el)) {
+        const fullKey = prefix ? `${prefix}.${key}` : key
+
+        if (typeof currValue === 'object' && currValue !== null && !Array.isArray(currValue)) {
+          const tmp = this.calcKeys(currValue, fullKey)
+          ret.push(...tmp)
         } else {
-          ret.push({ label: key, value: key })
-          this.buttonSwitch[key] = false
+          ret.push({ label: fullKey, value: fullKey })
+          this.buttonSwitch[fullKey] = this.buttonSwitch[fullKey] ?? false
         }
       }
+
       return ret
     },
     columnReorder(event) {
