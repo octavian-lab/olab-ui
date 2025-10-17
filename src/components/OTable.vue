@@ -193,6 +193,18 @@ export default {
         ? this.defaultExportKeys
         : columns.filter((el) => el?.props?.field).map((el) => el.props.field)
 
+      /**
+       * Blocco per la normalizzazione della chiave di esportazione
+       *
+       * Scopo: garantire che le esportazioni globali per tutte le pagine di dettaglio
+       * (giocatori e affiliati) utilizzino una chiave unificata.
+       *
+       * In questo modo, tutte le esportazioni relative a pagine che contengono
+       * "playerdetails" o "affiliatedetails" verranno mappate rispettivamente su
+       * "playerdetails" e "affiliatedetails", indipendentemente dal percorso completo.
+       *
+       * in modo che una volta salvati i parametri di esportazione,essi siano presenti per tutti i giocatori/affiliati
+       */
       let key = this.currentPageName
       if (typeof key === 'string') {
         if (key.includes('playersdetail')) {
