@@ -193,7 +193,8 @@ export default {
         key: this.currentPageName,
         name: `${this.currentPageName}-layout`,
         value: JSON.stringify(this.elements),
-        type: 2
+        type: 2,
+        mode: 1
       }
 
       try {
@@ -208,7 +209,8 @@ export default {
       const json = {
         name: this.currentPageName,
         value: JSON.stringify(this.elements),
-        type: 2
+        type: 2,
+        mode: 1
       }
 
       try {
