@@ -13,30 +13,32 @@ export default function (value, currency = 'EUR', hideCurrency = false) {
   if (currencyRef.length !== 3) {
     currencyRef = 'XXX'
   }
-  let precision
-  if (currencies.length > 0) {
-    const currencyObj = currencies.find((el) => el.id === currencyRef)
-    precision = currencyObj ? currencyObj.precision || currencyObj.valuePrecision || currencyObj.fractions : 'EUR'
-  } else {
-    precision = 2
-  }
 
   if (value == null) return ''
-  let valueDouble
-  let formatter
 
-  switch (currencyRef) {
-    case 'PTS':
-      return `${value} ${currencyRef}`
-    default:
-      formatter = new Intl.NumberFormat('it-IT', {
-        style: 'currency',
-        currency: currencyRef
-      })
-      valueDouble = parseFloat(value) / Math.pow(10, precision)
+  const currencyList = Array.isArray(currencies) ? currencies : []
+  const currencyObj = currencyList.find((el) => el.id === currencyRef)
+  const precisionValue =
+    currencyObj != null
+      ? currencyObj.precision || currencyObj.valuePrecision || currencyObj.fractions
+      : undefined
+  const precision = Number.isFinite(Number(precisionValue)) ? Number(precisionValue) : 2
 
-      if (hideCurrency === true) return valueDouble.toFixed(precision)
+  if (currencyRef === 'PTS') return `${value} ${currencyRef}`
 
-      return formatter.format(valueDouble.toFixed(precision))
+  const valueDouble = parseFloat(value) / Math.pow(10, precision)
+  const formatterOptions = {
+    useGrouping: true,
+    minimumFractionDigits: precision,
+    maximumFractionDigits: precision
   }
+
+  if (!hideCurrency) {
+    formatterOptions.style = 'currency'
+    formatterOptions.currency = currencyRef
+  }
+
+  const formatter = new Intl.NumberFormat('it-IT', formatterOptions)
+
+  return formatter.format(valueDouble)
 }
