@@ -123,6 +123,12 @@ export default {
         color += letters[Math.floor(Math.random() * 16)]
       }
       return color
+    },
+    formatInt(number) {
+      return new Intl.NumberFormat('it-IT', {
+        useGrouping: true,
+        maximumFractionDigits: 0,
+      }).format(number)
     }
     // TODO
     /*setTranslateKeyAttribute(prefix, name) {
