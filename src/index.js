@@ -19,6 +19,7 @@ import asDate from './filters/asDate.js'
 import toJSDate from './filters/toJSDate.js'
 import asAmount from './filters/asAmount.js'
 import toAmount from './filters/toAmount.js'
+import asInteger from './filters/asInteger.js'
 import asHHmm from './filters/asHHmm.js'
 import asPercentage from './filters/asPercentage.js'
 
@@ -75,6 +76,7 @@ export default {
       toJSDate,
       asAmount,
       asHHmm,
+      asInteger,
       toAmount,
       asPercentage
     }
