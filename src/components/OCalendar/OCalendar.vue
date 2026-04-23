@@ -120,6 +120,7 @@ export default {
     advanced: { type: Boolean, default: () => true },
     empty: { type: Boolean, default: () => false },
     showButtons: { type: Boolean, default: () => true },
+    showOthersPeriods: { type: Boolean, default: () => false },
     filteredOptions: { type: Array, default: () => [] },
     borderRounded: {
       type: Boolean,
@@ -133,31 +134,7 @@ export default {
       selects: {
         calendarOptions: [],
         previousMonths: [],
-        periods: [
-          {
-            label: this.$translate('admin.generic.calendar.this.week'),
-            value: {
-              date: {
-                from: this.getMidNight(this.getStartOf(moment(), 'isoweek')),
-                to: this.getMidNight(this.getEndOf(moment(), 'isoweek'))
-              }
-            }
-          },
-          {
-            label: this.$translate('admin.generic.calendar.last.week'),
-            value: {
-              date: {
-                from: this.getMidNight(
-                  this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
-                ),
-                to: this.getMidNight(
-                  this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
-                )
-              }
-            }
-          },
-          ...this.generatePeriods()
-        ]
+        periods: this.getPeriodsOptions()
       }
     }
   },
@@ -165,9 +142,13 @@ export default {
     dynamicGettersLang: {
       handler() {
         this.selects.calendarOptions = this.generateOptions()
+        this.selects.periods = this.getPeriodsOptions()
         this.getPreviousMonths()
         this.filterOptions()
       }
+    },
+    showOthersPeriods() {
+      this.selects.periods = this.getPeriodsOptions()
     },
     extQuery(val) {
       if (this.advanced) {
@@ -382,21 +363,96 @@ export default {
       // RESETTERÀ IL VMODEL
       this.modelValue = this.unselectable === true ? this.getCalendarOption(this.startValue) : null
     },
-    generatePeriods() {
-      const arr = [3, 7, 15, 30, 60, 90]
-      let ret = []
-      arr.forEach((el) => {
-        ret.push({
-          label: this.$translate('admin.generic.last.days.' + el),
+    getPeriodsOptions() {
+      return [
+        {
+          label: this.$translate('admin.generic.calendar.this.week'),
           value: {
             date: {
-              from: this.getMidNight(this.getStartOf(this.addPeriod(moment(), -el, 'days'), 'day')),
-              to: this.getEndOf(moment(), 'day')
+              from: this.getMidNight(this.getStartOf(moment(), 'isoweek')),
+              to: this.getMidNight(this.getEndOf(moment(), 'isoweek'))
             }
           }
-        })
-      })
-      return ret
+        },
+        {
+          label: this.$translate('admin.generic.calendar.last.week'),
+          value: {
+            date: {
+              from: this.getMidNight(
+                this.getStartOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+              ),
+              to: this.getMidNight(
+                this.getEndOf(this.addPeriod(moment(), -1, 'weeks'), 'isoweek')
+              )
+            }
+          }
+        },
+        ...this.generatePeriods()
+      ]
+    },
+    generatePeriods() {
+      const periods = [
+        {
+          label: this.$translate('admin.generic.last.days.3'),
+          amount: 3,
+          period: 'days'
+        },
+        {
+          label: this.$translate('admin.generic.last.days.7'),
+          amount: 7,
+          period: 'days'
+        },
+        {
+          label: this.$translate('admin.generic.last.days.15'),
+          amount: 15,
+          period: 'days'
+        },
+        {
+          label: this.$translate('admin.generic.last.days.30'),
+          amount: 30,
+          period: 'days'
+        },
+        {
+          label: this.$translate('admin.generic.last.days.60'),
+          amount: 60,
+          period: 'days'
+        },
+        {
+          label: this.$translate('admin.generic.last.days.90'),
+          amount: 90,
+          period: 'days'
+        }
+      ]
+
+      if (this.showOthersPeriods) {
+        periods.push(
+          {
+            label: this.$translate('admin.generic.calendar.last.180.days'),
+            amount: 180,
+            period: 'days'
+          },
+          {
+            label: this.$translate('admin.generic.calendar.last.365.days'),
+            amount: 365,
+            period: 'days'
+          },
+          {
+            label: this.$translate('admin.generic.calendar.last.10.years'),
+            amount: 10,
+            period: 'years'
+          }
+        )
+      }
+
+      return periods.map(({ label, amount, period }) => ({
+        label,
+        value: {
+          date: {
+            from: this.getMidNight(this.getStartOf(this.addPeriod(moment(), -amount, period), 'day')),
+            to: this.getEndOf(moment(), 'day')
+          }
+        }
+      }))
     },
     generateOptions() {
       return [
